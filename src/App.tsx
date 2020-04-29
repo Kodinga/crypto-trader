@@ -1,25 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Provider } from 'react-redux';
+import configureStore from './modules/redux/store';
+import { AppActions } from './modules/app/actions';
+import { TradeActions } from './modules/trades/actions';
+import Trades from 'modules/trades/components';
+import { Container, Header, TradesPanel } from 'App.styled';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 function App() {
+  const store = configureStore();
+  const symbol = 'tBTCUSD';
+  store.dispatch(AppActions.bootstrapApp());
+  
+  setTimeout(() => {
+    store.dispatch(TradeActions.subscribeToSymbol({symbol}));
+  }, 2000);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <Container>
+        <Header><h1>Crypto Trader</h1></Header>
+        <TradesPanel><Trades symbol={symbol} /></TradesPanel>
+      </Container>
+     
+    </Provider>
   );
 }
 
