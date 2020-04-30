@@ -9,5 +9,5 @@ export const AppActions = {
 };
 
 export type AppActions = ActionUnion<typeof AppActions>;
-export type BoostrapAppAction = ReturnType<typeof AppActions.bootstrapApp>;
+export type BoostrapApp = ReturnType<typeof AppActions.bootstrapApp>;
 
