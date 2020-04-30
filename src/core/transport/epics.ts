@@ -7,9 +7,9 @@ import { WS_ACTION_TYPES, WsSendAction, WsMessageAction, WsSubscribeToChannelAck
 import { Epic, ofType, combineEpics } from 'redux-observable';
 import { RootState } from 'modules/root';
 
-const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 1000;
+export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 1000;
 
-const handleWsSend: Epic<WsSendAction, never, RootState, Dependencies> = (action$, state$, { connection }) =>
+export const handleWsSend: Epic<WsSendAction, never, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
     ofType(WS_ACTION_TYPES.WS_SEND),
     mergeMap(action => {
@@ -19,7 +19,7 @@ const handleWsSend: Epic<WsSendAction, never, RootState, Dependencies> = (action
   );
 
 
-const handleWsSubscription: Epic<WsSendAction | WsMessageAction | WsSubscribeToChannelAck | WsSubscribeToChannelNack, WsSubscribeToChannelAck | WsSubscribeToChannelNack, RootState, Dependencies> = (action$, state$, { connection }) =>
+export const handleWsSubscription: Epic<WsSendAction | WsMessageAction | WsSubscribeToChannelAck | WsSubscribeToChannelNack, WsSubscribeToChannelAck | WsSubscribeToChannelNack, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
     ofType(WS_ACTION_TYPES.WS_SEND),
     filter(action => action.payload.event === 'subscribe'),

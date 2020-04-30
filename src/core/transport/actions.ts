@@ -24,7 +24,7 @@ export interface WsMessageActionMeta {
 
 export const WsActions = {
     wsSend: createAction<WS_ACTION_TYPES.WS_SEND, any>(WS_ACTION_TYPES.WS_SEND),
-    wsMessage: createAction<WS_ACTION_TYPES.WS_MESSAGE, any, WsMessageActionMeta>(WS_ACTION_TYPES.WS_MESSAGE),
+    wsMessage: createAction<WS_ACTION_TYPES.WS_MESSAGE, any, WsMessageActionMeta | undefined>(WS_ACTION_TYPES.WS_MESSAGE),
     subscribeToChannelAck: createAction<WS_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK, SubscribeToChannelAckActionPayload>(WS_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK),
     subscribeToChannelNack: createAction<WS_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK, SubscribeToChannelNackActionPayload>(WS_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK)
 };

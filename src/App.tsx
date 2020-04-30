@@ -6,7 +6,7 @@ import { TradeActions } from './modules/trades/actions';
 import Trades from 'modules/trades/components';
 import { Container, Header, TradesPanel } from 'App.styled';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 
 function App() {
   const store = configureStore();

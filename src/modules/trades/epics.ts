@@ -6,7 +6,7 @@ import { SubscribeToSymbolAction, TRADES_ACTION_TYPES } from './actions';
 import { Dependencies } from './../redux/store';
 import { WsActions } from 'core/transport/actions';
 
-const subscribeToTrades: Epic<SubscribeToSymbolAction | WsSendAction, WsSendAction, RootState, Dependencies> = (action$) =>
+export const subscribeToTrades: Epic<SubscribeToSymbolAction | WsSendAction, WsSendAction, RootState | undefined, Dependencies | undefined> = (action$) =>
     action$.pipe(
         ofType(TRADES_ACTION_TYPES.SUBSCRIBE_TO_SYMBOL),
         map(action => {

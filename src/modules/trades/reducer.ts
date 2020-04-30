@@ -75,3 +75,5 @@ export function tradesReducer(
             return state;
     }
 }
+
+export default tradesReducer;

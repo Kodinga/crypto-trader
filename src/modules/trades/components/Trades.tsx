@@ -4,6 +4,7 @@ import { ColDef } from 'ag-grid-community';
 import { DateTime } from 'luxon';
 import { Trade } from '../types/Trade';
 import { Container } from './Trades.styled';
+import theme from 'theme/style';
 
 export interface Props {
     trades: Trade[];
@@ -18,7 +19,13 @@ const Trades: FC<Props> = props => {
     }, {
         headerName: 'Amount',
         field: 'amount',
-        width: 120
+        width: 120,
+        valueFormatter: params => Math.abs(params.value).toString(),
+        cellStyle: params => {
+            return {
+                color: params.value < 0 ? theme.SELL : theme.BUY
+            }
+        }
     }, {
         headerName: 'Time',
         field: 'timestamp',
@@ -31,7 +38,7 @@ const Trades: FC<Props> = props => {
     }];
 
     return (
-        <Container className='ag-theme-balham'>
+        <Container className='ag-theme-balham-dark'>
             <AgGridReact
                 columnDefs={columnDefs}
                 rowData={trades}
