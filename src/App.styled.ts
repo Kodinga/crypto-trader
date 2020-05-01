@@ -11,7 +11,7 @@ export const Container = styled.div`
     grid-template-areas: 
         "header header header"
         "ticker . ."
-        "trades chart chart"
+        "trades candles candles"
         "trades depth book";
     padding: 10px;
 `;
@@ -27,4 +27,8 @@ export const TickersPanel = styled.div`
 
 export const TradesPanel = styled.div`
     grid-area: trades;
-`
+`;
+
+export const CandlesPanel = styled.div`
+    grid-area: candles;
+`;

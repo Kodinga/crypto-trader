@@ -20,7 +20,7 @@ describe('TradesEpic', () => {
                     helpers,
                     {}
                 );
-                const symbol = 'tBTCUSD';
+                const symbol = 'BTCUSD';
                 const action$ = hotAction('-a', { a: TradeActions.subscribeToSymbol({ symbol }) });
                 const state$ = hotState('-');
     
@@ -30,7 +30,7 @@ describe('TradesEpic', () => {
                     a: WsActions.wsSend({
                         event: 'subscribe',
                         channel: 'trades',
-                        symbol
+                        symbol: `t${symbol}`
                     })
                 });
             });

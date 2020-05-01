@@ -11,6 +11,7 @@ import { APP_ACTION_TYPES } from './actions';
 import { merge, of, from } from 'rxjs';
 import { TradeActions } from 'modules/trades/actions';
 import { WS_ACTION_TYPES, WsConnectionStatusChanged } from 'core/transport/actions';
+import { CandleActions } from 'modules/candles/actions';
 
 const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
@@ -31,14 +32,17 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, sta
               const currencyPairs = getCurrencyPairs(state$.value);
               const tickerActions = currencyPairs
                 .map(currencyPair => TickerActions.subscribeToSymbol({
-                  symbol: `t${currencyPair}`
+                  symbol: currencyPair
                 }));
-
+              const candlesActions = [
+                CandleActions.subscribeToSymbol({ symbol: currencyPairs[0], timeframe: '1M'})
+              ];
               const tradeActions = [
-                TradeActions.subscribeToSymbol({ symbol: `t${currencyPairs[0]}` })
+                TradeActions.subscribeToSymbol({ symbol: currencyPairs[0] })
               ];
               return merge(
-                from(tradeActions).pipe(delay(200)),
+                from(tradeActions),
+                from(candlesActions),
                 from(tickerActions)
                   .pipe(
                     // TODO - due to limitations with the Bitfinex WS protocol, we can't do concurrent subscriptions here (cf transport epic)

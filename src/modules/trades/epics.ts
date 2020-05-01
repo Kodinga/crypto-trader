@@ -14,7 +14,7 @@ export const subscribeToTrades: Epic<SubscribeToSymbolAction | WsSend, WsSend, R
             const msg = {
                 event: 'subscribe',
                 channel: 'trades',
-                symbol
+                symbol: `t${symbol}`
             };
             return WsActions.wsSend(msg);
         })
