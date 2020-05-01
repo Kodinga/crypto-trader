@@ -1,6 +1,10 @@
 const Palette = {
-    BUY: '#159f49',
-    SELL: '#df4249'
+    Buy: '#159f49',
+    Sell: '#df4249',
+    Orange: '#ffa41b',
+    White: '#fff',
+    BackgroundColor: '#222',
+    Label: 'rgba(245, 245, 245, 0.64)'
 };
 
 export default Palette;

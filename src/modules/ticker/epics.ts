@@ -2,18 +2,18 @@ import { map } from 'rxjs/operators';
 import { Epic, ofType, combineEpics } from 'redux-observable';
 import { WsSendAction } from './../../core/transport/actions';
 import { RootState } from 'modules/root';
-import { SubscribeToSymbolAction, TRADES_ACTION_TYPES } from './actions';
+import { SubscribeToTickerSymbolAction, TICKER_ACTION_TYPES } from './actions';
 import { Dependencies } from './../redux/store';
 import { WsActions } from 'core/transport/actions';
 
-export const subscribeToTrades: Epic<SubscribeToSymbolAction | WsSendAction, WsSendAction, RootState | undefined, Dependencies | undefined> = (action$) =>
+export const subscribeToTicker: Epic<SubscribeToTickerSymbolAction | WsSendAction, WsSendAction, RootState | undefined, Dependencies | undefined> = (action$) =>
     action$.pipe(
-        ofType(TRADES_ACTION_TYPES.TRADES_SUBSCRIBE_TO_SYMBOL),
+        ofType(TICKER_ACTION_TYPES.TICKER_SUBSCRIBE_TO_SYMBOL),
         map(action => {
             const { symbol } = action.payload;
             const msg = {
                 event: 'subscribe',
-                channel: 'trades',
+                channel: 'ticker',
                 symbol
             };
             return WsActions.wsSend(msg);
@@ -21,5 +21,5 @@ export const subscribeToTrades: Epic<SubscribeToSymbolAction | WsSendAction, WsS
     );
 
 export default combineEpics(
-    subscribeToTrades
+    subscribeToTicker
 );

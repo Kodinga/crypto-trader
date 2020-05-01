@@ -21,7 +21,7 @@ describe('TradesReducer', () => {
         const action = WsActions.wsMessage(data, meta);
         const result = trades(undefined, action);
         expect(result).toEqual({
-            [symbol]: [
+            [symbol.slice(1)]: [
                 {id, timestamp, amount, price}
             ]
         });
@@ -30,7 +30,7 @@ describe('TradesReducer', () => {
     it('should handle insert', () => {   
         const symbol = 'tBTCUSD';
         const initialState = {
-            [symbol]: [
+            [symbol.slice(1)]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9}
             ]
         };
@@ -51,7 +51,7 @@ describe('TradesReducer', () => {
         const action = WsActions.wsMessage(data, meta);
         const result = trades(initialState, action);
         expect(result).toEqual({
-            [symbol]: [
+            [symbol.slice(1)]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id, timestamp, amount, price}
             ]
@@ -61,7 +61,7 @@ describe('TradesReducer', () => {
     it('should handle upsert', () => {   
         const symbol = 'tBTCUSD';
         const initialState = {
-            [symbol]: [
+            [symbol.slice(1)]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id: 2, timestamp: 1574694478808, amount: 0.005, price: 7245.9},
             ]
@@ -83,7 +83,7 @@ describe('TradesReducer', () => {
         const action = WsActions.wsMessage(data, meta);
         const result = trades(initialState, action);
         expect(result).toEqual({
-            [symbol]: [
+            [symbol.slice(1)]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id, timestamp, amount, price}
             ]
@@ -93,7 +93,7 @@ describe('TradesReducer', () => {
     it('should discard heartbeat', () => {   
         const symbol = 'tBTCUSD';
         const initialState = {
-            [symbol]: [
+            [symbol.slice(1)]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id: 2, timestamp: 1574694478808, amount: 0.005, price: 7245.9},
             ]

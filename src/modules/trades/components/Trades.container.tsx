@@ -2,17 +2,16 @@ import { connect } from 'react-redux';
 import { RootState } from 'modules/root';
 import Trades, { Props } from './Trades'
 import { getTrades } from '../selectors';
+import { getCurrencyPairs } from 'modules/reference-data/selectors';
 
-export interface ContainerProps {
-    symbol: string;
-}
-
-const mapStateToProps = (state: RootState, containerProps: ContainerProps): Props => {
-    const { symbol } = containerProps;
-    const trades = getTrades(state)(symbol);
+const mapStateToProps = (state: RootState): Props => {
+    const currencyPairs = getCurrencyPairs(state);
+    const currencyPair = currencyPairs[0];
+    const trades = getTrades(state)(currencyPair); // TODO - store selection
 
     return {
-        trades
+        trades,
+        currencyPair
     };
 }
 

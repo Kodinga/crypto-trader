@@ -7,7 +7,7 @@ import { Trade } from './types/Trade';
 type SymbolState = Trade[];
 
 export interface TradesState {
-    [symbol: string]: SymbolState;
+    [currencyPair: string]: SymbolState;
 }
 
 const initialState: TradesState = {
@@ -58,13 +58,14 @@ export function tradesReducer(
 
             const { channel, request } = action.meta || {};
             if (channel === 'trades') {
-                const { symbol } = request;                
+                const { symbol } = request;    
+                const currencyPair = symbol.slice(1);            
                 const symbolReducer = Array.isArray(action.payload[1]) ? snapshotReducer : updateReducer;
-                const result = symbolReducer(state[symbol], action);
+                const result = symbolReducer(state[currencyPair], action);
 
                 return {
                     ...state,
-                    [symbol]: result
+                    [currencyPair]: result
                 };
             }
 

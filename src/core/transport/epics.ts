@@ -1,7 +1,6 @@
 import { EMPTY } from 'rxjs';
-import { filter, switchMap, catchError, timeout, take } from 'rxjs/operators';
+import { filter, mergeMap, catchError, timeout, take } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
-import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 import { Dependencies } from './../../modules/redux/store';
 import { WS_ACTION_TYPES, WsSendAction, WsMessageAction, WsSubscribeToChannelAck, WsActions, WsSubscribeToChannelNack } from './actions';
 import { Epic, ofType, combineEpics } from 'redux-observable';
@@ -18,12 +17,18 @@ export const handleWsSend: Epic<WsSendAction, never, RootState, Dependencies> = 
     })
   );
 
+/*
+    The Bitfinex WS api seems to have some limitations when it comes to subscriptions.
+    When we have concurrent subscription requests to the same channel, but with different payload, there is no
+    way to distinguish which response is for which request.
 
+    Ideally, we would have some sort of correlation id between the request and the response.
+*/
 export const handleWsSubscription: Epic<WsSendAction | WsMessageAction | WsSubscribeToChannelAck | WsSubscribeToChannelNack, WsSubscribeToChannelAck | WsSubscribeToChannelNack, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
     ofType(WS_ACTION_TYPES.WS_SEND),
     filter(action => action.payload.event === 'subscribe'),
-    switchMap(subscribeAction => {
+    mergeMap(subscribeAction => {
       return action$.pipe(
         ofType(WS_ACTION_TYPES.WS_MESSAGE),
         filter(action => {
@@ -33,6 +38,8 @@ export const handleWsSubscription: Epic<WsSendAction | WsMessageAction | WsSubsc
         take(1),
         timeout(WS_SUBSCRIPTION_TIMEOUT_IN_MS),
         mergeMap(action => {
+          // Note - sadly, the payload doesn't say which channel the error is for, 
+          // so if we have concurrent requests, we can't tell for sure which request has failed
           if (action.payload.event === 'error') {
             return of(WsActions.subscribeToChannelNack({
               error: action.payload.msg
