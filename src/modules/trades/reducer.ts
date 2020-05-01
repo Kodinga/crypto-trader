@@ -1,4 +1,4 @@
-import { WsMessageAction } from './../../core/transport/actions';
+import { WsMessage } from './../../core/transport/actions';
 import { Actions } from './../root';
 import { WS_ACTION_TYPES } from 'core/transport/actions';
 import { isHeartbeat } from 'core/transport/utils';
@@ -13,7 +13,7 @@ export interface TradesState {
 const initialState: TradesState = {
 }
 
-function snapshotReducer(state: SymbolState, action: WsMessageAction) {
+function snapshotReducer(state: SymbolState, action: WsMessage) {
     const [, trades] = action.payload;
     return trades.map(([id, timestamp, amount, price]: any[]) => ({
         id,
@@ -23,7 +23,7 @@ function snapshotReducer(state: SymbolState, action: WsMessageAction) {
     }));
 }
 
-function updateReducer(state: SymbolState = [], action: WsMessageAction) {
+function updateReducer(state: SymbolState = [], action: WsMessage) {
     const [, , trade] = action.payload;
     const [id, timestamp, amount, price] = trade;
     const existingTradeIndex = state.findIndex(x => x.id === id);

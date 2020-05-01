@@ -2,13 +2,13 @@ import { EMPTY } from 'rxjs';
 import { filter, mergeMap, catchError, timeout, take } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { Dependencies } from './../../modules/redux/store';
-import { WS_ACTION_TYPES, WsSendAction, WsMessageAction, WsSubscribeToChannelAck, WsActions, WsSubscribeToChannelNack } from './actions';
+import { WS_ACTION_TYPES, WsSend, WsMessage, WsSubscribeToChannelAck, WsActions, WsSubscribeToChannelNack } from './actions';
 import { Epic, ofType, combineEpics } from 'redux-observable';
 import { RootState } from 'modules/root';
 
 export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 1000;
 
-export const handleWsSend: Epic<WsSendAction, never, RootState, Dependencies> = (action$, state$, { connection }) =>
+export const handleWsSend: Epic<WsSend, never, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
     ofType(WS_ACTION_TYPES.WS_SEND),
     mergeMap(action => {
@@ -24,7 +24,7 @@ export const handleWsSend: Epic<WsSendAction, never, RootState, Dependencies> = 
 
     Ideally, we would have some sort of correlation id between the request and the response.
 */
-export const handleWsSubscription: Epic<WsSendAction | WsMessageAction | WsSubscribeToChannelAck | WsSubscribeToChannelNack, WsSubscribeToChannelAck | WsSubscribeToChannelNack, RootState, Dependencies> = (action$, state$, { connection }) =>
+export const handleWsSubscription: Epic<WsSend | WsMessage | WsSubscribeToChannelAck | WsSubscribeToChannelNack, WsSubscribeToChannelAck | WsSubscribeToChannelNack, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
     ofType(WS_ACTION_TYPES.WS_SEND),
     filter(action => action.payload.event === 'subscribe'),

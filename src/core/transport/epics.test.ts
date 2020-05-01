@@ -1,6 +1,6 @@
 import { DummyConnectionProxy } from './DummyConnectionProxy';
 import { TestScheduler } from 'rxjs/testing';
-import { WsSendAction, WsMessageAction } from './actions';
+import { WsSend, WsMessage } from './actions';
 import { handleWsSubscription, WS_SUBSCRIPTION_TIMEOUT_IN_MS, handleWsSend } from './epics';
 import { WsActions } from 'core/transport/actions';
 import { Dependencies } from 'modules/redux/store';
@@ -27,7 +27,7 @@ describe('TransportEpic', () => {
         it('should send a message on the wire', () => {
             testScheduler.run(async helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    WsSendAction,
+                    WsSend,
                     any
                 >(
                     helpers,
@@ -53,7 +53,7 @@ describe('TransportEpic', () => {
         it('should handle successful subscription', async () => {
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    WsSendAction | WsMessageAction,
+                    WsSend | WsMessage,
                     any
                 >(
                     helpers,
@@ -90,7 +90,7 @@ describe('TransportEpic', () => {
         it('should handle an error', async () => {
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    WsSendAction | WsMessageAction,
+                    WsSend | WsMessage,
                     any
                 >(
                     helpers,
@@ -122,7 +122,7 @@ describe('TransportEpic', () => {
         it('should handle timeout', () => {
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    WsSendAction | WsMessageAction,
+                    WsSend | WsMessage,
                     any
                 >(
                     helpers,

@@ -1,3 +1,4 @@
+import { ConnectionStatus } from 'core/transport/types/ConnectionStatus';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
 import { Actions, RootState } from './../root';
@@ -5,6 +6,7 @@ import { rootEpic, rootReducer } from '../root';
 import createWsMiddleware from 'core/transport/middleware';
 import { WsConnectionProxy } from 'core/transport/WsConnectionProxy';
 import { Connection } from 'core/transport/Connection';
+import { WsActions } from 'core/transport/actions';
 
 const connectionProxy = new WsConnectionProxy('wss://api-pub.bitfinex.com/ws/2');
 
@@ -37,7 +39,10 @@ export default function configureStore() {
     )
   );
 
-  connection.onConnect(() => console.log('Connected'));
+  connection.onConnect(() => {
+    store.dispatch(WsActions.wsConnectionStatusChanged(ConnectionStatus.Connected));
+    console.log('Connected');
+  });
 
   epicMiddleware.run(rootEpic);
 
