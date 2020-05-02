@@ -10,7 +10,8 @@ const mapStateToProps = (state: RootState): Props => {
     const candles = getCandles(state)(currencyPair); // TODO - store selection
     
     return {
-        candles
+        candles,
+        currencyPair
     };
 }
 

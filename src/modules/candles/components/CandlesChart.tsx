@@ -4,13 +4,16 @@ import * as Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import { Candle } from '../types/Candle';
 import darkUnica from 'highcharts/themes/dark-unica';
+import Palette from 'theme/style';
+import { formatCurrencyPair } from 'modules/reference-data/utils';
 
 export interface Props {
-    candles: Candle[]
+    candles: Candle[];
+    currencyPair: string;
 }
 
 const CandlesChart: FC<Props> = props => {
-    const { candles } = props;
+    const { candles, currencyPair } = props;
     const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
         series: [{
             type: 'candlestick',
@@ -24,15 +27,22 @@ const CandlesChart: FC<Props> = props => {
             setChartOptions({
                 series: [{
                     type: 'candlestick',
+                    name: formatCurrencyPair(currencyPair),
                     data: candles.map(({ timestamp, ...rest }) => ({
                         x: timestamp,
                         ...rest
                     }))
-                }]
+                }],
+                plotOptions: {
+                    candlestick: {
+                        color: Palette.Negative,
+                        upColor: Palette.Positive
+                    }
+                }
             });
         }
 
-    }, [candles]);
+    }, [candles, currencyPair]);
 
     useEffect(() => {
         darkUnica(Highcharts);

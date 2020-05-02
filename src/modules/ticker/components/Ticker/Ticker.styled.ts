@@ -3,8 +3,8 @@ import Palette from 'theme/style';
 
 export const Container = styled.div`
     display: grid;
-    height: calc(100% - 10px);
     grid-template-rows: 30px 1fr;
+    min-height: 70px;
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas: 
         "currencyPair price"
@@ -12,6 +12,10 @@ export const Container = styled.div`
     font-size: 12px;
     padding: 10px 10px 5px 10px;
     border: 1px solid ${Palette.Border};
+
+    &:hover {
+        background-color: #2d3436;
+    }
 `;
 
 export const CurrencyPair = styled.div`
@@ -32,6 +36,8 @@ export const RelativeChange = styled.div<{
     grid-area: relativeChange;
     font-size: 18px;
     color: ${({isPositive}) => isPositive ? Palette.Positive : Palette.Negative};
+    display: flex;
+    font-family: FiraSans-Medium;
 `;
 
 export const Change = styled.div<{
