@@ -14,15 +14,21 @@ const initialState: CandlesState = {
 }
 
 function snapshotReducer(state: SymbolState, action: WsMessage) {
-    const [, candles] = action.payload;
-    return candles.map(([timestamp, open, close, high, low, volume]: any[]) => ({
-        timestamp,
-        open,
-        close,
-        high, 
-        low, 
-        volume
-    }));
+    try {
+        const [, candles] = action.payload;
+        return candles.map(([timestamp, open, close, high, low, volume]: any[]) => ({
+            timestamp,
+            open,
+            close,
+            high, 
+            low, 
+            volume
+        }));
+    } catch(e) {
+        debugger;
+        return state;
+    }
+    
 } 
 
 function updateReducer(state: SymbolState = [], action: WsMessage) {

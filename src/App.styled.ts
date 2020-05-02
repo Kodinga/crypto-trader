@@ -10,9 +10,10 @@ export const Container = styled.div`
     grid-template-columns: 400px 1fr 1fr;
     grid-template-areas: 
         "header header header"
-        "ticker . ."
+        "ticker ticker ticker"
         "trades candles candles"
         "trades depth book";
+    grid-gap: 5px;
     padding: 10px;
 `;
 

@@ -13,7 +13,9 @@ const mapStateToProps = (state: RootState, props: ContainerProps): Props => {
     
     return {
         lastPrice: ticker?.lastPrice,
-        currencyPair
+        currencyPair,
+        dailyChangeRelative: ticker?.dailyChangeRelative,
+        dailyChange: ticker?.dailyChange
     };
 }
 
