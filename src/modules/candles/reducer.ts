@@ -14,34 +14,23 @@ const initialState: CandlesState = {
 }
 
 function snapshotReducer(state: SymbolState, action: WsMessage) {
-    try {
-        const [, candles] = action.payload;
-        return candles.map(([timestamp, open, close, high, low, volume]: any[]) => ({
-            timestamp,
-            open,
-            close,
-            high, 
-            low, 
-            volume
-        }));
-    } catch(e) {
-        debugger;
-        return state;
-    }
-    
-} 
+    const [, candles] = action.payload;
+    return candles.map(([timestamp, open, close, high, low, volume]: any[]) => ({
+        timestamp, open, close, high, low, volume
+    }));
+}
 
 function updateReducer(state: SymbolState = [], action: WsMessage) {
-    const [, , candle] = action.payload;
+    const [, candle] = action.payload;
     const [timestamp, open, close, high, low, volume] = candle;
-    
+
     const updatedState = state.slice();
     updatedState.push({
         timestamp,
         open,
         close,
-        high, 
-        low, 
+        high,
+        low,
         volume
     });
     return updatedState;
@@ -59,10 +48,10 @@ export function candlesReducer(
 
             const { channel, request } = action.meta || {};
             if (channel === 'candles') {
-                const { key } = request;  
-                const [, , symbol] = key.split(':');  
-                const currencyPair = symbol.slice(1);            
-                const symbolReducer = Array.isArray(action.payload[1]) ? snapshotReducer : updateReducer;
+                const { key } = request;
+                const [, , symbol] = key.split(':');
+                const currencyPair = symbol.slice(1);
+                const symbolReducer = Array.isArray(action.payload[1][0]) ? snapshotReducer : updateReducer;
                 const result = symbolReducer(state[currencyPair], action);
 
                 return {
@@ -78,3 +67,5 @@ export function candlesReducer(
             return state;
     }
 }
+
+export default candlesReducer;
