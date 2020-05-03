@@ -2,7 +2,7 @@ import { DummyConnectionProxy } from './DummyConnectionProxy';
 import { TestScheduler } from 'rxjs/testing';
 import { WsSend, WsMessage } from './actions';
 import { handleWsSubscription, WS_SUBSCRIPTION_TIMEOUT_IN_MS, handleWsSend } from './epics';
-import { WsActions } from 'core/transport/actions';
+import { WsActions, WsSubscribeToChannel } from 'core/transport/actions';
 import { Dependencies } from 'modules/redux/store';
 import { wrapHelpers } from 'testing/utils';
 import { Connection } from './Connection';
@@ -53,21 +53,21 @@ describe('TransportEpic', () => {
         it('should handle successful subscription', async () => {
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    WsSend | WsMessage,
+                    WsSubscribeToChannel | WsMessage,
                     any
                 >(
                     helpers,
                     {}
                 );
-                const channel = 'topic';
+                const channel = 'trades';
+                const symbol = 'tBTCUSD';
                 const channelId = 1;
-                const subscribeRequest = {
-                    event: 'subscribe',
-                    channel
-                };
-
+                
                 const action$ = hotAction('-a-b', {
-                    a: WsActions.wsSend(subscribeRequest),
+                    a: WsActions.subscribeToChannel({
+                        channel,
+                        symbol
+                    }),
                     b: WsActions.wsMessage({
                         event: 'subscribed',
                         channel,
@@ -77,11 +77,88 @@ describe('TransportEpic', () => {
                 const state$ = hotState('-');
                 const output$ = handleWsSubscription(action$, state$, {} as unknown as Dependencies);
 
-                expectObservable(output$).toBe('---a', {
-                    a: WsActions.subscribeToChannelAck({
+                expectObservable(output$).toBe('-a-b', {
+                    a: WsActions.wsSend({
+                        event: 'subscribe',
+                        channel,
+                        symbol
+                    }),
+                    b: WsActions.subscribeToChannelAck({
                         channel,
                         channelId,
-                        request: subscribeRequest
+                        request: {
+                            channel,
+                            symbol
+                        }
+                    })
+                });
+            });
+        });
+
+        it('should queue up subscriptions', async () => {
+            testScheduler.run(helpers => {
+                const { hotAction, hotState, expectObservable } = wrapHelpers<
+                    WsSubscribeToChannel | WsMessage,
+                    any
+                >(
+                    helpers,
+                    {}
+                );
+                const channel = 'trades';
+                const symbolRequest1 = 'tBTCUSD';
+                const symbolRequest2 = 'tBTC';
+                const channel1 = 1;
+                const channel2 = 2;
+                
+                const action$ = hotAction('-ab-c--- 100ms d', {
+                    a: WsActions.subscribeToChannel({
+                        channel,
+                        symbol: symbolRequest1
+                    }),
+                    b: WsActions.subscribeToChannel({
+                        channel,
+                        symbol: symbolRequest2
+                    }),
+                    c: WsActions.wsMessage({
+                        event: 'subscribed',
+                        channel,
+                        chanId: channel1
+                    }, undefined),
+                    d: WsActions.wsMessage({
+                        event: 'subscribed',
+                        channel,
+                        chanId: channel2
+                    }, undefined)
+                });
+                const state$ = hotState('-');
+                const output$ = handleWsSubscription(action$, state$, {} as unknown as Dependencies);
+
+                expectObservable(output$).toBe('-a--(bc) 100ms d', {
+                    a: WsActions.wsSend({
+                        event: 'subscribe',
+                        channel,
+                        symbol: symbolRequest1
+                    }),
+                    b: WsActions.subscribeToChannelAck({
+                        channel,
+                        channelId: channel1,
+                        request: {
+                            channel,
+                            symbol: symbolRequest1
+                        }
+                    }),
+                    c: WsActions.wsSend({
+                        event: 'subscribe',
+                        channel,
+                        symbol: symbolRequest2
+                    }),
+                    d: WsActions.subscribeToChannelAck({
+                        channel,
+                        channelId: channel2,
+                        request: {
+                            channel,
+                            symbol: symbolRequest2
+                        }
                     })
                 });
             });
@@ -90,7 +167,7 @@ describe('TransportEpic', () => {
         it('should handle an error', async () => {
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    WsSend | WsMessage,
+                    WsSubscribeToChannel | WsMessage,
                     any
                 >(
                     helpers,
@@ -99,9 +176,9 @@ describe('TransportEpic', () => {
                 const errorMessage = 'Error';
 
                 const action$ = hotAction('-a-b', {
-                    a: WsActions.wsSend({
-                        event: 'subscribe',
-                        channel: 'topic'
+                    a: WsActions.subscribeToChannel({
+                        channel: 'trades',
+                        symbol: 'tBTCUSD'
                     }),
                     b: WsActions.wsMessage({
                         event: 'error',
@@ -111,8 +188,13 @@ describe('TransportEpic', () => {
                 const state$ = hotState('-');
                 const output$ = handleWsSubscription(action$, state$, {} as unknown as Dependencies);
 
-                expectObservable(output$).toBe('---a', {
-                    a: WsActions.subscribeToChannelNack({
+                expectObservable(output$).toBe('-a-b', {
+                    a: WsActions.wsSend({
+                        event: 'subscribe',
+                        channel: 'trades',
+                        symbol: 'tBTCUSD'
+                    }),
+                    b: WsActions.subscribeToChannelNack({
                         error: errorMessage
                     })
                 });
@@ -122,7 +204,7 @@ describe('TransportEpic', () => {
         it('should handle timeout', () => {
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    WsSend | WsMessage,
+                    WsSubscribeToChannel | WsMessage,
                     any
                 >(
                     helpers,
@@ -130,16 +212,21 @@ describe('TransportEpic', () => {
                 );
 
                 const action$ = hotAction(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS}ms `, {
-                    a: WsActions.wsSend({
-                        event: 'subscribe',
-                        channel: 'topic'
+                    a: WsActions.subscribeToChannel({
+                        channel: 'trades',
+                        symbol: 'tBTCUSD'
                     })
                 });
                 const state$ = hotState('-');
                 const output$ = handleWsSubscription(action$, state$, {} as unknown as Dependencies);
 
-                expectObservable(output$).toBe(`${WS_SUBSCRIPTION_TIMEOUT_IN_MS}ms -(a|)`, {
-                    a: WsActions.subscribeToChannelNack({
+                expectObservable(output$).toBe(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms (b|)`, {
+                    a: WsActions.wsSend({
+                        event: 'subscribe',
+                        channel: 'trades',
+                        symbol: 'tBTCUSD'
+                    }),
+                    b: WsActions.subscribeToChannelNack({
                         error: 'Timeout'
                     })
                 });

@@ -6,7 +6,7 @@ import { RefDataActions, REF_DATA_ACTION_TYPES } from './../reference-data/actio
 import { RootState } from './../root';
 import { Dependencies } from './../redux/store';
 import { Epic, ofType, combineEpics } from 'redux-observable';
-import { switchMap, take, mergeMap, concatMap, delay, filter } from 'rxjs/operators';
+import { switchMap, take, mergeMap, filter } from 'rxjs/operators';
 import { APP_ACTION_TYPES } from './actions';
 import { merge, of, from } from 'rxjs';
 import { TradeActions } from 'modules/trades/actions';
@@ -44,10 +44,6 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, sta
                 from(tradeActions),
                 from(candlesActions),
                 from(tickerActions)
-                  .pipe(
-                    // TODO - due to limitations with the Bitfinex WS protocol, we can't do concurrent subscriptions here (cf transport epic)
-                    concatMap(action => of(action).pipe(delay(200)))
-                  )
               );
             })
           )

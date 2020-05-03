@@ -1,5 +1,5 @@
 import { TestScheduler } from 'rxjs/testing';
-import { TradeActions, SubscribeToSymbolAction } from './actions';
+import { TradeActions, TradesSubscribeToSymbol } from './actions';
 import { subscribeToTrades } from './epics';
 import { WsActions } from 'core/transport/actions';
 import { Dependencies } from 'modules/redux/store';
@@ -14,7 +14,7 @@ describe('TradesEpic', () => {
     
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    SubscribeToSymbolAction,
+                    TradesSubscribeToSymbol,
                     any
                 >(
                     helpers,
@@ -27,8 +27,7 @@ describe('TradesEpic', () => {
                 const output$ = subscribeToTrades(action$, state$, {} as unknown as Dependencies);
     
                 expectObservable(output$).toBe('-a', {
-                    a: WsActions.wsSend({
-                        event: 'subscribe',
+                    a: WsActions.subscribeToChannel({
                         channel: 'trades',
                         symbol: `t${symbol}`
                     })

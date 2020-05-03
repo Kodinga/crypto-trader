@@ -13,7 +13,7 @@ export function subscriptionsReducer(
     action: Actions
 ) {
     switch (action.type) {
-        case WS_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK: {
+        case WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL_ACK: {
             const { request, channel, channelId } = action.payload;
 
             return {

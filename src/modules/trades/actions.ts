@@ -13,5 +13,5 @@ export const TradeActions = {
 };
 
 export type TradeActions = ActionUnion<typeof TradeActions>;
-export type SubscribeToSymbolAction = ReturnType<typeof TradeActions.subscribeToSymbol>;
+export type TradesSubscribeToSymbol = ReturnType<typeof TradeActions.subscribeToSymbol>;
 
