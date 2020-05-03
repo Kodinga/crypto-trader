@@ -9,7 +9,7 @@ import Palette from 'theme/style';
 
 export interface Props {
     candles: Candle[];
-    currencyPair: string;
+    currencyPair?: string;
 }
 
 const CandlesChart: FC<Props> = props => {
@@ -54,7 +54,7 @@ const CandlesChart: FC<Props> = props => {
             setChartOptions({
                 series: [{
                     type: 'candlestick',
-                    name: formatCurrencyPair(currencyPair),
+                    name: currencyPair && formatCurrencyPair(currencyPair),
                     data
                 }],
                 plotOptions: {

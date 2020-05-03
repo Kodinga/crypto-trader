@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Palette from 'theme/style';
 
 export const Container = styled.div`
+    cursor: pointer;
     display: grid;
     grid-template-rows: 30px 1fr;
     min-height: 70px;

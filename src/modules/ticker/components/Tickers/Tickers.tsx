@@ -10,7 +10,7 @@ const Tickers: FC<Props> = props => {
     const { currencyPairs } = props;
 
     return (
-        <Container>
+        <Container>            
             {currencyPairs.map(currencyPair => <Ticker key={currencyPair} currencyPair={currencyPair} />)}
         </Container>
     )

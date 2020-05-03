@@ -8,7 +8,7 @@ import theme from 'theme/style';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
 
 export interface Props {
-    currencyPair: string;
+    currencyPair?: string;
     trades: Trade[];
 }
 
@@ -29,19 +29,22 @@ const Trades: FC<Props> = props => {
             }
         }
     }, {
+        headerName: 'Price',
+        field: 'price'
+    }, {
         headerName: 'Time',
         field: 'timestamp',
         sort: 'desc',
         width: 90,
-        valueFormatter: params => DateTime.fromMillis(params.value).toLocaleString(DateTime.TIME_24_WITH_SECONDS)
-    }, {
-        headerName: 'Price',
-        field: 'price'
+        valueFormatter: params => DateTime.fromMillis(params.value).toLocaleString(DateTime.TIME_24_WITH_SECONDS),
+        cellStyle: () => ({
+            color: 'rgba(245, 245, 245, 0.64)'
+        })
     }];
 
     return (
         <Container className='ag-theme-balham-dark'>
-            <Header><span>Trades - </span>{formatCurrencyPair(currencyPair)}</Header>
+            <Header><span>Trades - </span>{currencyPair && formatCurrencyPair(currencyPair)}</Header>
             <AgGridReact
                 columnDefs={columnDefs}
                 rowData={trades}

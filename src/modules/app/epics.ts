@@ -1,7 +1,6 @@
 import { ConnectionStatus } from './../../core/transport/types/ConnectionStatus';
 import { getCurrencyPairs } from './../reference-data/selectors';
 import { Actions } from 'modules/root';
-import { TickerActions } from './../ticker/actions';
 import { RefDataActions, REF_DATA_ACTION_TYPES } from './../reference-data/actions';
 import { RootState } from './../root';
 import { Dependencies } from './../redux/store';
@@ -9,9 +8,9 @@ import { Epic, ofType, combineEpics } from 'redux-observable';
 import { switchMap, take, mergeMap, filter } from 'rxjs/operators';
 import { APP_ACTION_TYPES } from './actions';
 import { merge, of, from } from 'rxjs';
-import { TradeActions } from 'modules/trades/actions';
+import { SelectionActions } from 'modules/selection/actions';
 import { WS_ACTION_TYPES, WsConnectionStatusChanged } from 'core/transport/actions';
-import { CandleActions } from 'modules/candles/actions';
+import { TickerActions } from 'modules/ticker/actions';
 
 const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
@@ -34,15 +33,8 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, sta
                 .map(currencyPair => TickerActions.subscribeToSymbol({
                   symbol: currencyPair
                 }));
-              const candlesActions = [
-                CandleActions.subscribeToSymbol({ symbol: currencyPairs[0], timeframe: '1m'})
-              ];
-              const tradeActions = [
-                TradeActions.subscribeToSymbol({ symbol: currencyPairs[0] })
-              ];
               return merge(
-                from(tradeActions),
-                from(candlesActions),
+                of(SelectionActions.selectCurrencyPair({currencyPair: currencyPairs[0]})),
                 from(tickerActions)
               );
             })

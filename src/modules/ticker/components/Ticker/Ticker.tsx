@@ -4,19 +4,25 @@ import UpdateHighlight from 'core/components/update-highlight/UpdateHighlight';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
 import TrendIndicator from 'core/components/trend-indicator';
 
-export interface Props {
+export interface StateProps {
     currencyPair: string;
     lastPrice: number;
     dailyChange: number;
     dailyChangeRelative: number;
 }
 
+export interface DispatchProps {
+    onClick?: () => void;
+}
+
+export type Props = StateProps & DispatchProps;
+
 const Ticker: FC<Props> = props => {
-    const { currencyPair, lastPrice, dailyChange, dailyChangeRelative } = props;
+    const { currencyPair, lastPrice, dailyChange, dailyChangeRelative, onClick } = props;
     const isPositiveChange = dailyChange > 0;
     const percentChange = dailyChangeRelative ? dailyChangeRelative * 100 : undefined;
     return (
-        <Container>
+        <Container onClick={onClick}>
             <CurrencyPair>{formatCurrencyPair(currencyPair)}</CurrencyPair>
             <Price><UpdateHighlight value={lastPrice?.toFixed(2)} /></Price>
             <RelativeChange isPositive={isPositiveChange}>
