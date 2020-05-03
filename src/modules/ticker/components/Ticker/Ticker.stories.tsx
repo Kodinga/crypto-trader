@@ -5,7 +5,7 @@ import Ticker from './Ticker';
 import Palette from 'theme/style';
 
 const Container: FC<any> = ({children}) => (
-    <div style={{width: '270px', height: '70px', backgroundColor: Palette.BackgroundColor}}>
+    <div style={{width: '270px', minHeight: '70px', backgroundColor: Palette.BackgroundColor}}>
         {children}
     </div>
 )

@@ -1,8 +1,8 @@
 const Palette = {
-    Buy: '#159f49',
-    Sell: '#df4249',
-    Positive: '#159f49',
-    Negative: '#df4249',
+    Buy: '#00AD08',
+    Sell: '#FF264D',
+    Positive: '#00AD08',
+    Negative: '#FF264D',
     Orange: '#ffa41b',
     White: '#fff',
     BackgroundColor: '#222',

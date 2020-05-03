@@ -14,14 +14,15 @@ export interface Props {
 const Ticker: FC<Props> = props => {
     const { currencyPair, lastPrice, dailyChange, dailyChangeRelative } = props;
     const isPositiveChange = dailyChange > 0;
+    const percentChange = dailyChangeRelative ? dailyChangeRelative * 100 : undefined;
     return (
         <Container>
             <CurrencyPair>{formatCurrencyPair(currencyPair)}</CurrencyPair>
             <Price><UpdateHighlight value={lastPrice?.toFixed(2)} /></Price>
             <RelativeChange isPositive={isPositiveChange}>
-                <TrendIndicator isPositive={isPositiveChange} />
-                <UpdateHighlight value={dailyChangeRelative?.toString()} />
-                {dailyChangeRelative && '%'}
+                <TrendIndicator value={dailyChangeRelative} />
+                <UpdateHighlight value={percentChange?.toFixed(2)} />
+                {percentChange && '%'}
             </RelativeChange>
             <Change isPositive={isPositiveChange}><UpdateHighlight value={dailyChange?.toFixed(2)} /></Change>
         </Container>

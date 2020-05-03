@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import Palette from 'theme/style';
 
 export const Container = styled.div`
-    font-family: FiraSans-Regular;
     background-color: ${Palette.BackgroundColor};
     width: calc(100vw - 20px);
     height: calc(100vh - 20px);

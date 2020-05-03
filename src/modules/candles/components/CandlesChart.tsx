@@ -1,11 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Container } from './CandlesChart.styled';
 import * as Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
+import { Container } from './CandlesChart.styled';
 import { Candle } from '../types/Candle';
-import darkUnica from 'highcharts/themes/dark-unica';
-import Palette from 'theme/style';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
+import 'theme/Highchart';
+import Palette from 'theme/style';
 
 export interface Props {
     candles: Candle[];
@@ -18,20 +18,44 @@ const CandlesChart: FC<Props> = props => {
         series: [{
             type: 'candlestick',
             data: []
-        }]
+        }],
+        rangeSelector: {
+            selected: 1,
+            buttons: [{
+                type: 'minute',
+                count: 5,
+                text: '5m'
+            }, {
+                type: 'minute',
+                count: 30,
+                text: '30m'
+            }, {
+                type: 'hour',
+                count: 1,
+                text: '1h'
+            }, {
+                type: 'hour',
+                count: 12,
+                text: '12h'
+            }, {
+                type: 'all',
+                text: 'All'
+            }]
+        },
     })
-    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         if (candles && candles.length > 0) {
+            const data = candles.map(({ timestamp, ...rest }) => ({
+                x: timestamp,
+                ...rest
+            }))
+                .sort((a, b) => a.x - b.x);
             setChartOptions({
                 series: [{
                     type: 'candlestick',
                     name: formatCurrencyPair(currencyPair),
-                    data: candles.map(({ timestamp, ...rest }) => ({
-                        x: timestamp,
-                        ...rest
-                    }))
+                    data
                 }],
                 plotOptions: {
                     candlestick: {
@@ -44,20 +68,13 @@ const CandlesChart: FC<Props> = props => {
 
     }, [candles, currencyPair]);
 
-    useEffect(() => {
-        darkUnica(Highcharts);
-        setReady(true);
-    }, []);
-
     return (
         <Container>
-            {ready &&
-                <HighchartsReact
-                    highcharts={Highcharts}
-                    options={chartOptions}
-                    constructorType={'stockChart'}
-                />
-            }
+            <HighchartsReact
+                highcharts={Highcharts}
+                options={chartOptions}
+                constructorType={'stockChart'}
+            />
         </Container>
     )
 }

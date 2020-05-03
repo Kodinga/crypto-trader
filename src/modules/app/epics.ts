@@ -35,7 +35,7 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, sta
                   symbol: currencyPair
                 }));
               const candlesActions = [
-                CandleActions.subscribeToSymbol({ symbol: currencyPairs[0], timeframe: '1M'})
+                CandleActions.subscribeToSymbol({ symbol: currencyPairs[0], timeframe: '1m'})
               ];
               const tradeActions = [
                 TradeActions.subscribeToSymbol({ symbol: currencyPairs[0] })
