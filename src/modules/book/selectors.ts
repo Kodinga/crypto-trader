@@ -23,9 +23,9 @@ export const getBook = createSelector(
             .filter(order => order.amount < 0)
             .sort((a, b) => a.price - b.price);
 
-        const depth = Math.max(bids.length, asks.length);
+        const maxDepth = Math.max(bids.length, asks.length);
 
-        return range(depth)
+        return range(maxDepth)
             .map(depth => {
                 const bid = bids[depth];
                 const ask = asks[depth];

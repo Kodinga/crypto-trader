@@ -15,7 +15,7 @@ const initialState: TradesState = {
 
 function snapshotReducer(state: SymbolState, action: ReceiveMessage) {
     const [, trades] = action.payload;
-    return trades.map(([id, timestamp, amount, price]: any[]) => ({
+    return trades.map(([id, timestamp, amount, price]: number[]) => ({
         id,
         timestamp,
         amount,

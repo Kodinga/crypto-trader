@@ -1,10 +1,10 @@
+import { combineEpics } from 'redux-observable';
+import { combineReducers } from 'redux';
 import { BookActions } from './book/actions';
 import { SelectionActions } from './selection/actions';
 import { CandlesActions } from './candles/actions';
 import { TickerActions } from './ticker/actions';
 import { RefDataActions } from './reference-data/actions';
-import { combineEpics } from 'redux-observable';
-import { combineReducers } from 'redux';
 import appEpics from './app/epics';
 import transportEpics from '../core/transport/epics';
 import tradeEpics from './trades/epics';

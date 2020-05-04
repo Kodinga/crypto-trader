@@ -18,7 +18,7 @@ function App() {
     store.dispatch(AppActions.bootstrapApp());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   return (
     <Provider store={store}>
       <Container>
@@ -28,7 +28,6 @@ function App() {
         <CandlesPanel><CandlesChart /></CandlesPanel>
         <BookPanel><Book /></BookPanel>
       </Container>
-     
     </Provider>
   );
 }

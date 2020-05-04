@@ -15,7 +15,7 @@ const initialState: CandlesState = {
 
 function snapshotReducer(state: SymbolState, action: ReceiveMessage) {
     const [, candles] = action.payload;
-    return candles.map(([timestamp, open, close, high, low, volume]: any[]) => ({
+    return candles.map(([timestamp, open, close, high, low, volume]: number[]) => ({
         timestamp, open, close, high, low, volume
     }));
 }

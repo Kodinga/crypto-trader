@@ -1,7 +1,7 @@
 import { Middleware, Dispatch } from 'redux';
+import { AppActions } from 'modules/app/actions';
 import { Connection } from './Connection';
 import { TransportActions } from './actions';
-import { AppActions } from 'modules/app/actions';
 
 const createWsMiddleware = ({ connection }: { connection: Connection }): Middleware => store => (next: Dispatch) => (action: AppActions) => {
     connection.onReceive(data => {

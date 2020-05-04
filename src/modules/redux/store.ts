@@ -1,12 +1,12 @@
-import { ConnectionStatus } from 'core/transport/types/ConnectionStatus';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
-import { Actions, RootState } from './../root';
-import { rootEpic, rootReducer } from '../root';
+import { ConnectionStatus } from 'core/transport/types/ConnectionStatus';
 import createWsMiddleware from 'core/transport/middleware';
 import { WsConnectionProxy } from 'core/transport/WsConnectionProxy';
 import { Connection } from 'core/transport/Connection';
 import { TransportActions } from 'core/transport/actions';
+import { Actions, RootState } from './../root';
+import { rootEpic, rootReducer } from '../root';
 
 const connectionProxy = new WsConnectionProxy('wss://api-pub.bitfinex.com/ws/2');
 
