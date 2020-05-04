@@ -1,17 +1,17 @@
 import { createAction, ActionUnion } from '../redux/utils';
 
 export enum BOOK_ACTION_TYPES {
-    BOOK_SUBSCRIBE_TO_SYMBOL = 'BOOK_SUBSCRIBE_TO_SYMBOL'
+    SUBSCRIBE_TO_BOOK = 'BOOK/SUBSCRIBE_TO_BOOK'
 }
 
-export interface SubscribeToSymbolActionPayload {
+export interface SubscribeToBookActionPayload {
     symbol: string;
 }
 
 export const BookActions = {
-    subscribeToSymbol: createAction<BOOK_ACTION_TYPES.BOOK_SUBSCRIBE_TO_SYMBOL, SubscribeToSymbolActionPayload>(BOOK_ACTION_TYPES.BOOK_SUBSCRIBE_TO_SYMBOL)
+    subscribeToBook: createAction<BOOK_ACTION_TYPES.SUBSCRIBE_TO_BOOK, SubscribeToBookActionPayload>(BOOK_ACTION_TYPES.SUBSCRIBE_TO_BOOK)
 };
 
 export type BookActions = ActionUnion<typeof BookActions>;
-export type BookSubscribeToSymbol = ReturnType<typeof BookActions.subscribeToSymbol>;
+export type SubscribeToBook = ReturnType<typeof BookActions.subscribeToBook>;
 

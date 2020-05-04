@@ -1,9 +1,9 @@
-import { WsActions } from 'core/transport/actions';
+import { TransportActions } from 'core/transport/actions';
 import trades from './reducer';
 
 describe('TradesReducer', () => {
     it('should handle snapshot', () => {
-        const symbol = 'tBTCUSD';
+        const currencyPair = 'BTCUSD';
         const channelId = 17470;
         const [id, timestamp, amount, price] = [1,1574694475039,0.005,7244.9];
         const data = [
@@ -15,22 +15,22 @@ describe('TradesReducer', () => {
         const meta = {
             channel: 'trades',
             request: {
-                symbol
+                symbol: `t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = trades(undefined, action);
         expect(result).toEqual({
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {id, timestamp, amount, price}
             ]
         });
     });
 
     it('should handle insert', () => {   
-        const symbol = 'tBTCUSD';
+        const currencyPair = 'BTCUSD';
         const initialState = {
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9}
             ]
         };
@@ -45,13 +45,13 @@ describe('TradesReducer', () => {
         const meta = {
             channel: 'trades',
             request: {
-                symbol
+                symbol: `t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = trades(initialState, action);
         expect(result).toEqual({
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id, timestamp, amount, price}
             ]
@@ -59,9 +59,9 @@ describe('TradesReducer', () => {
     });
 
     it('should handle upsert', () => {   
-        const symbol = 'tBTCUSD';
+        const currencyPair = 'BTCUSD';
         const initialState = {
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id: 2, timestamp: 1574694478808, amount: 0.005, price: 7245.9},
             ]
@@ -77,13 +77,13 @@ describe('TradesReducer', () => {
         const meta = {
             channel: 'trades',
             request: {
-                symbol
+                symbol: `t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = trades(initialState, action);
         expect(result).toEqual({
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id, timestamp, amount, price}
             ]
@@ -110,7 +110,7 @@ describe('TradesReducer', () => {
                 symbol
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = trades(initialState, action);
         expect(result).toBe(initialState);
     });

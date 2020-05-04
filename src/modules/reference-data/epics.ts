@@ -3,20 +3,20 @@ import { switchMap, map, catchError } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 import { of } from 'rxjs';
 import { Dependencies } from 'modules/redux/store';
-import { RefDataLoad, REF_DATA_ACTION_TYPES, RefDataLoadAck, RefDataLoadNack, RefDataActions } from './actions';
-import { RootState } from 'modules/root';
+import { RootState, Actions } from 'modules/root';
+import { REF_DATA_ACTION_TYPES, RefDataActions } from './actions';
 
-export const loadRefData: Epic<RefDataLoad | RefDataLoadAck | RefDataLoadNack, RefDataLoadAck | RefDataLoadNack, RootState, Dependencies> = (action$, state$, { connection }) =>
+export const loadRefData: Epic<Actions, Actions, RootState, Dependencies> = (action$) =>
   action$.pipe(
-    ofType(REF_DATA_ACTION_TYPES.REF_DATA_LOAD),
+    ofType(REF_DATA_ACTION_TYPES.LOAD_REF_DATA),
     switchMap(() => {
       return fromFetch('/data/currencyPairs.json')
         .pipe(
           switchMap(response => response.json()),
-          map(result => RefDataActions.refDataLoadAck({
+          map(result => RefDataActions.loadRefDataAck({
             currencyPairs: result as string[]
           })),
-          catchError(() => of(RefDataActions.refDataLoadNack()))
+          catchError(() => of(RefDataActions.loadRefDataNack()))
         );
     })
   );

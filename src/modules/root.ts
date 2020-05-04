@@ -1,6 +1,6 @@
 import { BookActions } from './book/actions';
 import { SelectionActions } from './selection/actions';
-import { CandleActions } from './candles/actions';
+import { CandlesActions } from './candles/actions';
 import { TickerActions } from './ticker/actions';
 import { RefDataActions } from './reference-data/actions';
 import { combineEpics } from 'redux-observable';
@@ -14,8 +14,8 @@ import candlesEpics from './candles/epics';
 import selectionEpics from './selection/epics';
 import bookEpics from './book/epics';
 import { AppActions } from './app/actions';
-import { TradeActions } from './trades/actions';
-import { WsActions } from 'core/transport/actions';
+import { TradesActions } from './trades/actions';
+import { TransportActions } from 'core/transport/actions';
 import { tradesReducer } from './trades/reducer';
 import { subscriptionsReducer } from 'core/transport/reducer';
 import { refDataReducer } from './reference-data/reducer';
@@ -45,6 +45,14 @@ export const rootReducer = combineReducers({
   book: bookReducer
 });
 
-export type Actions = AppActions | RefDataActions | WsActions | TradeActions | TickerActions | CandleActions | SelectionActions | BookActions;
+export type Actions = 
+    AppActions
+  | RefDataActions
+  | TransportActions
+  | TradesActions
+  | TickerActions
+  | CandlesActions
+  | SelectionActions
+  | BookActions;
 
 export type RootState = ReturnType<typeof rootReducer>;

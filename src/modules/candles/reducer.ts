@@ -1,7 +1,7 @@
-import { WsMessage } from './../../core/transport/actions';
-import { Actions } from './../root';
-import { WS_ACTION_TYPES } from 'core/transport/actions';
+import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
 import { isHeartbeat } from 'core/transport/utils';
+import { ReceiveMessage } from 'core/transport/actions';
+import { Actions } from './../root';
 import { Candle } from './types/Candle';
 
 type SymbolState = Candle[];
@@ -13,14 +13,14 @@ export interface CandlesState {
 const initialState: CandlesState = {
 }
 
-function snapshotReducer(state: SymbolState, action: WsMessage) {
+function snapshotReducer(state: SymbolState, action: ReceiveMessage) {
     const [, candles] = action.payload;
     return candles.map(([timestamp, open, close, high, low, volume]: any[]) => ({
         timestamp, open, close, high, low, volume
     }));
 }
 
-function updateReducer(state: SymbolState = [], action: WsMessage) {
+function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
     const [, candle] = action.payload;
     const [timestamp, open, close, high, low, volume] = candle;
 
@@ -41,7 +41,7 @@ export function candlesReducer(
     action: Actions
 ) {
     switch (action.type) {
-        case WS_ACTION_TYPES.WS_MESSAGE: {
+        case TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE: {
             if (isHeartbeat(action)) {
                 return state;
             }

@@ -1,16 +1,16 @@
-import { ConnectionStatus } from './../../core/transport/types/ConnectionStatus';
-import { getCurrencyPairs } from './../reference-data/selectors';
-import { Actions } from 'modules/root';
-import { RefDataActions, REF_DATA_ACTION_TYPES } from './../reference-data/actions';
-import { RootState } from './../root';
-import { Dependencies } from './../redux/store';
+import { merge, of, from } from 'rxjs';
 import { Epic, ofType, combineEpics } from 'redux-observable';
 import { switchMap, take, mergeMap, filter } from 'rxjs/operators';
-import { APP_ACTION_TYPES } from './actions';
-import { merge, of, from } from 'rxjs';
+import { Actions } from 'modules/root';
+import { ConnectionStatus } from 'core/transport/types/ConnectionStatus';
+import { getCurrencyPairs } from 'modules/reference-data/selectors';
+import { RefDataActions, REF_DATA_ACTION_TYPES } from 'modules/reference-data/actions';
+import { Dependencies } from 'modules/redux/store';
 import { SelectionActions } from 'modules/selection/actions';
-import { WS_ACTION_TYPES, WsConnectionStatusChanged } from 'core/transport/actions';
+import { TRANSPORT_ACTION_TYPES, ChangeConnectionStatus } from 'core/transport/actions';
 import { TickerActions } from 'modules/ticker/actions';
+import { RootState } from './../root';
+import { APP_ACTION_TYPES } from './actions';
 
 const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
@@ -20,17 +20,17 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, sta
       connection.connect();
 
       return action$.pipe(
-        ofType(WS_ACTION_TYPES.WS_CONNECTION_STATUS_CHANGED),
-        filter(action => (action as WsConnectionStatusChanged).payload === ConnectionStatus.Connected),
+        ofType(TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS),
+        filter(action => (action as ChangeConnectionStatus).payload === ConnectionStatus.Connected),
         switchMap(() => merge(
-          of(RefDataActions.refDataLoad()),
+          of(RefDataActions.loadRefData()),
           action$.pipe(
-            ofType(REF_DATA_ACTION_TYPES.REF_DATA_LOAD_ACK),
+            ofType(REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK),
             take(1),
             mergeMap(() => {
               const currencyPairs = getCurrencyPairs(state$.value);
               const tickerActions = currencyPairs
-                .map(currencyPair => TickerActions.subscribeToSymbol({
+                .map(currencyPair => TickerActions.subscribeToTicker({
                   symbol: currencyPair
                 }));
               return merge(

@@ -1,17 +1,17 @@
 import { createAction, ActionUnion } from '../redux/utils';
 
 export enum TICKER_ACTION_TYPES {
-    TICKER_SUBSCRIBE_TO_SYMBOL = 'TICKER_SUBSCRIBE_TO_SYMBOL'
+    SUBSCRIBE_TO_TICKER = 'TICKER/SUBSCRIBE_TO_TICKER'
 }
 
-export interface SubscribeToSymbolActionPayload {
+export interface SubscribeToTickerActionPayload {
     symbol: string;
 }
 
 export const TickerActions = {
-    subscribeToSymbol: createAction<TICKER_ACTION_TYPES.TICKER_SUBSCRIBE_TO_SYMBOL, SubscribeToSymbolActionPayload>(TICKER_ACTION_TYPES.TICKER_SUBSCRIBE_TO_SYMBOL)
+    subscribeToTicker: createAction<TICKER_ACTION_TYPES.SUBSCRIBE_TO_TICKER, SubscribeToTickerActionPayload>(TICKER_ACTION_TYPES.SUBSCRIBE_TO_TICKER)
 };
 
 export type TickerActions = ActionUnion<typeof TickerActions>;
-export type SubscribeToTickerSymbolAction = ReturnType<typeof TickerActions.subscribeToSymbol>;
+export type SubscribeToTickerAction = ReturnType<typeof TickerActions.subscribeToTicker>;
 

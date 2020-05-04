@@ -1,9 +1,9 @@
-import { WsActions } from 'core/transport/actions';
+import { TransportActions } from 'core/transport/actions';
 import candles from './reducer';
 
 describe('CandlesReducer', () => {
     it('should handle snapshot', () => {
-        const symbol = 'tBTCUSD';
+        const currencyPair = 'BTCUSD';
         const channelId = 17470;
         const [timestamp, open, close, high, low, volume] = [1574698260000,7379.785503,7383.8,7388.3,7379.785503,1.68829482];
         const data = [
@@ -15,22 +15,22 @@ describe('CandlesReducer', () => {
         const meta = {
             channel: 'candles',
             request: {
-                key: `trade:1m:${symbol}`
+                key: `trade:1m:t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = candles(undefined, action);
         expect(result).toEqual({
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {timestamp, open, close, high, low, volume}
             ]
         });
     });
 
-    it('should handle insert', () => {   
-        const symbol = 'candles';
+    it('should handle insert', () => {
+        const currencyPair = 'BTCUSD';
         const initialState = {
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {
                     timestamp: 1574698260000,
                     open: 7379, 
@@ -51,13 +51,13 @@ describe('CandlesReducer', () => {
         const meta = {
             channel: 'candles',
             request: {
-                key: `trade:1m:${symbol}`
+                key: `trade:1m:t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = candles(initialState, action);
         expect(result).toEqual({
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {
                     timestamp: 1574698260000,
                     open: 7379, 
@@ -72,9 +72,9 @@ describe('CandlesReducer', () => {
     });
 
     it('should discard heartbeat', () => {   
-        const symbol = 'tBTCUSD';
+        const currencyPair = 'BTCUSD';
         const initialState = {
-            [symbol.slice(1)]: [
+            [currencyPair]: [
                 {
                     timestamp: 1574698260000,
                     open: 7379, 
@@ -94,10 +94,10 @@ describe('CandlesReducer', () => {
         const meta = {
             channel: 'candles',
             request: {
-                key: `trade:1m:${symbol}`
+                key: `trade:1m:t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = candles(initialState, action);
         expect(result).toBe(initialState);
     });

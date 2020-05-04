@@ -1,7 +1,7 @@
-import { WsMessage } from './../../core/transport/actions';
-import { Actions } from './../root';
-import { WS_ACTION_TYPES } from 'core/transport/actions';
+import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
 import { isHeartbeat } from 'core/transport/utils';
+import { ReceiveMessage } from 'core/transport/actions';
+import { Actions } from './../root';
 import { Trade } from './types/Trade';
 
 type SymbolState = Trade[];
@@ -13,7 +13,7 @@ export interface TradesState {
 const initialState: TradesState = {
 }
 
-function snapshotReducer(state: SymbolState, action: WsMessage) {
+function snapshotReducer(state: SymbolState, action: ReceiveMessage) {
     const [, trades] = action.payload;
     return trades.map(([id, timestamp, amount, price]: any[]) => ({
         id,
@@ -23,7 +23,7 @@ function snapshotReducer(state: SymbolState, action: WsMessage) {
     }));
 }
 
-function updateReducer(state: SymbolState = [], action: WsMessage) {
+function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
     const [, , trade] = action.payload;
     const [id, timestamp, amount, price] = trade;
     const existingTradeIndex = state.findIndex(x => x.id === id);
@@ -51,7 +51,7 @@ export function tradesReducer(
     action: Actions
 ) {
     switch (action.type) {
-        case WS_ACTION_TYPES.WS_MESSAGE: {
+        case TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE: {
             if (isHeartbeat(action)) {
                 return state;
             }

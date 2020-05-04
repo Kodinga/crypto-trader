@@ -1,5 +1,5 @@
-import { REF_DATA_ACTION_TYPES } from './actions';
 import { Actions } from 'modules/root';
+import { REF_DATA_ACTION_TYPES } from './actions';
 
 interface RefDataState {
     currencyPairs: string[];
@@ -14,7 +14,7 @@ export function refDataReducer(
     action: Actions
 ) {
     switch (action.type) {
-        case REF_DATA_ACTION_TYPES.REF_DATA_LOAD_ACK: {
+        case REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK: {
             const { currencyPairs } = action.payload;
 
             return {

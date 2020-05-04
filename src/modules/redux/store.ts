@@ -6,7 +6,7 @@ import { rootEpic, rootReducer } from '../root';
 import createWsMiddleware from 'core/transport/middleware';
 import { WsConnectionProxy } from 'core/transport/WsConnectionProxy';
 import { Connection } from 'core/transport/Connection';
-import { WsActions } from 'core/transport/actions';
+import { TransportActions } from 'core/transport/actions';
 
 const connectionProxy = new WsConnectionProxy('wss://api-pub.bitfinex.com/ws/2');
 
@@ -40,7 +40,7 @@ export default function configureStore() {
   );
 
   connection.onConnect(() => {
-    store.dispatch(WsActions.wsConnectionStatusChanged(ConnectionStatus.Connected));
+    store.dispatch(TransportActions.changeConnectionStatus(ConnectionStatus.Connected));
     console.log('Connected');
   });
 

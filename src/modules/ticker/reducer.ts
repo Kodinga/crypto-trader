@@ -1,5 +1,5 @@
 import { Actions } from './../root';
-import { WS_ACTION_TYPES } from 'core/transport/actions';
+import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
 import { isHeartbeat } from 'core/transport/utils';
 import { Ticker } from './types/Ticker';
 
@@ -15,7 +15,7 @@ export function tickerReducer(
     action: Actions
 ) {
     switch (action.type) {
-        case WS_ACTION_TYPES.WS_MESSAGE: {
+        case TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE: {
             if (isHeartbeat(action)) {
                 return state;
             }

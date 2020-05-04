@@ -1,21 +1,21 @@
-import { TickerChannel } from 'core/transport/types/Channels';
 import { map } from 'rxjs/operators';
 import { Epic, ofType, combineEpics } from 'redux-observable';
-import { RootState } from 'modules/root';
-import { SubscribeToTickerSymbolAction, TICKER_ACTION_TYPES } from './actions';
+import { TransportActions } from 'core/transport/actions';
+import { TickerChannel } from 'core/transport/types/Channels';
+import { RootState, Actions } from 'modules/root';
+import { SubscribeToTickerAction, TICKER_ACTION_TYPES } from './actions';
 import { Dependencies } from './../redux/store';
-import { WsActions } from 'core/transport/actions';
 
-export const subscribeToTicker: Epic<SubscribeToTickerSymbolAction, any, RootState | undefined, Dependencies | undefined> = (action$) =>
+export const subscribeToTicker: Epic<Actions, Actions, RootState | undefined, Dependencies | undefined> = (action$) =>
     action$.pipe(
-        ofType(TICKER_ACTION_TYPES.TICKER_SUBSCRIBE_TO_SYMBOL),
+        ofType(TICKER_ACTION_TYPES.SUBSCRIBE_TO_TICKER),
         map(action => {
-            const { symbol } = action.payload;
+            const { symbol } = (action as SubscribeToTickerAction).payload;
             const msg = {
                 channel: 'ticker' as TickerChannel,
                 symbol: `t${symbol}`
             };
-            return WsActions.subscribeToChannel(msg);
+            return TransportActions.subscribeToChannel(msg);
         })
     );
 

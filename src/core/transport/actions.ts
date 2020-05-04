@@ -1,14 +1,14 @@
-import { ConnectionStatus } from './types/ConnectionStatus';
 import { createAction, ActionUnion } from 'modules/redux/utils';
+import { ConnectionStatus } from './types/ConnectionStatus';
 import { TradesChannel, CandlesChannel, TickerChannel, BookChannel } from './types/Channels';
 
-export enum WS_ACTION_TYPES {
-    WS_SEND = 'WS_SEND',
-    WS_MESSAGE = 'WS_MESSAGE',
-    WS_CONNECTION_STATUS_CHANGED = 'WS_CONNECTION_STATUS_CHANGED',
-    WS_SUBSCRIBE_TO_CHANNEL = 'WS_SUBSCRIBE_TO_CHANNEL',
-    WS_SUBSCRIBE_TO_CHANNEL_ACK = 'WS_SUBSCRIBE_TO_CHANNEL_ACK',
-    WS_SUBSCRIBE_TO_CHANNEL_NACK = 'WS_SUBSCRIBE_TO_CHANNEL_NACK'
+export enum TRANSPORT_ACTION_TYPES {
+    SEND_MESSAGE = 'TRANSPORT/SEND_MESSAGE',
+    RECEIVE_MESSAGE = 'TRANSPORT/RECEIVE_MESSAGE',
+    CHANGE_CONNECTION_STATUS = 'TRANSPORT/CHANGE_CONNECTION_STATUS',
+    SUBSCRIBE_TO_CHANNEL = 'TRANSPORT/SUBSCRIBE_TO_CHANNEL',
+    SUBSCRIBE_TO_CHANNEL_ACK = 'TRANSPORT/SUBSCRIBE_TO_CHANNEL_ACK',
+    SUBSCRIBE_TO_CHANNEL_NACK = 'TRANSPORT/SUBSCRIBE_TO_CHANNEL_NACK'
 }
 
 interface SubscribeToTrades {
@@ -44,24 +44,24 @@ export interface SubscribeToChannelNackActionPayload {
     error: string;
 }
 
-export interface WsMessageActionMeta {
+export interface ReceiveMessageActionMeta {
     channel: string;
     request?: any;
 }
 
-export const WsActions = {
-    wsSend: createAction<WS_ACTION_TYPES.WS_SEND, any>(WS_ACTION_TYPES.WS_SEND),
-    wsMessage: createAction<WS_ACTION_TYPES.WS_MESSAGE, any, WsMessageActionMeta | undefined>(WS_ACTION_TYPES.WS_MESSAGE),
-    wsConnectionStatusChanged: createAction<WS_ACTION_TYPES.WS_CONNECTION_STATUS_CHANGED, ConnectionStatus>(WS_ACTION_TYPES.WS_CONNECTION_STATUS_CHANGED),
-    subscribeToChannel: createAction<WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL, SubscribeToChannelActionPayload>(WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL),
-    subscribeToChannelAck: createAction<WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL_ACK, SubscribeToChannelAckActionPayload>(WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL_ACK),
-    subscribeToChannelNack: createAction<WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL_NACK, SubscribeToChannelNackActionPayload>(WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL_NACK)
+export const TransportActions = {
+    sendMessage: createAction<TRANSPORT_ACTION_TYPES.SEND_MESSAGE, any>(TRANSPORT_ACTION_TYPES.SEND_MESSAGE),
+    receiveMessage: createAction<TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE, any, ReceiveMessageActionMeta | undefined>(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
+    changeConnectionStatus: createAction<TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS, ConnectionStatus>(TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS),
+    subscribeToChannel: createAction<TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL, SubscribeToChannelActionPayload>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL),
+    subscribeToChannelAck: createAction<TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK, SubscribeToChannelAckActionPayload>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK),
+    subscribeToChannelNack: createAction<TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK, SubscribeToChannelNackActionPayload>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK)
 };
 
-export type WsActions = ActionUnion<typeof WsActions>;
-export type WsMessage = ReturnType<typeof WsActions.wsMessage>;
-export type WsSend = ReturnType<typeof WsActions.wsSend>;
-export type WsConnectionStatusChanged = ReturnType<typeof WsActions.wsConnectionStatusChanged>;
-export type WsSubscribeToChannel = ReturnType<typeof WsActions.subscribeToChannel>;
-export type WsSubscribeToChannelAck = ReturnType<typeof WsActions.subscribeToChannelAck>;
-export type WsSubscribeToChannelNack = ReturnType<typeof WsActions.subscribeToChannelNack>;
+export type TransportActions = ActionUnion<typeof TransportActions>;
+export type ReceiveMessage = ReturnType<typeof TransportActions.receiveMessage>;
+export type SendMessage = ReturnType<typeof TransportActions.sendMessage>;
+export type ChangeConnectionStatus = ReturnType<typeof TransportActions.changeConnectionStatus>;
+export type SubscribeToChannel = ReturnType<typeof TransportActions.subscribeToChannel>;
+export type SubscribeToChannelAck = ReturnType<typeof TransportActions.subscribeToChannelAck>;
+export type SubscribeToChannelNack = ReturnType<typeof TransportActions.subscribeToChannelNack>;

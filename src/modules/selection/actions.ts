@@ -1,7 +1,7 @@
 import { createAction, ActionUnion } from '../redux/utils';
 
 export enum SELECTION_ACTION_TYPES {
-    SELECT_CURRENCY_PAIR = 'SELECT_CURRENCY_PAIR'
+    SELECT_CURRENCY_PAIR = 'SELECTION/SELECT_CURRENCY_PAIR'
 }
 
 export interface SelectCurrencyPairActionPayload {

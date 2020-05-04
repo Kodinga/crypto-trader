@@ -1,7 +1,7 @@
 import { createAction, ActionUnion } from '../redux/utils';
 
 export enum APP_ACTION_TYPES {
-    BOOTSTRAP_APP = 'BOOTSTRAP_APP'
+    BOOTSTRAP_APP = 'APP/BOOTSTRAP_APP'
 }
 
 export const AppActions = {

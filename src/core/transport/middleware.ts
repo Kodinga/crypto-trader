@@ -1,6 +1,6 @@
 import { Middleware, Dispatch } from 'redux';
 import { Connection } from './Connection';
-import { WsActions } from './actions';
+import { TransportActions } from './actions';
 import { AppActions } from 'modules/app/actions';
 
 const createWsMiddleware = ({ connection }: { connection: Connection }): Middleware => store => (next: Dispatch) => (action: AppActions) => {
@@ -13,7 +13,7 @@ const createWsMiddleware = ({ connection }: { connection: Connection }): Middlew
                 meta = store.getState().subscriptions[channelId];
             }
         }
-        next(WsActions.wsMessage(parsedData, meta));
+        next(TransportActions.receiveMessage(parsedData, meta));
     });
     return next(action);
 }

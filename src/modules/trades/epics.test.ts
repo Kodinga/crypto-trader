@@ -1,9 +1,9 @@
 import { TestScheduler } from 'rxjs/testing';
-import { TradeActions, TradesSubscribeToSymbol } from './actions';
-import { subscribeToTrades } from './epics';
-import { WsActions } from 'core/transport/actions';
+import { TransportActions } from 'core/transport/actions';
 import { Dependencies } from 'modules/redux/store';
 import { wrapHelpers } from 'testing/utils';
+import { TradesActions, SubscribeToTrades } from './actions';
+import { subscribeToTrades } from './epics';
 
 describe('TradesEpic', () => {
     describe('subscribeToTrades()', () => {
@@ -14,22 +14,22 @@ describe('TradesEpic', () => {
     
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
-                    TradesSubscribeToSymbol,
+                    SubscribeToTrades,
                     any
                 >(
                     helpers,
                     {}
                 );
-                const symbol = 'BTCUSD';
-                const action$ = hotAction('-a', { a: TradeActions.subscribeToSymbol({ symbol }) });
+                const currencyPair = 'BTCUSD';
+                const action$ = hotAction('-a', { a: TradesActions.subscribeToTrades({ symbol: currencyPair }) });
                 const state$ = hotState('-');
     
                 const output$ = subscribeToTrades(action$, state$, {} as unknown as Dependencies);
     
                 expectObservable(output$).toBe('-a', {
-                    a: WsActions.subscribeToChannel({
+                    a: TransportActions.subscribeToChannel({
                         channel: 'trades',
-                        symbol: `t${symbol}`
+                        symbol: `t${currencyPair}`
                     })
                 });
             });

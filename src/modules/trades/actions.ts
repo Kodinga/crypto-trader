@@ -1,17 +1,17 @@
 import { createAction, ActionUnion } from '../redux/utils';
 
 export enum TRADES_ACTION_TYPES {
-    TRADES_SUBSCRIBE_TO_SYMBOL = 'TRADES_SUBSCRIBE_TO_SYMBOL'
+    SUBSCRIBE_TO_TRADES = 'TRADES/SUBSCRIBE_TO_SYMBOL'
 }
 
-export interface SubscribeToSymbolActionPayload {
+export interface SubscribeToTradesActionPayload {
     symbol: string;
 }
 
-export const TradeActions = {
-    subscribeToSymbol: createAction<TRADES_ACTION_TYPES.TRADES_SUBSCRIBE_TO_SYMBOL, SubscribeToSymbolActionPayload>(TRADES_ACTION_TYPES.TRADES_SUBSCRIBE_TO_SYMBOL)
+export const TradesActions = {
+    subscribeToTrades: createAction<TRADES_ACTION_TYPES.SUBSCRIBE_TO_TRADES, SubscribeToTradesActionPayload>(TRADES_ACTION_TYPES.SUBSCRIBE_TO_TRADES)
 };
 
-export type TradeActions = ActionUnion<typeof TradeActions>;
-export type TradesSubscribeToSymbol = ReturnType<typeof TradeActions.subscribeToSymbol>;
+export type TradesActions = ActionUnion<typeof TradesActions>;
+export type SubscribeToTrades = ReturnType<typeof TradesActions.subscribeToTrades>;
 

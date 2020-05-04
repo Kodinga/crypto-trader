@@ -1,5 +1,5 @@
 import { Actions } from 'modules/root';
-import { WS_ACTION_TYPES } from 'core/transport/actions';
+import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
 
 export interface SubscriptionState {
     [key: number]: { channel: string, request: any };
@@ -13,7 +13,7 @@ export function subscriptionsReducer(
     action: Actions
 ) {
     switch (action.type) {
-        case WS_ACTION_TYPES.WS_SUBSCRIBE_TO_CHANNEL_ACK: {
+        case TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK: {
             const { request, channel, channelId } = action.payload;
 
             return {

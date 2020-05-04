@@ -1,18 +1,18 @@
 import { createAction, ActionUnion } from '../redux/utils';
 
-export enum CANDLE_ACTION_TYPES {
-    CANDLE_SUBSCRIBE_TO_SYMBOL = 'CANDLE_SUBSCRIBE_TO_SYMBOL'
+export enum CANDLES_ACTION_TYPES {
+    SUBSCRIBE_TO_CANDLES = 'CANDLES/SUBSCRIBE_TO_CANDLES'
 }
 
-export interface SubscribeToSymbolActionPayload {
+export interface SubscribeToCandlesActionPayload {
     symbol: string;
     timeframe: '1m' | '5m' | '15m' | '30m' | '1h' | '3h' | '6h' | '12h' | '1D' | '7D' | '14D' | '1M'
 }
 
-export const CandleActions = {
-    subscribeToSymbol: createAction<CANDLE_ACTION_TYPES.CANDLE_SUBSCRIBE_TO_SYMBOL, SubscribeToSymbolActionPayload>(CANDLE_ACTION_TYPES.CANDLE_SUBSCRIBE_TO_SYMBOL)
+export const CandlesActions = {
+    subscribeToCandles: createAction<CANDLES_ACTION_TYPES.SUBSCRIBE_TO_CANDLES, SubscribeToCandlesActionPayload>(CANDLES_ACTION_TYPES.SUBSCRIBE_TO_CANDLES)
 };
 
-export type CandleActions = ActionUnion<typeof CandleActions>;
-export type SubscribeToCandlesSymbolAction = ReturnType<typeof CandleActions.subscribeToSymbol>;
+export type CandlesActions = ActionUnion<typeof CandlesActions>;
+export type SubscribeToCandles = ReturnType<typeof CandlesActions.subscribeToCandles>;
 

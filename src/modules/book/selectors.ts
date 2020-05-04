@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { RootState } from 'modules/root';
 import { memoize, range } from 'lodash';
+import { RootState } from 'modules/root';
 
 const bookSelector = (state: RootState) => state.book;
 

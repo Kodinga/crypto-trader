@@ -1,5 +1,5 @@
-import { SELECTION_ACTION_TYPES } from './actions';
 import { Actions } from 'modules/root';
+import { SELECTION_ACTION_TYPES } from './actions';
 
 interface SelectionState {
     currencyPair?: string;

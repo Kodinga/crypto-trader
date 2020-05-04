@@ -1,4 +1,4 @@
-import { WsActions } from 'core/transport/actions';
+import { TransportActions } from 'core/transport/actions';
 import book from './reducer';
 
 describe('BookReducer', () => {
@@ -18,7 +18,7 @@ describe('BookReducer', () => {
                 symbol: `t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = book(undefined, action);
         expect(result).toEqual({
             [currencyPair]: [
@@ -46,7 +46,7 @@ describe('BookReducer', () => {
                 symbol: `t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = book(initialState, action);
         expect(result).toEqual({
             [currencyPair]: [
@@ -76,7 +76,7 @@ describe('BookReducer', () => {
                 symbol: `t${currencyPair}`
             }
         };
-        const action = WsActions.wsMessage(data, meta);
+        const action = TransportActions.receiveMessage(data, meta);
         const result = book(initialState, action);
         expect(result).toEqual({
             [currencyPair]: [
