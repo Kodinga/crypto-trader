@@ -1,3 +1,4 @@
+import { BookActions } from './book/actions';
 import { SelectionActions } from './selection/actions';
 import { CandleActions } from './candles/actions';
 import { TickerActions } from './ticker/actions';
@@ -11,6 +12,7 @@ import refDataEpics from './reference-data/epics';
 import tickerEpics from './ticker/epics';
 import candlesEpics from './candles/epics';
 import selectionEpics from './selection/epics';
+import bookEpics from './book/epics';
 import { AppActions } from './app/actions';
 import { TradeActions } from './trades/actions';
 import { WsActions } from 'core/transport/actions';
@@ -20,6 +22,7 @@ import { refDataReducer } from './reference-data/reducer';
 import { tickerReducer } from './ticker/reducer';
 import { candlesReducer } from './candles/reducer';
 import { selectionReducer } from './selection/reducer';
+import { bookReducer } from './book/reducer';
 
 export const rootEpic = combineEpics(
   appEpics,
@@ -28,7 +31,8 @@ export const rootEpic = combineEpics(
   tradeEpics,
   tickerEpics,
   candlesEpics,
-  selectionEpics
+  selectionEpics,
+  bookEpics
 );
 
 export const rootReducer = combineReducers({
@@ -37,9 +41,10 @@ export const rootReducer = combineReducers({
   trades: tradesReducer,
   ticker: tickerReducer,
   candles: candlesReducer,
-  selection: selectionReducer
+  selection: selectionReducer,
+  book: bookReducer
 });
 
-export type Actions = AppActions | RefDataActions | WsActions | TradeActions | TickerActions | CandleActions | SelectionActions;
+export type Actions = AppActions | RefDataActions | WsActions | TradeActions | TickerActions | CandleActions | SelectionActions | BookActions;
 
 export type RootState = ReturnType<typeof rootReducer>;

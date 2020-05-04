@@ -12,7 +12,7 @@ export const Container = styled.div`
         "header header header"
         "ticker ticker ticker"
         "trades candles candles"
-        "trades depth book";
+        "trades book book";
     grid-gap: 5px;
     padding: 10px;
 `;
@@ -35,4 +35,8 @@ export const TradesPanel = styled.div`
 
 export const CandlesPanel = styled.div`
     grid-area: candles;
+`;
+
+export const BookPanel = styled.div`
+    grid-area: book;
 `;

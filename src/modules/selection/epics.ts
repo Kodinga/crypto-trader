@@ -1,6 +1,7 @@
 import { Actions } from 'modules/root';
 import { TradeActions } from 'modules/trades/actions';
 import { CandleActions } from './../candles/actions';
+import { BookActions } from './../book/actions';
 import { RootState } from './../root';
 import { Dependencies } from './../redux/store';
 import { Epic, ofType, combineEpics } from 'redux-observable';
@@ -16,7 +17,8 @@ const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action
       
       return from([
         CandleActions.subscribeToSymbol({ symbol: currencyPair, timeframe: '1m' }),
-        TradeActions.subscribeToSymbol({ symbol: currencyPair })
+        TradeActions.subscribeToSymbol({ symbol: currencyPair }),
+        BookActions.subscribeToSymbol({ symbol: currencyPair })
       ]);
 
     })

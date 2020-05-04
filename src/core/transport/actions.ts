@@ -1,6 +1,6 @@
 import { ConnectionStatus } from './types/ConnectionStatus';
 import { createAction, ActionUnion } from 'modules/redux/utils';
-import { TradesChannel, CandlesChannel, TickerChannel } from './types/Channels';
+import { TradesChannel, CandlesChannel, TickerChannel, BookChannel } from './types/Channels';
 
 export enum WS_ACTION_TYPES {
     WS_SEND = 'WS_SEND',
@@ -26,7 +26,13 @@ interface SubscribeToTicker {
     symbol: string;
 }
 
-export type SubscribeToChannelActionPayload = SubscribeToTrades | SubscribeToCandles | SubscribeToTicker;
+interface SubscribeToBook {
+    channel: BookChannel;
+    symbol: string; 
+    prec?: string;
+}
+
+export type SubscribeToChannelActionPayload = SubscribeToTrades | SubscribeToCandles | SubscribeToTicker | SubscribeToBook;
 
 export interface SubscribeToChannelAckActionPayload {
     channel: string;

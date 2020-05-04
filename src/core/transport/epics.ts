@@ -6,7 +6,7 @@ import { WS_ACTION_TYPES, WsSend, WsMessage, WsSubscribeToChannelAck, WsActions,
 import { Epic, ofType, combineEpics } from 'redux-observable';
 import { RootState } from 'modules/root';
 
-export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 1000;
+export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 2000;
 
 export const handleWsSend: Epic<WsSend, never, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(

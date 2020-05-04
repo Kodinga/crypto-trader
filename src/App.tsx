@@ -5,7 +5,8 @@ import { AppActions } from './modules/app/actions';
 import Trades from 'modules/trades/components';
 import Tickers from 'modules/ticker/components/Tickers';
 import CandlesChart from 'modules/candles/components';
-import { Container, Header, TradesPanel, TickersPanel, CandlesPanel } from 'App.styled';
+import Book from 'modules/book/components';
+import { Container, Header, TradesPanel, TickersPanel, CandlesPanel, BookPanel } from 'App.styled';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import 'theme/fonts.css';
@@ -25,6 +26,7 @@ function App() {
         <TickersPanel><Tickers /></TickersPanel>
         <TradesPanel><Trades /></TradesPanel>
         <CandlesPanel><CandlesChart /></CandlesPanel>
+        <BookPanel><Book /></BookPanel>
       </Container>
      
     </Provider>
