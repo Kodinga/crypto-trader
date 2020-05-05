@@ -1,5 +1,7 @@
 Crypto Trader is real-time demo application based on the Bitfinex paltform.
 
+![Crypto Trader]("./public/crypto-trader.gif")
+
 ## Available Scripts
 
 In the project directory, you can run:
