@@ -3,18 +3,20 @@ import Palette from 'theme/style';
 
 export const Container = styled.div`
     background-color: ${Palette.BackgroundColor};
-    width: calc(100vw - 20px);
-    height: calc(100vh - 20px);
+    width: 100vw;
+    height: 100vh;
+`;
+
+export const Content = styled.div`
     display: grid;
-    grid-template-rows: 50px 100px 1fr 1fr;
-    grid-template-columns: 400px 1fr 400px;
+    grid-template-rows: 40px 80px 1fr 250px;
+    grid-template-columns: 400px 400px 1fr;
     grid-template-areas: 
         "header header header"
-        "ticker ticker ticker"
+        "tickers tickers tickers"
         "trades candles candles"
         "trades book depth";
     grid-gap: 5px;
-    padding: 10px;
 `;
 
 export const Header = styled.div`
@@ -22,12 +24,13 @@ export const Header = styled.div`
     color: ${Palette.White};
     font-family: FiraSans-MediumItalic;
     background-color: #2d3436;
-    padding: 10px 5px 0 10px;
+    padding: 0 0 0 10px;
     font-size: 28px;
 `;
 
 export const TickersPanel = styled.div`
-    grid-area: ticker;
+    grid-area: tickers;
+    overflow: auto;
 `;
 
 export const TradesPanel = styled.div`

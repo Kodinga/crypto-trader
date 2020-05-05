@@ -9,6 +9,7 @@ export interface StateProps {
     lastPrice: number;
     dailyChange: number;
     dailyChangeRelative: number;
+    isActive?: boolean;
 }
 
 export interface DispatchProps {
@@ -18,11 +19,11 @@ export interface DispatchProps {
 export type Props = StateProps & DispatchProps;
 
 const Ticker: FC<Props> = props => {
-    const { currencyPair, lastPrice, dailyChange, dailyChangeRelative, onClick } = props;
+    const { currencyPair, lastPrice, dailyChange, dailyChangeRelative, onClick, isActive } = props;
     const isPositiveChange = dailyChange > 0;
     const percentChange = dailyChangeRelative ? dailyChangeRelative * 100 : undefined;
     return (
-        <Container onClick={onClick}>
+        <Container onClick={onClick} isActive={!!isActive}>
             <CurrencyPair>{formatCurrencyPair(currencyPair)}</CurrencyPair>
             <Price><UpdateHighlight value={lastPrice?.toFixed(2)} /></Price>
             <RelativeChange isPositive={isPositiveChange}>

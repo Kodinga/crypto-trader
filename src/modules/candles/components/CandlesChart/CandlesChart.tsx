@@ -15,6 +15,9 @@ export interface Props {
 const CandlesChart: FC<Props> = props => {
     const { candles, currencyPair } = props;
     const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
+        time: {
+            useUTC: false
+        },
         series: [{
             type: 'candlestick',
             data: []

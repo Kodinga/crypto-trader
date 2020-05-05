@@ -1,18 +1,20 @@
 import styled from 'styled-components';
 import Palette from 'theme/style';
 
-export const Container = styled.div`
+export const Container = styled.div<{
+    isActive: boolean;
+}>`
     cursor: pointer;
     display: grid;
     grid-template-rows: 30px 1fr;
-    min-height: 70px;
+    min-height: 60px;
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas: 
         "currencyPair price"
         "relativeChange change";
     font-size: 12px;
     padding: 10px 10px 5px 10px;
-    border: 1px solid ${Palette.Border};
+    border: 1px solid ${({isActive}) => isActive ? Palette.Orange : Palette.Border};
 
     &:hover {
         background-color: #2d3436;

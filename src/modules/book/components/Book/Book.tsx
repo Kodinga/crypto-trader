@@ -1,40 +1,41 @@
 import React, { FC } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-import { Container, Header } from './Book.styled';
-import { formatCurrencyPair } from 'modules/reference-data/utils';
+import { Container } from './Book.styled';
 import { Order } from '../../types/Order';
 import Palette from 'theme/style';
 
 export interface Props {
-    currencyPair?: string;
     orders: {bid: Order, ask: Order}[];
 }
 
 const Book: FC<Props> = props => {
-    const { orders, currencyPair } = props;
+    const { orders } = props;
     const columnDefs: ColDef[] = [{
         headerName: 'Bid Amount',
         field: 'bid.amount',
-        
+        width: 100,
         cellStyle: () => ({
             color: Palette.Bid
         }),
     }, {
         headerName: 'Bid Price',
         field: 'bid.price',
+        width: 100,
         cellStyle: () => ({
             color: Palette.Bid
         })
     }, {
         headerName: 'Ask Price',
         field: 'ask.price',
+        width: 100,
         cellStyle: () => ({
             color: Palette.Ask
         })
     }, {
         headerName: 'Ask Amount',
         field: 'ask.amount',
+        width: 100,
         cellStyle: () => ({
             color: Palette.Ask
         }),
@@ -43,7 +44,6 @@ const Book: FC<Props> = props => {
 
     return (
         <Container className='ag-theme-balham-dark'>
-            <Header><span>Book - </span>{currencyPair && formatCurrencyPair(currencyPair)}</Header>
             <AgGridReact
                 columnDefs={columnDefs}
                 rowData={orders}

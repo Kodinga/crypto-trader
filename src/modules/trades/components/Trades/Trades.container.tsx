@@ -9,8 +9,7 @@ const mapStateToProps = (state: RootState): Props => {
     const trades = currencyPair ? getTrades(state)(currencyPair) : [];
 
     return {
-        trades,
-        currencyPair
+        trades
     };
 }
 

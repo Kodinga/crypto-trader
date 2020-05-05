@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useThrottle } from 'core/hooks/useThrottle';
-import { Container, Header } from './DepthChart.styled';
+import { Container } from './DepthChart.styled';
 import Palette from 'theme/style';
 import 'theme/Highchart';
 
@@ -17,11 +17,12 @@ export interface Props {
 
 const DepthChart: FC<Props> = props => {
     const { depth } = props;
-    const debouncedDepth = useThrottle<Depth>(depth, 2000);
+    const debouncedDepth = useThrottle<Depth>(depth, 1000);
     const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
         chart: {
             type: 'area',
-            animation: false
+            animation: false,
+            height: '250px'
         },
         title: {
             text: ''
@@ -101,7 +102,6 @@ const DepthChart: FC<Props> = props => {
 
     return (
         <Container>
-            <Header>Depth</Header>
             <HighchartsReact
                 highcharts={Highcharts}
                 options={chartOptions}

@@ -9,8 +9,7 @@ const mapStateToProps = (state: RootState): Props => {
     const orders = currencyPair ? getBook(state)(currencyPair) : [];
 
     return {
-        orders,
-        currencyPair
+        orders
     };
 }
 

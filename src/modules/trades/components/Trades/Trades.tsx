@@ -3,17 +3,15 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { DateTime } from 'luxon';
 import { Trade } from '../../types/Trade';
-import { Container, Header } from './Trades.styled';
+import { Container } from './Trades.styled';
 import theme from 'theme/style';
-import { formatCurrencyPair } from 'modules/reference-data/utils';
 
 export interface Props {
-    currencyPair?: string;
     trades: Trade[];
 }
 
 const Trades: FC<Props> = props => {
-    const { trades, currencyPair } = props;
+    const { trades } = props;
     const columnDefs: ColDef[] = [{
         headerName: 'Id',
         field: 'id',
@@ -44,7 +42,6 @@ const Trades: FC<Props> = props => {
 
     return (
         <Container className='ag-theme-balham-dark'>
-            <Header><span>Trades - </span>{currencyPair && formatCurrencyPair(currencyPair)}</Header>
             <AgGridReact
                 columnDefs={columnDefs}
                 rowData={trades}
