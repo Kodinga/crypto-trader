@@ -114,4 +114,33 @@ describe('TradesReducer', () => {
         const result = trades(initialState, action);
         expect(result).toBe(initialState);
     });
+
+    it('should clear state on unsubscription', () => {   
+        const currencyPair = 'BTCUSD';
+        const otherCurrencyPair = 'BTCEUR';
+        const initialState = {
+            [currencyPair]: [
+                {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
+                {id: 2, timestamp: 1574694478808, amount: 0.005, price: 7245.9},
+            ],
+            [otherCurrencyPair]: []
+        };
+        
+        const channelId = 17470;
+        const data = {
+            event: 'unsubscribed',
+            chanId: channelId,
+        };
+        const meta = {
+            channel: 'trades',
+            request: {
+                symbol: `t${currencyPair}`
+            }
+        };
+        const action = TransportActions.receiveMessage(data, meta);
+        const result = trades(initialState, action);
+        expect(result).toEqual({
+            [otherCurrencyPair]: []
+        });
+    });
 });

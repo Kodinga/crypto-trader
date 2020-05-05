@@ -1,4 +1,3 @@
-import { getCurrencyPair } from './selectors';
 import { from } from 'rxjs';
 import { Epic, ofType, combineEpics } from 'redux-observable';
 import { switchMap, pairwise, withLatestFrom } from 'rxjs/operators';
@@ -9,6 +8,7 @@ import { BookActions } from 'modules/book/actions';
 import { RootState } from './../root';
 import { Dependencies } from './../redux/store';
 import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './actions';
+import { getCurrencyPair } from './selectors';
 
 const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) => {
   const statePairs$ = state$.pipe(pairwise());
@@ -21,7 +21,9 @@ const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action
       const unsubscribeActions = [];
       if (oldCurrencyPair) {
         unsubscribeActions.push(
-          TradesActions.unsubscribeFromTrades({ symbol: oldCurrencyPair })
+          CandlesActions.unsubscribeFromCandles({symbol: oldCurrencyPair, timeframe: '1m'}),
+          TradesActions.unsubscribeFromTrades({ symbol: oldCurrencyPair }),
+          BookActions.unsubscribeFromBook({ symbol: oldCurrencyPair })
         );
       }
 

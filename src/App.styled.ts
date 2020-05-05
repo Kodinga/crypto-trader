@@ -6,7 +6,7 @@ export const Container = styled.div`
     width: calc(100vw - 20px);
     height: calc(100vh - 20px);
     display: grid;
-    grid-template-rows: 100px 100px 1fr 1fr;
+    grid-template-rows: 50px 100px 1fr 1fr;
     grid-template-columns: 400px 1fr 400px;
     grid-template-areas: 
         "header header header"
@@ -22,7 +22,8 @@ export const Header = styled.div`
     color: ${Palette.White};
     font-family: FiraSans-MediumItalic;
     background-color: #2d3436;
-    padding: 0 10px;
+    padding: 10px 5px 0 10px;
+    font-size: 28px;
 `;
 
 export const TickersPanel = styled.div`

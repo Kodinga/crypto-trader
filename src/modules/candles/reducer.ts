@@ -1,5 +1,5 @@
 import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
-import { isHeartbeat } from 'core/transport/utils';
+import { isHeartbeat, isSubscriptionMessage, isUnsubscriptionMessage, isErrorMessage } from 'core/transport/utils';
 import { ReceiveMessage } from 'core/transport/actions';
 import { Actions } from './../root';
 import { Candle } from './types/Candle';
@@ -42,7 +42,7 @@ export function candlesReducer(
 ) {
     switch (action.type) {
         case TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE: {
-            if (isHeartbeat(action)) {
+            if (isHeartbeat(action) || isSubscriptionMessage(action) || isErrorMessage(action)) {
                 return state;
             }
 
@@ -51,6 +51,15 @@ export function candlesReducer(
                 const { key } = request;
                 const [, , symbol] = key.split(':');
                 const currencyPair = symbol.slice(1);
+
+                if (isUnsubscriptionMessage(action)) {
+                    const updatedState = {
+                        ...state
+                    };
+                    delete updatedState[currencyPair];
+                    return updatedState;
+                }
+
                 const symbolReducer = Array.isArray(action.payload[1][0]) ? snapshotReducer : updateReducer;
                 const result = symbolReducer(state[currencyPair], action);
 

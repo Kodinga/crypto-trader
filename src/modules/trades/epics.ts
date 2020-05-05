@@ -22,7 +22,6 @@ export const subscribeToTrades: Epic<Actions, Actions, RootState, Dependencies> 
         })
     );
 
-
 export const unsubscribeFromTrades: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) =>
     action$.pipe(
         ofType(TRADES_ACTION_TYPES.UNSUBSCRIBE_FROM_TRADES),
@@ -38,11 +37,12 @@ export const unsubscribeFromTrades: Epic<Actions, Actions, RootState, Dependenci
                         channelId
                     })
                 );
+            } else {
+                console.warn('Failed to find trades subscription');
             }
             return from(result);
         })
     );
-
 
 export default combineEpics(
     subscribeToTrades,

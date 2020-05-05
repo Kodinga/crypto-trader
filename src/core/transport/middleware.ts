@@ -7,11 +7,15 @@ const createWsMiddleware = ({ connection }: { connection: Connection }): Middlew
     connection.onReceive(data => {
         const parsedData = JSON.parse(data);
         let meta = undefined;
+        let channelId = undefined;
+
         if (Array.isArray(parsedData)) {
-            const [channelId] = parsedData;
-            if (store.getState().subscriptions[channelId]) {
-                meta = store.getState().subscriptions[channelId];
-            }
+            channelId = parsedData[0];
+        } else if (parsedData.hasOwnProperty('chanId')) {
+            channelId = parsedData.chanId;
+        }
+        if (channelId && store.getState().subscriptions[channelId]) {
+            meta = store.getState().subscriptions[channelId];
         }
         next(TransportActions.receiveMessage(parsedData, meta));
     });

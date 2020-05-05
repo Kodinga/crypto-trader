@@ -24,6 +24,15 @@ export function subscriptionsReducer(
                 }
             };
         }
+        case TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_ACK: {
+            const { channelId } = action.payload;
+
+            const updatedState = {
+                ...state
+            };
+            delete updatedState[channelId];
+            return updatedState;
+        }
         default:
             return state;
     }

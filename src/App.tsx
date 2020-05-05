@@ -23,7 +23,7 @@ function App() {
   return (
     <Provider store={store}>
       <Container>
-        <Header><h1>Crypto Trader</h1></Header>
+        <Header>Crypto Trader</Header>
         <TickersPanel><Tickers /></TickersPanel>
         <TradesPanel><Trades /></TradesPanel>
         <CandlesPanel><CandlesChart /></CandlesPanel>

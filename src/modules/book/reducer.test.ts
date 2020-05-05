@@ -84,4 +84,32 @@ describe('BookReducer', () => {
             ]
         });
     });
+
+    it('should clear state on unsubscription', () => {   
+        const currencyPair = 'BTCUSD';
+        const otherCurrencyPair = 'BTCEUR';
+        const initialState = {
+            [currencyPair]: [
+                {id: 1, price: 7294.7, amount: 1.5}
+            ],
+            [otherCurrencyPair]: []
+        };
+        
+        const channelId = 17470;
+        const data = {
+            event: 'unsubscribed',
+            chanId: channelId,
+        };
+        const meta = {
+            channel: 'book',
+            request: {
+                symbol: `t${currencyPair}`
+            }
+        };
+        const action = TransportActions.receiveMessage(data, meta);
+        const result = book(initialState, action);
+        expect(result).toEqual({
+            [otherCurrencyPair]: []
+        });
+    });
 });

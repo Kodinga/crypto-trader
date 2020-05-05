@@ -101,4 +101,39 @@ describe('CandlesReducer', () => {
         const result = candles(initialState, action);
         expect(result).toBe(initialState);
     });
+
+    it('should clear state on unsubscription', () => {   
+        const currencyPair = 'BTCUSD';
+        const otherCurrencyPair = 'BTCEUR';
+        const initialState = {
+            [currencyPair]: [
+                {
+                    timestamp: 1574698260000,
+                    open: 7379, 
+                    close: 7392, 
+                    high: 7401,
+                    low: 7378, 
+                    volume: 1.70
+                }
+            ],
+            [otherCurrencyPair]: []
+        };
+        
+        const channelId = 17470;
+        const data = {
+            event: 'unsubscribed',
+            chanId: channelId,
+        };
+        const meta = {
+            channel: 'candles',
+            request: {
+                key: `trade:1m:t${currencyPair}`
+            }
+        };
+        const action = TransportActions.receiveMessage(data, meta);
+        const result = candles(initialState, action);
+        expect(result).toEqual({
+            [otherCurrencyPair]: []
+        });
+    });
 });
