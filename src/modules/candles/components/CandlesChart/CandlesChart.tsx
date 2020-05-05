@@ -2,9 +2,9 @@ import React, { FC, useEffect, useState } from 'react';
 import * as Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import { Container } from './CandlesChart.styled';
-import { Candle } from '../types/Candle';
+import { Candle } from '../../types/Candle';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
-import 'theme/Highchart';
+import 'theme/Highstock';
 import Palette from 'theme/style';
 
 export interface Props {

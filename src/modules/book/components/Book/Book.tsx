@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { Container, Header } from './Book.styled';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
-import { Order } from '../types/Order';
+import { Order } from '../../types/Order';
 import Palette from 'theme/style';
 
 export interface Props {
@@ -18,25 +18,25 @@ const Book: FC<Props> = props => {
         field: 'bid.amount',
         
         cellStyle: () => ({
-            color: Palette.Buy
+            color: Palette.Bid
         }),
     }, {
         headerName: 'Bid Price',
         field: 'bid.price',
         cellStyle: () => ({
-            color: Palette.Buy
+            color: Palette.Bid
         })
     }, {
         headerName: 'Ask Price',
         field: 'ask.price',
         cellStyle: () => ({
-            color: Palette.Sell
+            color: Palette.Ask
         })
     }, {
         headerName: 'Ask Amount',
         field: 'ask.amount',
         cellStyle: () => ({
-            color: Palette.Sell
+            color: Palette.Ask
         }),
         valueFormatter: params => params.value ? Math.abs(params.value).toString() : ''
     }];

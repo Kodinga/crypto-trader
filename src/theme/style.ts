@@ -1,6 +1,6 @@
 const Palette = {
-    Buy: '#00AD08',
-    Sell: '#FF264D',
+    Bid: '#00AD08',
+    Ask: '#FF264D',
     Positive: '#00AD08',
     Negative: '#FF264D',
     Orange: '#ffa41b',

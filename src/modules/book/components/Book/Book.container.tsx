@@ -1,17 +1,17 @@
 import { connect } from 'react-redux';
 import { RootState } from 'modules/root';
-import Trades, { Props } from './Trades'
-import { getTrades } from '../selectors';
 import { getCurrencyPair } from 'modules/selection/selectors';
+import Book, { Props } from './Book'
+import { getBook } from '../../selectors';
 
 const mapStateToProps = (state: RootState): Props => {
     const currencyPair = getCurrencyPair(state);
-    const trades = currencyPair ? getTrades(state)(currencyPair) : [];
+    const orders = currencyPair ? getBook(state)(currencyPair) : [];
 
     return {
-        trades,
+        orders,
         currencyPair
     };
 }
 
-export default connect(mapStateToProps)(Trades);
+export default connect(mapStateToProps)(Book);

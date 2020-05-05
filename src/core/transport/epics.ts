@@ -6,7 +6,7 @@ import { Dependencies } from 'modules/redux/store';
 import { RootState, Actions } from 'modules/root';
 import { TRANSPORT_ACTION_TYPES, SendMessage, ReceiveMessage, TransportActions, SubscribeToChannel } from './actions';
 
-export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 2000;
+export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 5000;
 
 export const handleSendMessage: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(

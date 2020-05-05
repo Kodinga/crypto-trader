@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { DateTime } from 'luxon';
-import { Trade } from '../types/Trade';
+import { Trade } from '../../types/Trade';
 import { Container, Header } from './Trades.styled';
 import theme from 'theme/style';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
@@ -25,7 +25,7 @@ const Trades: FC<Props> = props => {
         valueFormatter: params => Math.abs(params.value).toString(),
         cellStyle: params => {
             return {
-                color: params.value < 0 ? theme.Sell : theme.Buy
+                color: params.value < 0 ? theme.Ask : theme.Bid
             }
         }
     }, {

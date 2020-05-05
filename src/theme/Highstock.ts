@@ -1,4 +1,4 @@
-import * as Highcharts from 'highcharts';
+import * as Highcharts from 'highcharts/highstock';
 import Palette from './style';
 
 (Highcharts as any).theme = {

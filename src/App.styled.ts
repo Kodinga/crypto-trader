@@ -7,12 +7,12 @@ export const Container = styled.div`
     height: calc(100vh - 20px);
     display: grid;
     grid-template-rows: 100px 100px 1fr 1fr;
-    grid-template-columns: 400px 1fr 1fr;
+    grid-template-columns: 400px 1fr 400px;
     grid-template-areas: 
         "header header header"
         "ticker ticker ticker"
         "trades candles candles"
-        "trades book book";
+        "trades book depth";
     grid-gap: 5px;
     padding: 10px;
 `;
@@ -40,3 +40,7 @@ export const CandlesPanel = styled.div`
 export const BookPanel = styled.div`
     grid-area: book;
 `;
+
+export const DepthPanel = styled.div`
+    grid-area: depth;
+`

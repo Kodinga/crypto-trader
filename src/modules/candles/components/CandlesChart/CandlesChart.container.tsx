@@ -1,17 +1,18 @@
 import { connect } from 'react-redux';
+import CandlesChart, { Props } from './CandlesChart';
 import { RootState } from 'modules/root';
-import Book, { Props } from './Book'
-import { getBook } from '../selectors';
+import { getCandles } from '../../selectors';
 import { getCurrencyPair } from 'modules/selection/selectors';
 
 const mapStateToProps = (state: RootState): Props => {
     const currencyPair = getCurrencyPair(state);
-    const orders = currencyPair ? getBook(state)(currencyPair) : [];
-
+    const candles = currencyPair ? getCandles(state)(currencyPair) : [];
+    
     return {
-        orders,
+        candles,
         currencyPair
     };
 }
 
-export default connect(mapStateToProps)(Book);
+
+export default connect(mapStateToProps)(CandlesChart);
