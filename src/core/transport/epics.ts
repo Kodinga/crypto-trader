@@ -4,7 +4,7 @@ import { filter, mergeMap, catchError, timeout, take, concatMap, map } from 'rxj
 import { of } from 'rxjs/internal/observable/of';
 import { Dependencies } from 'modules/redux/store';
 import { RootState, Actions } from 'modules/root';
-import { TRANSPORT_ACTION_TYPES, SendMessage, ReceiveMessage, TransportActions, SubscribeToChannel } from './actions';
+import { TRANSPORT_ACTION_TYPES, SendMessage, ReceiveMessage, TransportActions, SubscribeToChannel, UnsubscribeFromChannel } from './actions';
 
 export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 5000;
 
@@ -22,16 +22,19 @@ export const handleSendMessage: Epic<Actions, Actions, RootState, Dependencies> 
     Because requests/responses don't have a correlation id, we can't run concurrent requests safely.
     Therefore, we queue subscription requests and process them sequencially.
 */
-export const handleSubscription: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
-  action$.pipe(
-    ofType(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL),
-    concatMap(subscribeAction => {
+export const handleSubscription: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) => {
+  return action$.pipe(
+    filter(action => action.type === TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL || action.type === TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL),
+    concatMap(rootAction => {
+      const isSubscribing = rootAction.type === TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL;
+
       return merge(
         action$.pipe(
           ofType(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
           filter(action => {
             const receiveMessageAction = action as ReceiveMessage;
-            return (receiveMessageAction.payload.event === 'subscribed' && receiveMessageAction.payload.channel === (subscribeAction as SubscribeToChannel).payload.channel)
+            return (isSubscribing && receiveMessageAction.payload.event === 'subscribed' && receiveMessageAction.payload.channel === (rootAction as SubscribeToChannel).payload.channel)
+              || (!isSubscribing && receiveMessageAction.payload.event === 'unsubscribed')
               || receiveMessageAction.payload.event === 'error'
           }),
           take(1),
@@ -39,30 +42,46 @@ export const handleSubscription: Epic<Actions, Actions, RootState, Dependencies>
           map(action => {
             const receiveMessageAction = action as ReceiveMessage;
             if (receiveMessageAction.payload.event === 'error') {
-              return TransportActions.subscribeToChannelNack({
-                error: receiveMessageAction.payload.msg
-              });
+              return isSubscribing
+                ? TransportActions.subscribeToChannelNack({
+                  error: receiveMessageAction.payload.msg
+                })
+                : TransportActions.unsubscribeFromChannelNack();
             } else {
               const { channel, chanId: channelId } = receiveMessageAction.payload;
 
-              return TransportActions.subscribeToChannelAck({
-                channel,
-                channelId,
-                request: (subscribeAction as SubscribeToChannel).payload
-              });
+              return isSubscribing
+                ? TransportActions.subscribeToChannelAck({
+                  channel,
+                  channelId,
+                  request: (rootAction as SubscribeToChannel).payload
+                })
+                : TransportActions.unsubscribeFromChannelAck({
+                  channelId
+                });
             }
-          })
+          }),
+          catchError(() => isSubscribing
+            ? of(TransportActions.subscribeToChannelNack({
+              error: 'Timeout'
+            }))
+            : of(TransportActions.unsubscribeFromChannelNack())
+          )
         ),
-        of(TransportActions.sendMessage({
-          event: 'subscribe',
-          ...(subscribeAction as SubscribeToChannel).payload
-        }))
+        isSubscribing
+          ? of(TransportActions.sendMessage({
+            event: 'subscribe',
+            ...(rootAction as SubscribeToChannel).payload
+          }))
+          : of(TransportActions.sendMessage({
+            event: 'unsubscribe',
+            chanId: (rootAction as UnsubscribeFromChannel).payload.channelId
+          }))
       );
     }),
-    catchError(() => of(TransportActions.subscribeToChannelNack({
-      error: 'Timeout'
-    })))
+
   );
+}
 
 export default combineEpics(
   handleSendMessage,

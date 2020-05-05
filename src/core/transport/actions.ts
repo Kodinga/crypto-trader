@@ -8,7 +8,10 @@ export enum TRANSPORT_ACTION_TYPES {
     CHANGE_CONNECTION_STATUS = 'TRANSPORT/CHANGE_CONNECTION_STATUS',
     SUBSCRIBE_TO_CHANNEL = 'TRANSPORT/SUBSCRIBE_TO_CHANNEL',
     SUBSCRIBE_TO_CHANNEL_ACK = 'TRANSPORT/SUBSCRIBE_TO_CHANNEL_ACK',
-    SUBSCRIBE_TO_CHANNEL_NACK = 'TRANSPORT/SUBSCRIBE_TO_CHANNEL_NACK'
+    SUBSCRIBE_TO_CHANNEL_NACK = 'TRANSPORT/SUBSCRIBE_TO_CHANNEL_NACK',
+    UNSUBSCRIBE_FROM_CHANNEL= 'TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL',
+    UNSUBSCRIBE_FROM_CHANNEL_ACK = 'TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_ACK',
+    UNSUBSCRIBE_FROM_CHANNEL_NACK = 'TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_NACK'
 }
 
 interface SubscribeToTrades {
@@ -49,13 +52,24 @@ export interface ReceiveMessageActionMeta {
     request?: any;
 }
 
+export interface UnsubscribeFromChannelActionPayload {
+    channelId: number;
+}
+
+export interface UnsubscribeFromChannelAckActionPayload {
+    channelId: number;
+}
+
 export const TransportActions = {
     sendMessage: createAction<TRANSPORT_ACTION_TYPES.SEND_MESSAGE, any>(TRANSPORT_ACTION_TYPES.SEND_MESSAGE),
     receiveMessage: createAction<TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE, any, ReceiveMessageActionMeta | undefined>(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
     changeConnectionStatus: createAction<TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS, ConnectionStatus>(TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS),
     subscribeToChannel: createAction<TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL, SubscribeToChannelActionPayload>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL),
     subscribeToChannelAck: createAction<TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK, SubscribeToChannelAckActionPayload>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK),
-    subscribeToChannelNack: createAction<TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK, SubscribeToChannelNackActionPayload>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK)
+    subscribeToChannelNack: createAction<TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK, SubscribeToChannelNackActionPayload>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK),
+    unsubscribeFromChannel: createAction<TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL, UnsubscribeFromChannelActionPayload>(TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL),
+    unsubscribeFromChannelAck: createAction<TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_ACK, UnsubscribeFromChannelAckActionPayload>(TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_ACK),
+    unsubscribeFromChannelNack: createAction<TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_NACK>(TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_NACK),
 };
 
 export type TransportActions = ActionUnion<typeof TransportActions>;
@@ -65,3 +79,6 @@ export type ChangeConnectionStatus = ReturnType<typeof TransportActions.changeCo
 export type SubscribeToChannel = ReturnType<typeof TransportActions.subscribeToChannel>;
 export type SubscribeToChannelAck = ReturnType<typeof TransportActions.subscribeToChannelAck>;
 export type SubscribeToChannelNack = ReturnType<typeof TransportActions.subscribeToChannelNack>;
+export type UnsubscribeFromChannel = ReturnType<typeof TransportActions.unsubscribeFromChannel>;
+export type UnsubscribeFromChannelAck = ReturnType<typeof TransportActions.unsubscribeFromChannelAck>;
+export type UnsubscribeFromChannelNack = ReturnType<typeof TransportActions.unsubscribeFromChannelNack>;

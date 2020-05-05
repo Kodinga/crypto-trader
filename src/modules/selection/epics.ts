@@ -1,6 +1,7 @@
+import { getCurrencyPair } from './selectors';
 import { from } from 'rxjs';
 import { Epic, ofType, combineEpics } from 'redux-observable';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, pairwise, withLatestFrom } from 'rxjs/operators';
 import { Actions } from 'modules/root';
 import { TradesActions } from 'modules/trades/actions';
 import { CandlesActions } from 'modules/candles/actions';
@@ -9,20 +10,35 @@ import { RootState } from './../root';
 import { Dependencies } from './../redux/store';
 import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './actions';
 
-const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action$) =>
-  action$.pipe(
+const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) => {
+  const statePairs$ = state$.pipe(pairwise());
+  return action$.pipe(
     ofType(SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR),
-    switchMap(action => {
+    withLatestFrom(statePairs$),
+    switchMap(([action, [oldState, newState]]) => {
+      const oldCurrencyPair = getCurrencyPair(oldState);
       const { currencyPair } = (action as SelectCurrencyPair).payload;
-      
-      return from([
+      const unsubscribeActions = [];
+      if (oldCurrencyPair) {
+        unsubscribeActions.push(
+          TradesActions.unsubscribeFromTrades({ symbol: oldCurrencyPair })
+        );
+      }
+
+      const subscribeActions = [
         CandlesActions.subscribeToCandles({ symbol: currencyPair, timeframe: '1m' }),
         TradesActions.subscribeToTrades({ symbol: currencyPair }),
         BookActions.subscribeToBook({ symbol: currencyPair })
+      ]
+
+      return from([
+        ...unsubscribeActions,
+        ...subscribeActions
       ]);
 
     })
   );
+}
 
 export default combineEpics(
   handleSelection

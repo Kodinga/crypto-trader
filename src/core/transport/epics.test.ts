@@ -1,7 +1,7 @@
 import { TestScheduler } from 'rxjs/testing';
 import { Dependencies } from 'modules/redux/store';
 import { wrapHelpers } from 'testing/utils';
-import { TransportActions, SubscribeToChannel } from 'core/transport/actions';
+import { TransportActions, SubscribeToChannel, UnsubscribeFromChannel } from 'core/transport/actions';
 import { DummyConnectionProxy } from './DummyConnectionProxy';
 import { SendMessage, ReceiveMessage } from './actions';
 import { handleSubscription, WS_SUBSCRIPTION_TIMEOUT_IN_MS, handleSendMessage } from './epics';
@@ -201,7 +201,7 @@ describe('TransportEpic', () => {
             });
         });
 
-        it('should handle timeout', () => {
+        it('should handle subscription timing out', () => {
             testScheduler.run(helpers => {
                 const { hotAction, hotState, expectObservable } = wrapHelpers<
                     SubscribeToChannel | ReceiveMessage,
@@ -220,7 +220,7 @@ describe('TransportEpic', () => {
                 const state$ = hotState('-');
                 const output$ = handleSubscription(action$, state$, {} as unknown as Dependencies);
 
-                expectObservable(output$).toBe(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms (b|)`, {
+                expectObservable(output$).toBe(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms b`, {
                     a: TransportActions.sendMessage({
                         event: 'subscribe',
                         channel: 'trades',
@@ -229,6 +229,70 @@ describe('TransportEpic', () => {
                     b: TransportActions.subscribeToChannelNack({
                         error: 'Timeout'
                     })
+                });
+            });
+        });
+
+        it('should handle successful unsubscription', async () => {
+            testScheduler.run(helpers => {
+                const { hotAction, hotState, expectObservable } = wrapHelpers<
+                    UnsubscribeFromChannel | ReceiveMessage,
+                    any
+                >(
+                    helpers,
+                    {}
+                );
+               
+                const channelId = 1;
+                
+                const action$ = hotAction('-a-b', {
+                    a: TransportActions.unsubscribeFromChannel({
+                        channelId
+                    }),
+                    b: TransportActions.receiveMessage({
+                        event: 'unsubscribed',
+                        chanId: channelId
+                    }, undefined)
+                });
+                const state$ = hotState('-');
+                const output$ = handleSubscription(action$, state$, {} as unknown as Dependencies);
+
+                expectObservable(output$).toBe('-a-b', {
+                    a: TransportActions.sendMessage({
+                        event: 'unsubscribe',
+                        chanId: channelId
+                    }),
+                    b: TransportActions.unsubscribeFromChannelAck({
+                        channelId
+                    })
+                });
+            });
+        });
+
+        it('should handle unsubscription timing out', () => {
+            testScheduler.run(helpers => {
+                const { hotAction, hotState, expectObservable } = wrapHelpers<
+                    UnsubscribeFromChannel | ReceiveMessage,
+                    any
+                >(
+                    helpers,
+                    {}
+                );
+                const channelId = 12;
+                const action$ = hotAction(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS}ms `, {
+                    a: TransportActions.unsubscribeFromChannel({
+                        channelId
+                    })
+                });
+                const state$ = hotState('-');
+                const output$ = handleSubscription(action$, state$, {} as unknown as Dependencies);
+
+                expectObservable(output$).toBe(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms b`, {
+                    a: TransportActions.sendMessage({
+                        event: 'unsubscribe',
+                        chanId: channelId
+                    }),
+                    b: TransportActions.unsubscribeFromChannelNack()
                 });
             });
         });
