@@ -1,6 +1,6 @@
-Crypto Trader is real-time demo application based on the Bitfinex paltform.
+Crypto Trader is real-time demo application based on the Bitfinex platform.
 
-![Crypto Trader]("./public/crypto-trader.gif")
+![image](public/crypto-trader.gif)
 
 ## Available Scripts
 
