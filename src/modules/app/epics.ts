@@ -1,7 +1,7 @@
 import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './../selection/actions';
 import { merge, of, from, EMPTY } from 'rxjs';
 import { Epic, ofType, combineEpics } from 'redux-observable';
-import { switchMap, take, mergeMap, filter, map, tap} from 'rxjs/operators';
+import { switchMap, take, mergeMap, filter, map, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Actions } from 'modules/root';
 import { ConnectionStatus } from 'core/transport/types/ConnectionStatus';
 import { getCurrencyPairs } from 'modules/reference-data/selectors';
@@ -56,6 +56,7 @@ const updateTitle: Epic<Actions, Actions, RootState, Dependencies> = (action$, s
         return state$
           .pipe(
             map(state => state.ticker[currencyPair]),
+            distinctUntilChanged(),
             filter(ticker => typeof ticker !== 'undefined'),
             tap(ticker => document.title = `(${ticker.lastPrice?.toFixed(2)} ${counter}) Crypto Trader`),
             mergeMap(() => EMPTY)
