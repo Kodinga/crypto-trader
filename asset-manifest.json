@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/static/css/main.4fad0284.chunk.css",
-    "main.js": "/static/js/main.446b17e1.chunk.js",
-    "main.js.map": "/static/js/main.446b17e1.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.1edba088.js",
-    "runtime-main.js.map": "/static/js/runtime-main.1edba088.js.map",
-    "static/css/2.b2e868b7.chunk.css": "/static/css/2.b2e868b7.chunk.css",
-    "static/js/2.14bf3d48.chunk.js": "/static/js/2.14bf3d48.chunk.js",
-    "static/js/2.14bf3d48.chunk.js.map": "/static/js/2.14bf3d48.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.736c6e13d941b015901c5e372e62d7d0.js": "/precache-manifest.736c6e13d941b015901c5e372e62d7d0.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.b2e868b7.chunk.css.map": "/static/css/2.b2e868b7.chunk.css.map",
-    "static/css/main.4fad0284.chunk.css.map": "/static/css/main.4fad0284.chunk.css.map",
-    "static/js/2.14bf3d48.chunk.js.LICENSE.txt": "/static/js/2.14bf3d48.chunk.js.LICENSE.txt",
-    "static/media/fonts.css": "/static/media/MaterialIcons-Regular.012cf6a1.woff"
+    "main.css": "/crypto-trader/static/css/main.6ce459d6.chunk.css",
+    "main.js": "/crypto-trader/static/js/main.ed2c124f.chunk.js",
+    "main.js.map": "/crypto-trader/static/js/main.ed2c124f.chunk.js.map",
+    "runtime-main.js": "/crypto-trader/static/js/runtime-main.669214a5.js",
+    "runtime-main.js.map": "/crypto-trader/static/js/runtime-main.669214a5.js.map",
+    "static/css/2.b2e868b7.chunk.css": "/crypto-trader/static/css/2.b2e868b7.chunk.css",
+    "static/js/2.33e78ed6.chunk.js": "/crypto-trader/static/js/2.33e78ed6.chunk.js",
+    "static/js/2.33e78ed6.chunk.js.map": "/crypto-trader/static/js/2.33e78ed6.chunk.js.map",
+    "index.html": "/crypto-trader/index.html",
+    "precache-manifest.683fb7e920bf07bb795c716d3c8207f6.js": "/crypto-trader/precache-manifest.683fb7e920bf07bb795c716d3c8207f6.js",
+    "service-worker.js": "/crypto-trader/service-worker.js",
+    "static/css/2.b2e868b7.chunk.css.map": "/crypto-trader/static/css/2.b2e868b7.chunk.css.map",
+    "static/css/main.6ce459d6.chunk.css.map": "/crypto-trader/static/css/main.6ce459d6.chunk.css.map",
+    "static/js/2.33e78ed6.chunk.js.LICENSE.txt": "/crypto-trader/static/js/2.33e78ed6.chunk.js.LICENSE.txt",
+    "static/media/fonts.css": "/crypto-trader/static/media/MaterialIcons-Regular.012cf6a1.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.1edba088.js",
+    "static/js/runtime-main.669214a5.js",
     "static/css/2.b2e868b7.chunk.css",
-    "static/js/2.14bf3d48.chunk.js",
-    "static/css/main.4fad0284.chunk.css",
-    "static/js/main.446b17e1.chunk.js"
+    "static/js/2.33e78ed6.chunk.js",
+    "static/css/main.6ce459d6.chunk.css",
+    "static/js/main.ed2c124f.chunk.js"
   ]
 }
