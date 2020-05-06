@@ -1,3 +1,4 @@
+import { createReducer } from 'modules/redux/utils';
 import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
 import { isHeartbeat, isSubscriptionMessage, isUnsubscriptionMessage, isErrorMessage } from 'core/transport/utils';
 import { ReceiveMessage } from 'core/transport/actions';
@@ -46,43 +47,37 @@ function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
     }
 }
 
-export function tradesReducer(
-    state = initialState,
-    action: Actions
-) {
-    switch (action.type) {
-        case TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE: {
-            if (isHeartbeat(action) || isSubscriptionMessage(action) || isErrorMessage(action)) {
-                return state;
-            }
-
-            const { channel, request } = action.meta || {};
-            if (channel === 'trades') {
-                const { symbol } = request;    
-                const currencyPair = symbol.slice(1);
-                if (isUnsubscriptionMessage(action)) {
-                    const updatedState = {
-                        ...state
-                    };
-                    delete updatedState[currencyPair];
-                    return updatedState;
-                }     
-
-                const symbolReducer = Array.isArray(action.payload[1]) ? snapshotReducer : updateReducer;
-                const result = symbolReducer(state[currencyPair], action);
-
-                return {
-                    ...state,
-                    [currencyPair]: result
-                };
-            }
-
-            return state;
-        }
-
-        default:
-            return state;
+const receiveMessageReducer = (state: TradesState, action: ReceiveMessage) => {
+    if (isHeartbeat(action) || isSubscriptionMessage(action) || isErrorMessage(action)) {
+        return state;
     }
+
+    const { channel, request } = action.meta || {};
+    if (channel === 'trades') {
+        const { symbol } = request;    
+        const currencyPair = symbol.slice(1);
+        if (isUnsubscriptionMessage(action)) {
+            const updatedState = {
+                ...state
+            };
+            delete updatedState[currencyPair];
+            return updatedState;
+        }     
+
+        const symbolReducer = Array.isArray(action.payload[1]) ? snapshotReducer : updateReducer;
+        const result = symbolReducer(state[currencyPair], action);
+
+        return {
+            ...state,
+            [currencyPair]: result
+        };
+    }
+
+    return state;
 }
+
+export const tradesReducer = createReducer<TradesState, Actions>({
+    [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer
+}, initialState);
 
 export default tradesReducer;

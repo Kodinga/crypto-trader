@@ -1,7 +1,8 @@
+import { Actions } from 'modules/root';
 import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
+import { createReducer } from 'modules/redux/utils';
 import { isHeartbeat, isSubscriptionMessage, isUnsubscriptionMessage, isErrorMessage } from 'core/transport/utils';
-import { ReceiveMessage } from './../../core/transport/actions';
-import { Actions } from './../root';
+import { ReceiveMessage } from 'core/transport/actions';
 import { Order } from './types/Order';
 
 type SymbolState = Order[];
@@ -51,44 +52,38 @@ function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
     }
 }
 
-export function bookReducer(
-    state = initialState,
-    action: Actions
-) {
-    switch (action.type) {
-        case TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE: {
-            if (isHeartbeat(action) || isSubscriptionMessage(action) || isErrorMessage(action)) {
-                return state;
-            }
+const receiveMessageReducer = (state: BookState, action: ReceiveMessage) => {
+    if (isHeartbeat(action) || isSubscriptionMessage(action) || isErrorMessage(action)) {
+        return state;
+    }
 
-            const { channel, request } = action.meta || {};
+    const { channel, request } = action.meta || {};
 
-            if (channel === 'book') {
-                const { symbol } = request;    
-                const currencyPair = symbol.slice(1);  
+    if (channel === 'book') {
+        const { symbol } = request;    
+        const currencyPair = symbol.slice(1);  
 
-                if (isUnsubscriptionMessage(action)) {
-                    const updatedState = {
-                        ...state
-                    };
-                    delete updatedState[currencyPair];
-                    return updatedState;
-                }
-
-                const symbolReducer = Array.isArray(action.payload[1][0]) ? snapshotReducer : updateReducer;
-                const result = symbolReducer(state[currencyPair], action);
-                return {
-                    ...state,
-                    [currencyPair]: result
-                };
-            }
-
-            return state;
+        if (isUnsubscriptionMessage(action)) {
+            const updatedState = {
+                ...state
+            };
+            delete updatedState[currencyPair];
+            return updatedState;
         }
 
-        default:
-            return state;
+        const symbolReducer = Array.isArray(action.payload[1][0]) ? snapshotReducer : updateReducer;
+        const result = symbolReducer(state[currencyPair], action);
+        return {
+            ...state,
+            [currencyPair]: result
+        };
     }
+
+    return state;
 }
+
+export const bookReducer = createReducer<BookState, Actions>({
+    [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer
+}, initialState);
 
 export default bookReducer;

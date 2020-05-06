@@ -44,4 +44,25 @@ export function createAction(type: string) {
     }
 };
 
-export type ActionUnion<A extends ActionCreatorsMapObject> = ReturnType<A[keyof A]>
+export type ActionUnion<A extends ActionCreatorsMapObject> = ReturnType<A[keyof A]>;
+
+type ReducerMap<S, A> = A extends ActionWithPayloadAndMeta<infer T, infer P, infer M>
+    ? { [key in T]: (state: S, action: ActionWithPayloadAndMeta<T, P, M>) => S }
+    : A extends ActionWithPayload<infer T, infer P>
+        ? { [key in T]: (state: S, action: ActionWithPayload<T, P>) => S }
+        : A extends Action<infer T>
+            ? {  [key in T]: (state: S, action: Action<T>) => S }
+            : never;
+
+export function createReducer<S, A extends { type: string }>(
+  handlers: ReducerMap<S, A>,
+  initialState: S,
+) {
+  return function reducer(state = initialState, action: A): S {
+    if (handlers.hasOwnProperty(action.type)) {
+      return handlers[action.type](state, action);
+    } else {
+      return state;
+    }
+  };
+}
