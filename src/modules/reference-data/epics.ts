@@ -10,7 +10,7 @@ export const loadRefData: Epic<Actions, Actions, RootState, Dependencies> = (act
   action$.pipe(
     ofType(REF_DATA_ACTION_TYPES.LOAD_REF_DATA),
     switchMap(() => {
-      return fromFetch('/data/currencyPairs.json')
+      return fromFetch('data/currencyPairs.json')
         .pipe(
           switchMap(response => response.json()),
           map(result => RefDataActions.loadRefDataAck({
