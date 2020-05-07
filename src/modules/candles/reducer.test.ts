@@ -43,7 +43,7 @@ describe('CandlesReducer', () => {
         };
         
         const channelId = 17470;
-        const [timestamp, open, close, high, low, volume] = [1574698200000,7399.9,7379.7,7399.9,7371.8,41.63633658];
+        const [timestamp, open, close, high, low, volume] = [1574698280000,7399.9,7379.7,7399.9,7371.8,41.63633658];
         const data = [
             channelId,
             [timestamp, open, close, high, low, volume]
@@ -58,6 +58,7 @@ describe('CandlesReducer', () => {
         const result = candles(initialState, action);
         expect(result).toEqual({
             [currencyPair]: [
+                {timestamp, open, close, high, low, volume},
                 {
                     timestamp: 1574698260000,
                     open: 7379, 
@@ -65,8 +66,7 @@ describe('CandlesReducer', () => {
                     high: 7401,
                     low: 7378, 
                     volume: 1.70
-                },
-                {timestamp, open, close, high, low, volume}
+                }
             ]
         });
     });

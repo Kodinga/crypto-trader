@@ -5,6 +5,8 @@ import { ReceiveMessage } from 'core/transport/actions';
 import { Actions } from './../root';
 import { Candle } from './types/Candle';
 
+const MAX_CANDLES = 1000;
+
 type SymbolState = Candle[];
 
 export interface CandlesState {
@@ -18,23 +20,24 @@ function snapshotReducer(state: SymbolState, action: ReceiveMessage) {
     const [, candles] = action.payload;
     return candles.map(([timestamp, open, close, high, low, volume]: number[]) => ({
         timestamp, open, close, high, low, volume
-    }));
+    })).sort((a: Candle, b: Candle) => b.timestamp - a.timestamp);
 }
 
 function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
     const [, candle] = action.payload;
     const [timestamp, open, close, high, low, volume] = candle;
 
-    const updatedState = state.slice();
-    updatedState.push({
-        timestamp,
-        open,
-        close,
-        high,
-        low,
-        volume
-    });
-    return updatedState;
+    return [
+        {
+            timestamp,
+            open,
+            close,
+            high,
+            low,
+            volume
+        },
+        ...state
+    ];
 }
 
 const receiveMessageReducer = (state: CandlesState, action: ReceiveMessage) => {
@@ -61,7 +64,7 @@ const receiveMessageReducer = (state: CandlesState, action: ReceiveMessage) => {
 
         return {
             ...state,
-            [currencyPair]: result
+            [currencyPair]: result.slice(0, MAX_CANDLES) // restrict number of candles so we don't eventully fill up the memory
         };
     }
 
