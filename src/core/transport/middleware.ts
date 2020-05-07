@@ -1,5 +1,5 @@
 import { Middleware, Dispatch } from 'redux';
-import { AppActions } from 'modules/app/actions';
+import { Actions } from 'modules/root';
 import { Connection } from './Connection';
 import { TransportActions } from './actions';
 
@@ -20,7 +20,7 @@ const createWsMiddleware = ({ connection }: { connection: Connection }): Middlew
             }
             next(TransportActions.receiveMessage(parsedData, meta));
         });
-        return (action: AppActions) => next(action);
+        return (action: Actions) => next(action);
     };
 }
 
