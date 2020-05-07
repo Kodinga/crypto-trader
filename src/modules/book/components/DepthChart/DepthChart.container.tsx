@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { RootState } from 'modules/root';
+import { getCurrencyPair } from 'modules/selection/selectors';
 import DepthChart, { Props } from './DepthChart'
 import { getDepth } from '../../selectors';
-import { getCurrencyPair } from 'modules/selection/selectors';
 
 const mapStateToProps = (state: RootState): Props => {
     const currencyPair = getCurrencyPair(state);
