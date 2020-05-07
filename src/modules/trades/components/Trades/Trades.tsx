@@ -4,7 +4,7 @@ import { ColDef } from 'ag-grid-community';
 import { DateTime } from 'luxon';
 import { Trade } from '../../types/Trade';
 import { Container } from './Trades.styled';
-import theme from 'theme/style';
+import Palette from 'theme/style';
 
 export interface Props {
     trades: Trade[];
@@ -23,7 +23,7 @@ const Trades: FC<Props> = props => {
         valueFormatter: params => Math.abs(params.value).toString(),
         cellStyle: params => {
             return {
-                color: params.value < 0 ? theme.Ask : theme.Bid
+                color: params.value < 0 ? Palette.Ask : Palette.Bid
             }
         }
     }, {
@@ -36,7 +36,7 @@ const Trades: FC<Props> = props => {
         width: 90,
         valueFormatter: params => DateTime.fromMillis(params.value).toLocaleString(DateTime.TIME_24_WITH_SECONDS),
         cellStyle: () => ({
-            color: 'rgba(245, 245, 245, 0.64)'
+            color: Palette.LightGray
         })
     }];
 

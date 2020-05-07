@@ -18,9 +18,40 @@ const CandlesChart: FC<Props> = props => {
         time: {
             useUTC: false
         },
+        yAxis: [{
+            labels: {
+                align: 'right',
+                x: -3
+            },
+            title: {
+                text: 'OHLC'
+            },
+            height: '70%',
+            lineWidth: 2,
+            resize: {
+                enabled: true
+            }
+        }, {
+            labels: {
+                align: 'right',
+                x: -3
+            },
+            title: {
+                text: 'Volume'
+            },
+            top: '75%',
+            height: '25%',
+            offset: 0,
+            lineWidth: 2
+        }],
         series: [{
             type: 'candlestick',
             data: []
+        }, {
+            type: 'column',
+            name: 'Volume',
+            data: [],
+            yAxis: 1
         }],
         rangeSelector: {
             selected: 1,
@@ -49,21 +80,29 @@ const CandlesChart: FC<Props> = props => {
 
     useEffect(() => {
         if (candles && candles.length > 0) {
-            const data = candles.map(({ timestamp, ...rest }) => ({
+            const ohlc = candles.map(({ timestamp, ...rest }) => ({
                 x: timestamp,
                 ...rest
             }))
                 .sort((a, b) => a.x - b.x);
+            const volumes = candles.map(({timestamp, volume}) => [timestamp, volume]).sort((a, b) => a[0] - b[0]);
+
             setChartOptions({
                 series: [{
                     type: 'candlestick',
                     name: currencyPair && formatCurrencyPair(currencyPair),
-                    data
+                    data: ohlc
+                }, {
+                    type: 'column',
+                    data: volumes,
                 }],
                 plotOptions: {
                     candlestick: {
                         color: Palette.Negative,
                         upColor: Palette.Positive
+                    },
+                    column: {
+                        color: Palette.LightGray
                     }
                 }
             });

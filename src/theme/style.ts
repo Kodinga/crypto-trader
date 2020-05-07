@@ -8,6 +8,7 @@ const Palette = {
     BackgroundColor: '#222',
     Label: 'rgba(245, 245, 245, 0.64)',
     Border: '#424242',
+    LightGray: 'rgba(245, 245, 245, 0.64)'
 };
 
 export default Palette;
