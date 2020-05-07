@@ -34,7 +34,6 @@ const Trades: FC<Props> = props => {
     }, {
         headerName: 'Time',
         field: 'timestamp',
-        sort: 'desc',
         valueFormatter: params => DateTime.fromMillis(params.value).toLocaleString(DateTime.TIME_24_WITH_SECONDS),
         cellStyle: () => ({
             color: Palette.LightGray

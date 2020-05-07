@@ -7,6 +7,8 @@ import { Trade } from './types/Trade';
 
 type SymbolState = Trade[];
 
+export const MAX_TRADES = 100;
+
 export interface TradesState {
     [currencyPair: string]: SymbolState;
 }
@@ -16,7 +18,7 @@ const initialState: TradesState = {
 
 function snapshotReducer(state: SymbolState, action: ReceiveMessage) {
     const [, trades] = action.payload;
-    return trades.map(([id, timestamp, amount, price]: number[]) => ({
+    return trades.sort((a: number[], b: number[]) => b[1] - a[1]).map(([id, timestamp, amount, price]: number[]) => ({
         id,
         timestamp,
         amount,
@@ -41,8 +43,8 @@ function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
         return updatedState;
     } else {
         return [
-            ...state,
-            newOrUpdatedTrade
+            newOrUpdatedTrade,
+            ...state
         ];
     }
 }
@@ -69,7 +71,7 @@ const receiveMessageReducer = (state: TradesState, action: ReceiveMessage) => {
 
         return {
             ...state,
-            [currencyPair]: result
+            [currencyPair]: result.slice(0, MAX_TRADES) // only keep the top x trades, so we don't eventually fill up the memory
         };
     }
 

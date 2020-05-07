@@ -5,11 +5,13 @@ describe('TradesReducer', () => {
     it('should handle snapshot', () => {
         const currencyPair = 'BTCUSD';
         const channelId = 17470;
-        const [id, timestamp, amount, price] = [1,1574694475039,0.005,7244.9];
+        const [trade1Id, trade1Timestamp, trade1Amount, trade1Price] = [1,1574694475039,0.005,7244.9];
+        const [trade2Id, trade2Timestamp, trade2Amount, trade2Price] = [2,1574694475040,0.01,7242.1];
         const data = [
             channelId,
             [
-                [id, timestamp, amount, price]
+                [trade1Id, trade1Timestamp, trade1Amount, trade1Price],
+                [trade2Id, trade2Timestamp, trade2Amount, trade2Price]
             ]
         ];
         const meta = {
@@ -22,7 +24,8 @@ describe('TradesReducer', () => {
         const result = trades(undefined, action);
         expect(result).toEqual({
             [currencyPair]: [
-                {id, timestamp, amount, price}
+                {id: trade2Id, timestamp: trade2Timestamp, amount: trade2Amount, price: trade2Price},
+                {id: trade1Id, timestamp: trade1Timestamp, amount: trade1Amount, price: trade1Price}
             ]
         });
     });
@@ -52,8 +55,8 @@ describe('TradesReducer', () => {
         const result = trades(initialState, action);
         expect(result).toEqual({
             [currencyPair]: [
-                {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
-                {id, timestamp, amount, price}
+                {id, timestamp, amount, price},
+                {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9}
             ]
         });
     });
@@ -94,8 +97,8 @@ describe('TradesReducer', () => {
         const symbol = 'tBTCUSD';
         const initialState = {
             [symbol.slice(1)]: [
-                {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id: 2, timestamp: 1574694478808, amount: 0.005, price: 7245.9},
+                {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9}
             ]
         };
         
@@ -120,8 +123,8 @@ describe('TradesReducer', () => {
         const otherCurrencyPair = 'BTCEUR';
         const initialState = {
             [currencyPair]: [
-                {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
                 {id: 2, timestamp: 1574694478808, amount: 0.005, price: 7245.9},
+                {id: 1, timestamp: 1574694475039, amount: 0.005, price: 7244.9},
             ],
             [otherCurrencyPair]: []
         };
