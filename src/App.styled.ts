@@ -16,7 +16,7 @@ export const Content = styled.div`
     height: 100%;
     @media only screen and (min-width: 1200px) {
         grid-template-rows: 40px 70px 1fr 250px 50px;
-        grid-template-columns: 400px 400px 1fr;
+        grid-template-columns: 400px 1fr 400px;
         grid-template-areas: 
             "header header header"
             "tickers tickers tickers"

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Container, CurrencyPair, Price, RelativeChange, Change } from './Ticker.styled';
 import UpdateHighlight from 'core/components/update-highlight/UpdateHighlight';
-import { formatCurrencyPair } from 'modules/reference-data/utils';
+import { formatCurrencyPair, formatPrice } from 'modules/reference-data/utils';
 import TrendIndicator from 'core/components/trend-indicator';
 
 export interface StateProps {
@@ -25,7 +25,7 @@ const Ticker: FC<Props> = props => {
     return (
         <Container onClick={onClick} isActive={!!isActive}>
             <CurrencyPair>{formatCurrencyPair(currencyPair)}</CurrencyPair>
-            <Price><UpdateHighlight value={lastPrice?.toFixed(2)} /></Price>
+            <Price><UpdateHighlight value={formatPrice(lastPrice)} /></Price>
             <RelativeChange isPositive={isPositiveChange}>
                 <TrendIndicator value={dailyChangeRelative} />
                 <UpdateHighlight value={percentChange?.toFixed(2)} />

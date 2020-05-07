@@ -14,3 +14,7 @@ export function formatCurrencyPair(currencyPair: string): string {
     const [base, counter] = parseCurrencyPair(currencyPair);
     return [base, counter].join(' / ');
 }
+
+export const formatPrice = (price: number | string | undefined) => {
+    return typeof price === 'undefined' || price === '' ? '' : Number(price).toFixed(2);
+}
