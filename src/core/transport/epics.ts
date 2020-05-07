@@ -10,9 +10,9 @@ export const WS_SUBSCRIPTION_TIMEOUT_IN_MS = 5000;
 
 export const handleSendMessage: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
-    ofType(TRANSPORT_ACTION_TYPES.SEND_MESSAGE),
+    ofType<Actions, SendMessage>(TRANSPORT_ACTION_TYPES.SEND_MESSAGE),
     mergeMap(action => {
-      connection.send(JSON.stringify((action as SendMessage).payload));
+      connection.send(JSON.stringify(action.payload));
       return EMPTY;
     })
   );
@@ -22,20 +22,19 @@ export const handleSendMessage: Epic<Actions, Actions, RootState, Dependencies> 
     Because requests/responses don't have a correlation id, we can't run concurrent requests safely.
     Therefore, we queue subscription requests and process them sequencially.
 */
-export const handleSubscription: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) => {
+export const handleSubscription: Epic<Actions, Actions, RootState, Dependencies> = (action$) => {
   return action$.pipe(
-    filter(action => action.type === TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL || action.type === TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL),
+    ofType<Actions, SubscribeToChannel | UnsubscribeFromChannel>(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL, TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL),
     concatMap(rootAction => {
       const isSubscribing = rootAction.type === TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL;
 
       return merge(
         action$.pipe(
-          ofType(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
+          ofType<Actions, ReceiveMessage>(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
           filter(action => {
-            const receiveMessageAction = action as ReceiveMessage;
-            return (isSubscribing && receiveMessageAction.payload.event === 'subscribed' && receiveMessageAction.payload.channel === (rootAction as SubscribeToChannel).payload.channel)
-              || (!isSubscribing && receiveMessageAction.payload.event === 'unsubscribed')
-              || receiveMessageAction.payload.event === 'error'
+            return (isSubscribing && action.payload.event === 'subscribed' && action.payload.channel === (rootAction as SubscribeToChannel).payload.channel)
+              || (!isSubscribing && action.payload.event === 'unsubscribed')
+              || action.payload.event === 'error'
           }),
           take(1),
           timeout(WS_SUBSCRIPTION_TIMEOUT_IN_MS),

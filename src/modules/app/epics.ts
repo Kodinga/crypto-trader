@@ -12,22 +12,23 @@ import { TRANSPORT_ACTION_TYPES, ChangeConnectionStatus } from 'core/transport/a
 import { parseCurrencyPair } from 'modules/reference-data/utils';
 import { TickerActions } from 'modules/ticker/actions';
 import { RootState } from './../root';
-import { APP_ACTION_TYPES } from './actions';
+import { APP_ACTION_TYPES, BoostrapApp } from './actions';
+import { LoadRefDataAck } from './../reference-data/actions';
 
 const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(
-    ofType(APP_ACTION_TYPES.BOOTSTRAP_APP),
+    ofType<Actions, BoostrapApp>(APP_ACTION_TYPES.BOOTSTRAP_APP),
     switchMap(() => {
-      console.log('Boostrap App');
+      console.log('Bootstrap App');
       connection.connect();
 
       return action$.pipe(
-        ofType(TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS),
-        filter(action => (action as ChangeConnectionStatus).payload === ConnectionStatus.Connected),
+        ofType<Actions, ChangeConnectionStatus>(TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS),
+        filter(action => action.payload === ConnectionStatus.Connected),
         switchMap(() => merge(
           of(RefDataActions.loadRefData()),
           action$.pipe(
-            ofType(REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK),
+            ofType<Actions, LoadRefDataAck>(REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK),
             take(1),
             mergeMap(() => {
               const currencyPairs = getCurrencyPairs(state$.value);

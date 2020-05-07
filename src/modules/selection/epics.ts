@@ -13,11 +13,11 @@ import { getCurrencyPair } from './selectors';
 const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) => {
   const statePairs$ = state$.pipe(pairwise());
   return action$.pipe(
-    ofType(SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR),
+    ofType<Actions, SelectCurrencyPair>(SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR),
     withLatestFrom(statePairs$),
     switchMap(([action, [oldState, newState]]) => {
       const oldCurrencyPair = getCurrencyPair(oldState);
-      const { currencyPair } = (action as SelectCurrencyPair).payload;
+      const { currencyPair } = action.payload;
       const unsubscribeActions = [];
       if (oldCurrencyPair) {
         unsubscribeActions.push(

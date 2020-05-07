@@ -8,9 +8,9 @@ import { Dependencies } from './../redux/store';
 
 export const subscribeToTicker: Epic<Actions, Actions, RootState | undefined, Dependencies | undefined> = (action$) =>
     action$.pipe(
-        ofType(TICKER_ACTION_TYPES.SUBSCRIBE_TO_TICKER),
+        ofType<Actions, SubscribeToTickerAction>(TICKER_ACTION_TYPES.SUBSCRIBE_TO_TICKER),
         map(action => {
-            const { symbol } = (action as SubscribeToTickerAction).payload;
+            const { symbol } = action.payload;
             const msg = {
                 channel: 'ticker' as TickerChannel,
                 symbol: `t${symbol}`

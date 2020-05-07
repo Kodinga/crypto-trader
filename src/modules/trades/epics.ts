@@ -11,9 +11,9 @@ import { from } from 'rxjs';
 
 export const subscribeToTrades: Epic<Actions, Actions, RootState, Dependencies> = (action$) =>
     action$.pipe(
-        ofType(TRADES_ACTION_TYPES.SUBSCRIBE_TO_TRADES),
+        ofType<Actions, SubscribeToTrades>(TRADES_ACTION_TYPES.SUBSCRIBE_TO_TRADES),
         map(action => {
-            const { symbol } = (action as SubscribeToTrades).payload;
+            const { symbol } = action.payload;
             const msg = {
                 channel: 'trades' as TradesChannel,
                 symbol: `t${symbol}`
@@ -24,9 +24,9 @@ export const subscribeToTrades: Epic<Actions, Actions, RootState, Dependencies> 
 
 export const unsubscribeFromTrades: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) =>
     action$.pipe(
-        ofType(TRADES_ACTION_TYPES.UNSUBSCRIBE_FROM_TRADES),
+        ofType<Actions, UnsubscribeFromTrades>(TRADES_ACTION_TYPES.UNSUBSCRIBE_FROM_TRADES),
         mergeMap(action => {
-            const { symbol } = (action as UnsubscribeFromTrades).payload;
+            const { symbol } = action.payload;
             const result: Actions[] = [];
             const channelId = getSubscription(state$.value)('trades', {
                 symbol: `t${symbol}`

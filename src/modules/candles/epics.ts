@@ -10,9 +10,9 @@ import { Dependencies } from './../redux/store';
 
 export const subscribeToCandles: Epic<Actions, Actions, RootState | undefined, Dependencies | undefined> = (action$) =>
     action$.pipe(
-        ofType(CANDLES_ACTION_TYPES.SUBSCRIBE_TO_CANDLES),
+        ofType<Actions, SubscribeToCandles>(CANDLES_ACTION_TYPES.SUBSCRIBE_TO_CANDLES),
         map(action => {
-            const { symbol, timeframe } = (action as SubscribeToCandles).payload;
+            const { symbol, timeframe } = action.payload;
             const msg = {
                 channel: 'candles' as CandlesChannel,
                 key: ['trade', timeframe, `t${symbol}`].join(':')
@@ -24,9 +24,9 @@ export const subscribeToCandles: Epic<Actions, Actions, RootState | undefined, D
 
 export const unsubscribeFromCandles: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) =>
     action$.pipe(
-        ofType(CANDLES_ACTION_TYPES.UNSUBSCRIBE_FROM_CANDLES),
+        ofType<Actions, UnsubscribeFromCandles>(CANDLES_ACTION_TYPES.UNSUBSCRIBE_FROM_CANDLES),
         mergeMap(action => {
-            const { symbol, timeframe } = (action as UnsubscribeFromCandles).payload;
+            const { symbol, timeframe } = action.payload;
 
             const result: Actions[] = [];
             const channelId = getSubscription(state$.value)('candles', {
