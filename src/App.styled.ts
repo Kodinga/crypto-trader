@@ -9,14 +9,16 @@ export const Container = styled.div`
 
 export const Content = styled.div`
     display: grid;
-    grid-template-rows: 40px 80px 1fr 250px;
+    grid-template-rows: 40px 70px 1fr 250px 50px;
     grid-template-columns: 400px 400px 1fr;
     grid-template-areas: 
         "header header header"
         "tickers tickers tickers"
         "trades candles candles"
-        "trades book depth";
+        "trades book depth"
+        "footer footer footer";
     grid-gap: 5px;
+    padding: 5px 10px;
 `;
 
 export const Header = styled.div`
@@ -47,4 +49,9 @@ export const BookPanel = styled.div`
 
 export const DepthPanel = styled.div`
     grid-area: depth;
-`
+`;
+
+export const Footer = styled.div`
+    grid-area: footer;
+`;
+

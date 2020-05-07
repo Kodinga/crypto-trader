@@ -17,7 +17,7 @@ export interface Props {
 
 const DepthChart: FC<Props> = props => {
     const { depth } = props;
-    const debouncedDepth = useThrottle<Depth>(depth, 1000);
+    const throttledDepth = useThrottle<Depth>(depth, 500);
     const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
         chart: {
             type: 'area',
@@ -67,7 +67,7 @@ const DepthChart: FC<Props> = props => {
     })
 
     useEffect(() => {
-        const { bids, asks } = debouncedDepth;
+        const { bids, asks } = throttledDepth;
 
         setChartOptions({
             xAxis: {
@@ -98,7 +98,7 @@ const DepthChart: FC<Props> = props => {
             }]
         });
 
-    }, [debouncedDepth]);
+    }, [throttledDepth]);
 
     return (
         <Container>

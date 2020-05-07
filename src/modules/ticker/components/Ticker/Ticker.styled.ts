@@ -6,14 +6,14 @@ export const Container = styled.div<{
 }>`
     cursor: pointer;
     display: grid;
-    grid-template-rows: 30px 1fr;
-    min-height: 60px;
+    grid-template-rows: 25px 1fr;
+    height: 50px;
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas: 
         "currencyPair price"
         "relativeChange change";
     font-size: 12px;
-    padding: 10px 10px 5px 10px;
+    padding: 5px 10px;
     border: 1px solid ${({isActive}) => isActive ? Palette.Orange : Palette.Border};
 
     &:hover {

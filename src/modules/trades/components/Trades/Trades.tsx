@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { DateTime } from 'luxon';
+import { useThrottle } from 'core/hooks/useThrottle';
 import { Trade } from '../../types/Trade';
 import { Container } from './Trades.styled';
 import Palette from 'theme/style';
@@ -12,6 +13,8 @@ export interface Props {
 
 const Trades: FC<Props> = props => {
     const { trades } = props;
+    const throttledTrades = useThrottle<Trade[]>(trades, 500);
+
     const columnDefs: ColDef[] = [{
         headerName: 'Id',
         field: 'id',
@@ -44,7 +47,7 @@ const Trades: FC<Props> = props => {
         <Container className='ag-theme-balham-dark'>
             <AgGridReact
                 columnDefs={columnDefs}
-                rowData={trades}
+                rowData={throttledTrades}
                 deltaRowDataMode={true}
                 getRowNodeId={data => data.id}
             >

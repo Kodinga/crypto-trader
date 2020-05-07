@@ -8,10 +8,12 @@ import CandlesChart from 'modules/candles/components/CandlesChart';
 import Book from 'modules/book/components/Book';
 import DepthChart from 'modules/book/components/DepthChart';
 import Widget from 'core/components/widget';
-import { Container, Content, Header, TradesPanel, TickersPanel, CandlesPanel, BookPanel, DepthPanel } from 'App.styled';
+import Diagnostics from 'core/components/Diagnostics';
+import { Container, Content, Header, TradesPanel, TickersPanel, CandlesPanel, BookPanel, DepthPanel, Footer } from 'App.styled';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import 'theme/fonts.css';
+
 
 function App() {
   const store = configureStore();
@@ -31,6 +33,7 @@ function App() {
           <CandlesPanel><CandlesChart /></CandlesPanel>
           <BookPanel><Widget title={'Book'}><Book /></Widget></BookPanel>
           <DepthPanel><Widget title={'Depth'}><DepthChart /></Widget></DepthPanel>
+          <Footer><Diagnostics /></Footer>
         </Content>
       </Container>
     </Provider>
