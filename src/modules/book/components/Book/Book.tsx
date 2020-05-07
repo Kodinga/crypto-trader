@@ -17,28 +17,24 @@ const Book: FC<Props> = props => {
     const columnDefs: ColDef[] = [{
         headerName: 'Bid Amount',
         field: 'bid.amount',
-        width: 100,
         cellStyle: () => ({
             color: Palette.Bid
         }),
     }, {
         headerName: 'Bid Price',
         field: 'bid.price',
-        width: 100,
         cellStyle: () => ({
             color: Palette.Bid
         })
     }, {
         headerName: 'Ask Price',
         field: 'ask.price',
-        width: 100,
         cellStyle: () => ({
             color: Palette.Ask
         })
     }, {
         headerName: 'Ask Amount',
         field: 'ask.amount',
-        width: 100,
         cellStyle: () => ({
             color: Palette.Ask
         }),
@@ -52,6 +48,7 @@ const Book: FC<Props> = props => {
                 rowData={throttledOrders}
                 deltaRowDataMode={true}
                 getRowNodeId={data => [data.bid?.id, data.ask?.id].join('#')}
+                onGridReady={event => event.api.sizeColumnsToFit()}
             >
             </AgGridReact>
         </Container>

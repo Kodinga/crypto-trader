@@ -22,7 +22,6 @@ const Trades: FC<Props> = props => {
     }, {
         headerName: 'Amount',
         field: 'amount',
-        width: 120,
         valueFormatter: params => Math.abs(params.value).toString(),
         cellStyle: params => {
             return {
@@ -36,7 +35,6 @@ const Trades: FC<Props> = props => {
         headerName: 'Time',
         field: 'timestamp',
         sort: 'desc',
-        width: 90,
         valueFormatter: params => DateTime.fromMillis(params.value).toLocaleString(DateTime.TIME_24_WITH_SECONDS),
         cellStyle: () => ({
             color: Palette.LightGray
@@ -50,6 +48,7 @@ const Trades: FC<Props> = props => {
                 rowData={throttledTrades}
                 deltaRowDataMode={true}
                 getRowNodeId={data => data.id}
+                onGridReady={event => event.api.sizeColumnsToFit()}
             >
             </AgGridReact>
         </Container>

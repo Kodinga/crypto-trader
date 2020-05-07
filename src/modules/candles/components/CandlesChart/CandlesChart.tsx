@@ -111,7 +111,7 @@ const CandlesChart: FC<Props> = props => {
     }, [candles, currencyPair]);
 
     return (
-        <Container>
+        <Container className="candles-chart">
             <HighchartsReact
                 highcharts={Highcharts}
                 options={chartOptions}

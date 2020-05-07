@@ -5,20 +5,53 @@ export const Container = styled.div`
     background-color: ${Palette.BackgroundColor};
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 `;
 
 export const Content = styled.div`
     display: grid;
-    grid-template-rows: 40px 70px 1fr 250px 50px;
-    grid-template-columns: 400px 400px 1fr;
-    grid-template-areas: 
-        "header header header"
-        "tickers tickers tickers"
-        "trades candles candles"
-        "trades book depth"
-        "footer footer footer";
     grid-gap: 5px;
     padding: 5px 10px;
+    width: 100%;
+    height: 100%;
+    @media only screen and (min-width: 1200px) {
+        grid-template-rows: 40px 70px 1fr 250px 50px;
+        grid-template-columns: 400px 400px 1fr;
+        grid-template-areas: 
+            "header header header"
+            "tickers tickers tickers"
+            "trades candles candles"
+            "trades book depth"
+            "footer footer footer";
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 1200px) {
+        grid-template-rows: 40px 70px 1fr 250px 50px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+            "header header"
+            "tickers tickers"
+            "trades book"
+            "trades depth"
+            "footer footer";
+
+        .candles-chart {
+            display: none;
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        grid-template-rows: 40px calc(100% - 90px) 50px;
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "header"
+            "tickers"
+            "footer";
+
+        .candles-chart {
+            display: none;
+        }
+    }
 `;
 
 export const Header = styled.div`
