@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-import { DateTime } from 'luxon';
 import { useThrottle } from 'core/hooks/useThrottle';
-import { priceFormatter } from 'modules/ag-grid/formatter';
+import { priceFormatter, amountFormatter, timeFormatter } from 'modules/ag-grid/formatter';
 import { Trade } from '../../types/Trade';
 import { Container } from './Trades.styled';
 import Palette from 'theme/style';
@@ -23,7 +22,7 @@ const Trades: FC<Props> = props => {
     }, {
         headerName: 'Amount',
         field: 'amount',
-        valueFormatter: params => Math.abs(params.value).toString(),
+        valueFormatter: params => amountFormatter({value: Math.abs(params.value)}),
         
     }, {
         headerName: 'Price',
@@ -37,7 +36,7 @@ const Trades: FC<Props> = props => {
     }, {
         headerName: 'Time',
         field: 'timestamp',
-        valueFormatter: params => DateTime.fromMillis(params.value).toLocaleString(DateTime.TIME_24_WITH_SECONDS),
+        valueFormatter: timeFormatter,
         cellStyle: () => ({
             color: Palette.LightGray
         })

@@ -32,5 +32,4 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: ContainerProps): Dispa
     }
 }
 
-
 export default connect(mapStateToProps, mapDispatchToProps)(Ticker);

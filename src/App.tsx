@@ -7,9 +7,10 @@ import Tickers from 'modules/ticker/components/Tickers';
 import CandlesChart from 'modules/candles/components/CandlesChart';
 import Book from 'modules/book/components/Book';
 import DepthChart from 'modules/book/components/DepthChart';
+import Market from 'modules/ticker/components/Market';
 import Widget from 'core/components/widget';
 import Diagnostics from 'core/components/Diagnostics';
-import { Container, Content, Header, TradesPanel, TickersPanel, CandlesPanel, BookPanel, DepthPanel, Footer } from 'App.styled';
+import { Container, Content, Header, MarketPanel, TradesPanel, TickersPanel, CandlesPanel, BookPanel, DepthPanel, Footer } from 'App.styled';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import 'theme/fonts.css';
@@ -29,6 +30,7 @@ function App() {
         <Content>
           <Header>Crypto Trader</Header>
           <TickersPanel><Tickers /></TickersPanel>
+          <MarketPanel><Widget title={'Market'}><Market /></Widget></MarketPanel>
           <TradesPanel><Widget title={'Trades'}><Trades /></Widget></TradesPanel>
           <CandlesPanel><CandlesChart /></CandlesPanel>
           <BookPanel><Widget title={'Book'}><Book /></Widget></BookPanel>

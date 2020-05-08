@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-import { priceFormatter } from 'modules/ag-grid/formatter';
+import { priceFormatter, amountFormatter } from 'modules/ag-grid/formatter';
 import { useThrottle } from 'core/hooks/useThrottle';
 import { Container } from './Book.styled';
 import { Order } from '../../types/Order';
@@ -17,7 +17,8 @@ const Book: FC<Props> = props => {
 
     const columnDefs: ColDef[] = [{
         headerName: 'Bid Amount',
-        field: 'bid.amount'
+        field: 'bid.amount',
+        valueFormatter: amountFormatter
     }, {
         headerName: 'Bid Price',
         field: 'bid.price',
@@ -36,7 +37,7 @@ const Book: FC<Props> = props => {
     }, {
         headerName: 'Ask Amount',
         field: 'ask.amount',
-        valueFormatter: params => params.value ? Math.abs(params.value).toString() : ''
+        valueFormatter: params => amountFormatter({value: Math.abs(params.value)})
     }];
 
     return (
