@@ -54,11 +54,15 @@ const CandlesChart: FC<Props> = props => {
             yAxis: 1
         }],
         rangeSelector: {
-            selected: 1,
+            selected: 2,
             buttons: [{
                 type: 'minute',
                 count: 5,
                 text: '5m'
+            }, {
+                type: 'minute',
+                count: 15,
+                text: '15m'
             }, {
                 type: 'minute',
                 count: 30,

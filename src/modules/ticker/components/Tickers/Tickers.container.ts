@@ -20,7 +20,8 @@ const mapStateToProps = (state: RootState): Props => {
     }
 
     return {
-        currencyPairs
+        currencyPairs,
+        selectedCurrencyPairIndex
     };
 }
 

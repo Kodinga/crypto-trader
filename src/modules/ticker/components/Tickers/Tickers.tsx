@@ -1,17 +1,33 @@
-import React, { FC } from 'react';
-import { Container } from './Tickers.styled';
+import React, { FC, useState, useEffect } from 'react';
+import { usePrevious } from 'core/hooks/usePrevious';
+import { Container, TickerWrapper, ScrollDirection } from './Tickers.styled';
 import Ticker from '../Ticker';
 
 export interface Props {
     currencyPairs: string[];
+    selectedCurrencyPairIndex?: number;
 }
 
 const Tickers: FC<Props> = props => {
-    const { currencyPairs } = props;
+    const { currencyPairs, selectedCurrencyPairIndex } = props;
+    const [direction, setDirection] = useState<ScrollDirection>('left');
+    const previousSelectedCurrencyPairIndex = usePrevious(selectedCurrencyPairIndex);
+
+    useEffect(() => {
+        const direction = (previousSelectedCurrencyPairIndex || 0) > (selectedCurrencyPairIndex || 0) ? 'right' : 'left';
+        setDirection(direction);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCurrencyPairIndex]);
 
     return (
-        <Container>            
-            {currencyPairs.map(currencyPair => <Ticker key={currencyPair} currencyPair={currencyPair} />)}
+        <Container>
+            {
+                currencyPairs.map((currencyPair, index) => (
+                    <TickerWrapper index={index} itemCount={currencyPairs.length} key={currencyPair} direction={direction}>
+                        <Ticker currencyPair={currencyPair} />
+                    </TickerWrapper>
+                ))
+            }
         </Container>
     )
 }
