@@ -21,8 +21,7 @@ const DepthChart: FC<Props> = props => {
     const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
         chart: {
             type: 'area',
-            animation: false,
-            height: '250px'
+            animation: false
         },
         title: {
             text: ''

@@ -15,7 +15,7 @@ export const Content = styled.div`
     width: 100%;
     height: 100%;
     @media only screen and (min-width: 1200px) {
-        grid-template-rows: 40px 70px 1fr 250px 50px;
+        grid-template-rows: 40px 70px 1fr 250px 30px;
         grid-template-columns: 400px 1fr 400px;
         grid-template-areas: 
             "header header header"
@@ -26,26 +26,30 @@ export const Content = styled.div`
     }
 
     @media only screen and (min-width: 600px) and (max-width: 1200px) {
-        grid-template-rows: 40px 70px 1fr 250px 50px;
+        grid-template-rows: 40px 70px 1fr 1fr 30px;
         grid-template-columns: 1fr 1fr;
         grid-template-areas: 
             "header header"
-            "tickers tickers"
-            "trades book"
+            "market book"
+            "market book"
             "trades depth"
             "footer footer";
 
+        .tickers {
+            display: none;
+        }
+        
         .candles-chart {
             display: none;
         }
     }
 
     @media only screen and (max-width: 600px) {
-        grid-template-rows: 40px calc(100% - 90px) 50px;
-        grid-template-columns: 1fr;
+        grid-template-rows: 40px calc(100% - 90px) 30px;
+        grid-template-columns: calc(100% - 20px);
         grid-template-areas: 
             "header"
-            "tickers"
+            "market"
             "footer";
 
         .candles-chart {
@@ -90,5 +94,6 @@ export const DepthPanel = styled.div`
 
 export const Footer = styled.div`
     grid-area: footer;
+    padding: 0 10px;
 `;
 
