@@ -6,8 +6,7 @@ export type ScrollDirection = 'left' | 'right';
 
 export const Container = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 `;
 
 export const TickerWrapper = styled.div<{

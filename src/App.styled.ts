@@ -16,7 +16,7 @@ export const Content = styled.div`
     height: 100%;
     @media only screen and (min-width: 1200px) {
         grid-template-rows: 40px 70px 1fr 250px 30px;
-        grid-template-columns: 400px 1fr 400px;
+        grid-template-columns: 400px 1fr 1fr;
         grid-template-areas: 
             "header header header"
             "tickers tickers tickers"
@@ -70,6 +70,8 @@ export const Header = styled.div`
 export const TickersPanel = styled.div`
     grid-area: tickers;
     overflow: auto;
+    width: 1200px;
+    margin: 0 auto;
 `;
 
 export const MarketPanel = styled.div`
