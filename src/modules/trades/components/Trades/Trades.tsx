@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { DateTime } from 'luxon';
 import { useThrottle } from 'core/hooks/useThrottle';
-import { priceFormatter } from 'modules/ag-grid/agGridFormatter';
+import { priceFormatter } from 'modules/ag-grid/formatter';
 import { Trade } from '../../types/Trade';
 import { Container } from './Trades.styled';
 import Palette from 'theme/style';

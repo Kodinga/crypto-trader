@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-import { priceFormatter } from 'modules/ag-grid/agGridFormatter';
+import { priceFormatter } from 'modules/ag-grid/formatter';
 import { useThrottle } from 'core/hooks/useThrottle';
 import { Container } from './Book.styled';
 import { Order } from '../../types/Order';
