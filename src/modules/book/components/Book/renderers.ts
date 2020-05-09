@@ -16,11 +16,11 @@ const amountRenderer = (value: string, styles: { [key: string]: any }) => {
 export const bidAmountRenderer = (params: ICellRendererParams) => {
     const { bidDepth: depth, maxDepth } = params.data;
     const width = ((depth || 0) / maxDepth) * 100;
-    return amountRenderer(params.valueFormatted, { 'background-color': Palette.BidTransparent, width: `${width}%` });
+    return amountRenderer(params.valueFormatted, { 'background-color': Palette.BidTransparent, width: `${width}%`, left: '-12px' });
 };
 
 export const askAmountRenderer = (params: ICellRendererParams) => {
     const { askDepth: depth, maxDepth } = params.data;
     const width = ((depth || 0) / maxDepth) * 100;
-    return amountRenderer(params.valueFormatted, { 'background-color': Palette.AskTransparent, width: `${width}%`, right: 0 });
+    return amountRenderer(params.valueFormatted, { 'background-color': Palette.AskTransparent, width: `${width}%`, right: '-12px' });
 };
