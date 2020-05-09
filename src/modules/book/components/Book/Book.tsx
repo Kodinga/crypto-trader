@@ -3,22 +3,24 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { priceFormatter, amountFormatter } from 'modules/ag-grid/formatter';
 import { useThrottle } from 'core/hooks/useThrottle';
-import { Container } from './Book.styled';
+import { bidAmountRenderer, askAmountRenderer } from './renderers';
 import { Order } from '../../types/Order';
+import { Container } from './Book.styled';
 import Palette from 'theme/style';
 
 export interface Props {
-    orders: {bid: Order, ask: Order}[];
+    orders: { bid: Order, ask: Order }[];
 }
 
 const Book: FC<Props> = props => {
     const { orders } = props;
-    const throttledOrders = useThrottle<{bid: Order, ask: Order}[]>(orders, 500);
+    const throttledOrders = useThrottle<{ bid: Order, ask: Order }[]>(orders, 500);
 
     const columnDefs: ColDef[] = [{
         headerName: 'Bid Amount',
         field: 'bid.amount',
-        valueFormatter: amountFormatter
+        valueFormatter: amountFormatter,
+        cellRenderer: bidAmountRenderer
     }, {
         headerName: 'Bid Price',
         field: 'bid.price',
@@ -37,7 +39,8 @@ const Book: FC<Props> = props => {
     }, {
         headerName: 'Ask Amount',
         field: 'ask.amount',
-        valueFormatter: params => amountFormatter({value: Math.abs(params.value)})
+        valueFormatter: params => amountFormatter({ value: Math.abs(params.value) }),
+        cellRenderer: askAmountRenderer
     }];
 
     return (

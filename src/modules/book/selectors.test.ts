@@ -30,7 +30,6 @@ describe('BookSelectors', () => {
             const result = getBook(state)(currencyPair);
             expect(result).toEqual([
                 {
-                    depth: 0,
                     bid: {
                         id: 2,
                         price: 12,
@@ -40,10 +39,12 @@ describe('BookSelectors', () => {
                         id: 5,
                         price: 12.5,
                         amount: -2
-                    }
+                    },
+                    maxDepth: 7,
+                    bidDepth: 1,
+                    askDepth: 2
                 },
                 {
-                    depth: 1,
                     bid: {
                         id: 1,
                         price: 10,
@@ -53,16 +54,21 @@ describe('BookSelectors', () => {
                         id: 3,
                         price: 13,
                         amount: -1
-                    }
+                    },
+                    maxDepth: 7,
+                    bidDepth: 3,
+                    askDepth: 3
                 },
                 {
-                    depth: 2,
                     bid: {
                         id: 4,
                         price: 9,
                         amount: 1
                     },
-                    ask: undefined
+                    ask: undefined,
+                    maxDepth: 7,
+                    bidDepth: 4,
+                    askDepth: undefined
                 }
             ]);
         });

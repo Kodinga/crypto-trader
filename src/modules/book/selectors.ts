@@ -24,19 +24,26 @@ export const getBook = createSelector(
             .filter(order => order.amount < 0)
             .sort((a, b) => a.price - b.price);
 
-        const maxDepth = Math.max(bids.length, asks.length);
+        const levels = Math.max(bids.length, asks.length);
+        const maxBidDepth = bids.map(bid => bid.amount).reduce((acc, v) => acc += v, 0);
+        const maxAskDepth = asks.map(ask => Math.abs(ask.amount)).reduce((acc, v) => acc += v, 0);
+        const maxDepth = maxBidDepth + maxAskDepth;
 
-        return range(maxDepth)
-            .map(depth => {
-                const bid = bids[depth];
-                const ask = asks[depth];
+        const result: {bid: Order, ask: Order, bidDepth: number, askDepth: number, maxDepth: number}[] = [];
+        range(levels)
+            .forEach(level => {
+                const bid = bids[level];
+                const ask = asks[level];
 
-                return {
+                result.push({
                     bid,
                     ask,
-                    depth
-                };
+                    bidDepth: bid && (result[level - 1] ? result[level - 1].bidDepth : 0) + bid.amount,
+                    askDepth: ask && (result[level - 1] ? result[level - 1].askDepth : 0) + Math.abs(ask.amount),
+                    maxDepth
+                });
             });
+        return result;
     })
 )
 
