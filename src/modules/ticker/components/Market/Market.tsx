@@ -5,7 +5,8 @@ import { priceFormatter, volumeFormatter } from 'modules/ag-grid/formatter';
 import { Ticker } from 'modules/ticker/types/Ticker';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
 import { Container } from './Market.styled';
-import PriceChartRenderer from './PriceChart';
+import PriceChartRenderer from './PriceChartRenderer';
+import PriceRenderer from './PriceRenderer';
 import Palette from 'theme/style';
 
 export interface StateProps {
@@ -34,14 +35,16 @@ const Market: FC<Props> = props => {
             color: Palette.Bid
         }),
         type: 'numericColumn',
-        valueFormatter: priceFormatter
+        valueFormatter: priceFormatter,
+        cellRenderer: 'priceRenderer'
     }, {
         headerName: 'Ask Price',
         field: 'ask',
         cellStyle: () => ({
             color: Palette.Ask
         }),
-        valueFormatter: priceFormatter
+        valueFormatter: priceFormatter,
+        cellRenderer: 'priceRenderer',
     }, {
         headerName: 'Volume',
         field: 'volume',
@@ -87,7 +90,8 @@ const Market: FC<Props> = props => {
                     onClick(event.data.currencyPair);
                 }}
                 frameworkComponents={{
-                    priceChartRenderer: PriceChartRenderer
+                    priceChartRenderer: PriceChartRenderer,
+                    priceRenderer: PriceRenderer
                 }}
             >
             </AgGridReact>

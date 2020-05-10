@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { Container, CurrencyPair, Price, RelativeChange, Change } from './Ticker.styled';
-import UpdateHighlight from 'core/components/update-highlight/UpdateHighlight';
+import UpdateHighlight from 'core/components/UpdateHighlight/UpdateHighlight';
+import TrendIndicator from 'core/components/TrendIndicator';
 import { formatCurrencyPair, formatPrice } from 'modules/reference-data/utils';
-import TrendIndicator from 'core/components/trend-indicator';
 
 export interface StateProps {
     currencyPair: string;

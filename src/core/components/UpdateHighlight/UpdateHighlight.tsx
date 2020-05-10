@@ -37,12 +37,11 @@ const UpdateHighlight: FC<IProps> = props => {
         if (typeof changedPartRef.current?.animate === 'function') {
             animation = changedPartRef.current.animate([
                 // keyframes
-                { color: Palette.White },
                 { color: Palette.Orange },
                 { color: Palette.White }
             ], {
-                duration: 500,
-                iterations: 2
+                duration: 200,
+                iterations: 1
             });
         }
 
