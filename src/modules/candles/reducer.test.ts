@@ -76,6 +76,45 @@ describe('CandlesReducer', () => {
         });
     });
 
+    it('should handle upsert', () => {
+        const currencyPair = 'BTCUSD';
+        const timeframe = '1m';
+        const lookupKey = getLookupKey(currencyPair, timeframe);
+        const timestamp = 1574698260000;
+        const initialState = {
+            [lookupKey]: [
+                {
+                    timestamp,
+                    open: 7379, 
+                    close: 7392, 
+                    high: 7401,
+                    low: 7378, 
+                    volume: 1.70
+                }
+            ]
+        };
+        
+        const channelId = 17470;
+        const [open, close, high, low, volume] = [7399.9,7379.7,7399.9,7371.8,41.63633658];
+        const data = [
+            channelId,
+            [timestamp, open, close, high, low, volume]
+        ];
+        const meta = {
+            channel: 'candles',
+            request: {
+                key: `trade:${timeframe}:t${currencyPair}`
+            }
+        };
+        const action = TransportActions.receiveMessage(data, meta);
+        const result = candles(initialState, action);
+        expect(result).toEqual({
+            [lookupKey]: [
+                {timestamp, open, close, high, low, volume}
+            ]
+        });
+    });
+
     it('should discard heartbeat', () => {   
         const currencyPair = 'BTCUSD';
         const timeframe = '1m';

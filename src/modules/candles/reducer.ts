@@ -27,16 +27,23 @@ function snapshotReducer(state: SymbolState, action: ReceiveMessage) {
 function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
     const [, candle] = action.payload;
     const [timestamp, open, close, high, low, volume] = candle;
+    const candleIndex = state.findIndex(c => c.timestamp === timestamp);
+    const newOrUpdatedCandle = {
+        timestamp,
+        open,
+        close,
+        high,
+        low,
+        volume
+    };
 
+    if (candleIndex >= 0) {
+        const updatedState = state.slice();
+        updatedState.splice(candleIndex, 1, newOrUpdatedCandle);
+        return updatedState;
+    }
     return [
-        {
-            timestamp,
-            open,
-            close,
-            high,
-            low,
-            volume
-        },
+        newOrUpdatedCandle,
         ...state
     ];
 }
