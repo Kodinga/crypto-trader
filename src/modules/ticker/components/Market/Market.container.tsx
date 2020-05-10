@@ -1,14 +1,14 @@
-import { getCurrencyPair } from 'modules/selection/selectors';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { getTickers } from 'modules/ticker/selectors';
+import { getSelectedCurrencyPair } from 'modules/selection/selectors';
+import { getTickersWithPrices } from 'modules/ticker/selectors';
 import { RootState } from 'modules/root';
 import { SelectionActions } from 'modules/selection/actions';
 import Market, { StateProps, DispatchProps } from './Market';
 
 const mapStateToProps = (state: RootState): StateProps => {
-    const tickers = getTickers(state);
-    const selectedCurrencyPair = getCurrencyPair(state);
+    const tickers = getTickersWithPrices(state);
+    const selectedCurrencyPair = getSelectedCurrencyPair(state);
 
     return {
         tickers,
@@ -19,7 +19,7 @@ const mapStateToProps = (state: RootState): StateProps => {
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
 
     return {
-        onClick: (currencyPair: string) => dispatch(SelectionActions.selectCurrencyPair({currencyPair}))
+        onClick: (currencyPair: string) => dispatch(SelectionActions.selectCurrencyPair({ currencyPair }))
     }
 }
 

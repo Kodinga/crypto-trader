@@ -2,10 +2,11 @@ import { createReducer } from 'modules/redux/utils';
 import { TRANSPORT_ACTION_TYPES } from 'core/transport/actions';
 import { isHeartbeat, isSubscriptionMessage, isUnsubscriptionMessage, isErrorMessage } from 'core/transport/utils';
 import { ReceiveMessage } from 'core/transport/actions';
+import { getLookupKey } from './utils';
 import { Actions } from './../root';
 import { Candle } from './types/Candle';
 
-const MAX_CANDLES = 1000;
+const MAX_CANDLES = 100;
 
 type SymbolState = Candle[];
 
@@ -48,23 +49,24 @@ const receiveMessageReducer = (state: CandlesState, action: ReceiveMessage) => {
     const { channel, request } = action.meta || {};
     if (channel === 'candles') {
         const { key } = request;
-        const [, , symbol] = key.split(':');
+        const [, timeframe, symbol] = key.split(':');
         const currencyPair = symbol.slice(1);
+        const lookupKey = getLookupKey(currencyPair, timeframe);
 
         if (isUnsubscriptionMessage(action)) {
             const updatedState = {
                 ...state
             };
-            delete updatedState[currencyPair];
+            delete updatedState[lookupKey];
             return updatedState;
         }
 
         const symbolReducer = Array.isArray(action.payload[1][0]) ? snapshotReducer : updateReducer;
-        const result = symbolReducer(state[currencyPair], action);
+        const result = symbolReducer(state[lookupKey], action);
 
         return {
             ...state,
-            [currencyPair]: result.slice(0, MAX_CANDLES) // restrict number of candles so we don't eventully fill up the memory
+            [lookupKey]: result.slice(0, MAX_CANDLES) // restrict number of candles so we don't eventully fill up the memory
         };
     }
 

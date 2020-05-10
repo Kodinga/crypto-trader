@@ -25,6 +25,7 @@ const receiveMessageReducer = (state: TickerState, action: ReceiveMessage) => {
         return {
             ...state,
             [currencyPair]: {
+                currencyPair,
                 bid,
                 bidSize,
                 ask,

@@ -8,7 +8,7 @@ import { BookActions } from 'modules/book/actions';
 import { RootState } from './../root';
 import { Dependencies } from './../redux/store';
 import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './actions';
-import { getCurrencyPair } from './selectors';
+import { getSelectedCurrencyPair } from './selectors';
 
 const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) => {
   const statePairs$ = state$.pipe(pairwise());
@@ -16,7 +16,7 @@ const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action
     ofType<Actions, SelectCurrencyPair>(SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR),
     withLatestFrom(statePairs$),
     switchMap(([action, [oldState, newState]]) => {
-      const oldCurrencyPair = getCurrencyPair(oldState);
+      const oldCurrencyPair = getSelectedCurrencyPair(oldState);
       const { currencyPair } = action.payload;
       const unsubscribeActions = [];
       if (oldCurrencyPair) {

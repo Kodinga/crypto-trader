@@ -11,6 +11,7 @@ import { SelectionActions } from 'modules/selection/actions';
 import { TRANSPORT_ACTION_TYPES, ChangeConnectionStatus } from 'core/transport/actions';
 import { parseCurrencyPair } from 'modules/reference-data/utils';
 import { TickerActions } from 'modules/ticker/actions';
+import { CandlesActions } from 'modules/candles/actions';
 import { RootState } from './../root';
 import { APP_ACTION_TYPES, BoostrapApp } from './actions';
 import { LoadRefDataAck } from './../reference-data/actions';
@@ -36,9 +37,13 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, sta
                 .map(currencyPair => TickerActions.subscribeToTicker({
                   symbol: currencyPair
                 }));
+                const candleActions = currencyPairs
+                .map(currencyPair => CandlesActions.subscribeToCandles({ symbol: currencyPair, timeframe: '5m' }));
+
               return merge(
                 of(SelectionActions.selectCurrencyPair({ currencyPair: currencyPairs[0] })),
-                from(tickerActions)
+                from(tickerActions),
+                from(candleActions)
               );
             })
           )

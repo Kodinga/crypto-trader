@@ -5,10 +5,11 @@ import { priceFormatter, volumeFormatter } from 'modules/ag-grid/formatter';
 import { Ticker } from 'modules/ticker/types/Ticker';
 import { formatCurrencyPair } from 'modules/reference-data/utils';
 import { Container } from './Market.styled';
+import PriceChartRenderer from './PriceChart';
 import Palette from 'theme/style';
 
 export interface StateProps {
-    tickers: (Ticker & { currencyPair: string })[];
+    tickers: (Ticker & { currencyPair: string, prices: number[] })[];
     selectedCurrencyPair?: string;
 }
 
@@ -45,6 +46,15 @@ const Market: FC<Props> = props => {
         headerName: 'Volume',
         field: 'volume',
         valueFormatter: volumeFormatter
+    }, {
+        headerName: '',
+        field: 'prices',
+        cellRenderer: 'priceChartRenderer',
+        width: 100,
+        cellStyle: () => ({
+            'padding-left': 0,
+            'padding-right': 0
+        })
     }];
 
     const rowClassRules = {
@@ -75,6 +85,9 @@ const Market: FC<Props> = props => {
                 rowSelection={'single'}
                 onRowClicked={event => {
                     onClick(event.data.currencyPair);
+                }}
+                frameworkComponents={{
+                    priceChartRenderer: PriceChartRenderer
                 }}
             >
             </AgGridReact>

@@ -1,4 +1,5 @@
 export interface Ticker {
+    currencyPair: string;
     bid: number;
     bidSize: number;
     ask: number;

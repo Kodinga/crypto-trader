@@ -1,9 +1,12 @@
 import { TransportActions } from 'core/transport/actions';
+import { getLookupKey } from './utils';
 import candles from './reducer';
 
 describe('CandlesReducer', () => {
     it('should handle snapshot', () => {
         const currencyPair = 'BTCUSD';
+        const timeframe = '1m';
+        const lookupKey = getLookupKey(currencyPair, timeframe);
         const channelId = 17470;
         const [timestamp, open, close, high, low, volume] = [1574698260000,7379.785503,7383.8,7388.3,7379.785503,1.68829482];
         const data = [
@@ -15,13 +18,13 @@ describe('CandlesReducer', () => {
         const meta = {
             channel: 'candles',
             request: {
-                key: `trade:1m:t${currencyPair}`
+                key: `trade:${timeframe}:t${currencyPair}`
             }
         };
         const action = TransportActions.receiveMessage(data, meta);
         const result = candles(undefined, action);
         expect(result).toEqual({
-            [currencyPair]: [
+            [lookupKey]: [
                 {timestamp, open, close, high, low, volume}
             ]
         });
@@ -29,8 +32,10 @@ describe('CandlesReducer', () => {
 
     it('should handle insert', () => {
         const currencyPair = 'BTCUSD';
+        const timeframe = '1m';
+        const lookupKey = getLookupKey(currencyPair, timeframe);
         const initialState = {
-            [currencyPair]: [
+            [lookupKey]: [
                 {
                     timestamp: 1574698260000,
                     open: 7379, 
@@ -51,13 +56,13 @@ describe('CandlesReducer', () => {
         const meta = {
             channel: 'candles',
             request: {
-                key: `trade:1m:t${currencyPair}`
+                key: `trade:${timeframe}:t${currencyPair}`
             }
         };
         const action = TransportActions.receiveMessage(data, meta);
         const result = candles(initialState, action);
         expect(result).toEqual({
-            [currencyPair]: [
+            [lookupKey]: [
                 {timestamp, open, close, high, low, volume},
                 {
                     timestamp: 1574698260000,
@@ -73,8 +78,10 @@ describe('CandlesReducer', () => {
 
     it('should discard heartbeat', () => {   
         const currencyPair = 'BTCUSD';
+        const timeframe = '1m';
+        const lookupKey = getLookupKey(currencyPair, timeframe);
         const initialState = {
-            [currencyPair]: [
+            [lookupKey]: [
                 {
                     timestamp: 1574698260000,
                     open: 7379, 
@@ -94,7 +101,7 @@ describe('CandlesReducer', () => {
         const meta = {
             channel: 'candles',
             request: {
-                key: `trade:1m:t${currencyPair}`
+                key: `trade:${timeframe}:t${currencyPair}`
             }
         };
         const action = TransportActions.receiveMessage(data, meta);
@@ -104,9 +111,11 @@ describe('CandlesReducer', () => {
 
     it('should clear state on unsubscription', () => {   
         const currencyPair = 'BTCUSD';
-        const otherCurrencyPair = 'BTCEUR';
+        const otherKey = 'BTCEUR:2m';
+        const timeframe = '1m';
+        const lookupKey = getLookupKey(currencyPair, timeframe);
         const initialState = {
-            [currencyPair]: [
+            [lookupKey]: [
                 {
                     timestamp: 1574698260000,
                     open: 7379, 
@@ -116,7 +125,7 @@ describe('CandlesReducer', () => {
                     volume: 1.70
                 }
             ],
-            [otherCurrencyPair]: []
+            [otherKey]: []
         };
         
         const channelId = 17470;
@@ -127,13 +136,13 @@ describe('CandlesReducer', () => {
         const meta = {
             channel: 'candles',
             request: {
-                key: `trade:1m:t${currencyPair}`
+                key: `trade:${timeframe}:t${currencyPair}`
             }
         };
         const action = TransportActions.receiveMessage(data, meta);
         const result = candles(initialState, action);
         expect(result).toEqual({
-            [otherCurrencyPair]: []
+            [otherKey]: []
         });
     });
 });

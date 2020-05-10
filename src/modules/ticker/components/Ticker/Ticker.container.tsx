@@ -2,8 +2,8 @@ import { connect } from 'react-redux';
 import { RootState } from 'modules/root';
 import { Dispatch } from 'redux';
 import { SelectionActions } from 'modules/selection/actions';
-import { getCurrencyPair } from 'modules/selection/selectors';
-import { getTicker } from './../../selectors';
+import { getSelectedCurrencyPair } from 'modules/selection/selectors';
+import { getTicker } from '../../selectors';
 import Ticker, { StateProps, DispatchProps } from './Ticker';
 
 export interface ContainerProps {
@@ -12,7 +12,7 @@ export interface ContainerProps {
 
 const mapStateToProps = (state: RootState, props: ContainerProps): StateProps => {
     const { currencyPair } = props;
-    const selectedCurrencyPair = getCurrencyPair(state);
+    const selectedCurrencyPair = getSelectedCurrencyPair(state);
     const ticker = getTicker(state)(currencyPair);
     
     return {
