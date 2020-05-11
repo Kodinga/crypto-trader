@@ -10,7 +10,7 @@ import { Dependencies } from './../redux/store';
 import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './actions';
 import { getSelectedCurrencyPair } from './selectors';
 
-const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) => {
+export const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$) => {
   const statePairs$ = state$.pipe(pairwise());
   return action$.pipe(
     ofType<Actions, SelectCurrencyPair>(SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR),
@@ -31,7 +31,7 @@ const handleSelection: Epic<Actions, Actions, RootState, Dependencies> = (action
         CandlesActions.subscribeToCandles({ symbol: currencyPair, timeframe: '1m' }),
         TradesActions.subscribeToTrades({ symbol: currencyPair }),
         BookActions.subscribeToBook({ symbol: currencyPair })
-      ]
+      ];
 
       return from([
         ...unsubscribeActions,

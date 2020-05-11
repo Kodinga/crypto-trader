@@ -27,8 +27,8 @@ export const unsubscribeFromCandles: Epic<Actions, Actions, RootState, Dependenc
         ofType<Actions, UnsubscribeFromCandles>(CANDLES_ACTION_TYPES.UNSUBSCRIBE_FROM_CANDLES),
         mergeMap(action => {
             const { symbol, timeframe } = action.payload;
-
             const result: Actions[] = [];
+
             const channelId = getSubscription(state$.value)('candles', {
                 key: ['trade', timeframe, `t${symbol}`].join(':')
             });

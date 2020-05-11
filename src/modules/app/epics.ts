@@ -1,4 +1,3 @@
-import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './../selection/actions';
 import { merge, of, from, EMPTY } from 'rxjs';
 import { Epic, ofType, combineEpics } from 'redux-observable';
 import { switchMap, take, mergeMap, filter, map, tap, distinctUntilChanged } from 'rxjs/operators';
@@ -15,6 +14,7 @@ import { CandlesActions } from 'modules/candles/actions';
 import { RootState } from './../root';
 import { APP_ACTION_TYPES, BoostrapApp } from './actions';
 import { LoadRefDataAck } from './../reference-data/actions';
+import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './../selection/actions';
 
 const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (action$, state$, { connection }) =>
   action$.pipe(

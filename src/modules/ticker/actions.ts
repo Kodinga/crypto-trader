@@ -13,5 +13,5 @@ export const TickerActions = {
 };
 
 export type TickerActions = ActionUnion<typeof TickerActions>;
-export type SubscribeToTickerAction = ReturnType<typeof TickerActions.subscribeToTicker>;
+export type SubscribeToTicker = ReturnType<typeof TickerActions.subscribeToTicker>;
 

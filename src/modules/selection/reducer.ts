@@ -1,5 +1,6 @@
+import { createReducer } from 'modules/redux/utils';
 import { Actions } from 'modules/root';
-import { SELECTION_ACTION_TYPES } from './actions';
+import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from './actions';
 
 interface SelectionState {
     currencyPair?: string;
@@ -8,23 +9,17 @@ interface SelectionState {
 const initialState: SelectionState = {
 }
 
-export function selectionReducer(
-    state = initialState,
-    action: Actions
-) {
-    switch (action.type) {
-        case SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR: {
-            const { currencyPair } = action.payload;
+const selectCurrencyPair = (state: SelectionState, action: SelectCurrencyPair) => {
+    const { currencyPair } = action.payload;
 
-            return {
-                ...state,
-                currencyPair
-            }
-        }
-
-        default:
-            return state;
-    }
+    return {
+        ...state,
+        currencyPair
+    };
 }
+
+export const selectionReducer = createReducer<SelectionState, Actions>({
+    [SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR]: selectCurrencyPair
+}, initialState);
 
 export default selectionReducer;
