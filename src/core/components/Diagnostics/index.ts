@@ -1,3 +1,3 @@
-import Diagnostics from './Diagnostics';
+import Diagnostics from "./Diagnostics";
 
 export default Diagnostics;

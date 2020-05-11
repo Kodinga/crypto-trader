@@ -1,14 +1,12 @@
-import styled from 'styled-components';
-import Palette from '../../../theme/style';
+import styled from "styled-components";
+import Palette from "../../../theme/style";
 
 export const Content = styled.div`
-    display: flex;
+  display: flex;
 `;
 
-export const IdenticalPart = styled.div`
-
-`;
+export const IdenticalPart = styled.div``;
 
 export const ChangedPart = styled.div`
-    color: ${Palette.Orange};
+  color: ${Palette.Orange};
 `;

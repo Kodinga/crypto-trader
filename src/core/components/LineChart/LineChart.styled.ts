@@ -1,5 +1,5 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const SvgContainer = styled.svg`
-    fill: none;
+  fill: none;
 `;

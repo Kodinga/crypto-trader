@@ -3,4 +3,5 @@
 
     Index can be any number
 */
-export const getValueAt = (values: any[]) => (index: number) => values[(index % values.length + values.length) % values.length];
+export const getValueAt = (values: any[]) => (index: number) =>
+  values[((index % values.length) + values.length) % values.length];

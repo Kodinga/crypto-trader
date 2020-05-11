@@ -1,1 +1,2 @@
-export const getLookupKey = (currencyPair: string, timeframe: string) => [currencyPair, timeframe].join(':');
+export const getLookupKey = (currencyPair: string, timeframe: string) =>
+  [currencyPair, timeframe].join(":");

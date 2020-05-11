@@ -1,7 +1,7 @@
 export interface ConnectionProxyConstructor {
-    new(realm: string): ConnectionProxy;
-  }
-  
+  new (realm: string): ConnectionProxy;
+}
+
 export interface ConnectionProxy {
   start(): void;
   stop(): void;

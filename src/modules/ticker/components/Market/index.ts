@@ -1,3 +1,3 @@
-import Market from './Market.container';
+import Market from "./Market.container";
 
 export default Market;

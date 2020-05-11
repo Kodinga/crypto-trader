@@ -1,3 +1,3 @@
-import UpdateHighlight from './UpdateHighlight';
+import UpdateHighlight from "./UpdateHighlight";
 
 export default UpdateHighlight;

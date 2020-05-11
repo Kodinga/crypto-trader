@@ -1,3 +1,3 @@
-import TrendIndicator from './TrendIndicator';
+import TrendIndicator from "./TrendIndicator";
 
 export default TrendIndicator;

@@ -1,9 +1,9 @@
-import { useMemo, useEffect, useState } from 'react';
-import { throttle } from 'lodash';
+import { useMemo, useEffect, useState } from "react";
+import { throttle } from "lodash";
 
 export const useThrottleFn = <T extends (...args: any) => any>(
   fn: T,
-  ms = 1000,
+  ms = 1000
 ) => {
   const throttledFn = useMemo(() => {
     return throttle(fn, ms);
@@ -19,8 +19,8 @@ export const useThrottleFn = <T extends (...args: any) => any>(
 };
 
 export const useThrottle = <T>(value: T, ms = 1000) => {
-    const [throttledValue, setThrottledValue] = useState(value);
-    const setThrottledValueThrottled = useThrottleFn(setThrottledValue, ms);
-    setThrottledValueThrottled(value);
-    return throttledValue;
-  };
+  const [throttledValue, setThrottledValue] = useState(value);
+  const setThrottledValueThrottled = useThrottleFn(setThrottledValue, ms);
+  setThrottledValueThrottled(value);
+  return throttledValue;
+};

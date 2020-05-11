@@ -1,36 +1,35 @@
-import React, { Component } from 'react';
-import UpdateHighlight from 'core/components/UpdateHighlight';
+import React, { Component } from "react";
+import UpdateHighlight from "core/components/UpdateHighlight";
 
 interface Props {
-    valueFormatted: string;
+  valueFormatted: string;
 }
 
 interface State {
-    valueFormatted: string;
+  valueFormatted: string;
 }
 
 class PriceRenderer extends Component<Props, State> {
-    constructor(props: Props) {
-      super(props);
-  
-      this.state = {
-        valueFormatted: props.valueFormatted,
-      };
-    }
+  constructor(props: Props) {
+    super(props);
 
-    refresh(params: Props) {
-        this.setState({
-            valueFormatted: params.valueFormatted,
-        });
-    
-        return true;
-      }
+    this.state = {
+      valueFormatted: props.valueFormatted,
+    };
+  }
 
+  refresh(params: Props) {
+    this.setState({
+      valueFormatted: params.valueFormatted,
+    });
 
-    render() {
-        const { valueFormatted } = this.state;
-        return <UpdateHighlight value={valueFormatted} />;
-    }
+    return true;
+  }
+
+  render() {
+    const { valueFormatted } = this.state;
+    return <UpdateHighlight value={valueFormatted} />;
+  }
 }
 
 export default PriceRenderer;

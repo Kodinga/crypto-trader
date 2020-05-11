@@ -1,3 +1,3 @@
-import CandlesChart from './CandlesChart.container';
+import CandlesChart from "./CandlesChart.container";
 
 export default CandlesChart;

@@ -1,20 +1,30 @@
-import React, { useEffect } from 'react';
-import { Provider } from 'react-redux';
-import configureStore from './modules/redux/store';
-import { AppActions } from './modules/app/actions';
-import Trades from 'modules/trades/components/Trades';
-import Tickers from 'modules/ticker/components/Tickers';
-import CandlesChart from 'modules/candles/components/CandlesChart';
-import Book from 'modules/book/components/Book';
-import DepthChart from 'modules/book/components/DepthChart';
-import Market from 'modules/ticker/components/Market';
-import Widget from 'core/components/widget';
-import Diagnostics from 'core/components/Diagnostics';
-import { Container, Content, Header, MarketPanel, TradesPanel, TickersPanel, CandlesPanel, BookPanel, DepthPanel, Footer } from 'App.styled';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
-import 'theme/fonts.css';
-
+import React, { useEffect } from "react";
+import { Provider } from "react-redux";
+import configureStore from "./modules/redux/store";
+import { AppActions } from "./modules/app/actions";
+import Trades from "modules/trades/components/Trades";
+import Tickers from "modules/ticker/components/Tickers";
+import CandlesChart from "modules/candles/components/CandlesChart";
+import Book from "modules/book/components/Book";
+import DepthChart from "modules/book/components/DepthChart";
+import Market from "modules/ticker/components/Market";
+import Widget from "core/components/widget";
+import Diagnostics from "core/components/Diagnostics";
+import {
+  Container,
+  Content,
+  Header,
+  MarketPanel,
+  TradesPanel,
+  TickersPanel,
+  CandlesPanel,
+  BookPanel,
+  DepthPanel,
+  Footer,
+} from "App.styled";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+import "theme/fonts.css";
 
 function App() {
   const store = configureStore();
@@ -29,13 +39,35 @@ function App() {
       <Container>
         <Content>
           <Header>Crypto Trader</Header>
-          <TickersPanel><Tickers /></TickersPanel>
-          <MarketPanel><Widget title={'Market'}><Market /></Widget></MarketPanel>
-          <TradesPanel><Widget title={'Trades'}><Trades /></Widget></TradesPanel>
-          <CandlesPanel><CandlesChart /></CandlesPanel>
-          <BookPanel><Widget title={'Book'}><Book /></Widget></BookPanel>
-          <DepthPanel><Widget title={'Depth'}><DepthChart /></Widget></DepthPanel>
-          <Footer><Diagnostics /></Footer>
+          <TickersPanel>
+            <Tickers />
+          </TickersPanel>
+          <MarketPanel>
+            <Widget title={"Market"}>
+              <Market />
+            </Widget>
+          </MarketPanel>
+          <TradesPanel>
+            <Widget title={"Trades"}>
+              <Trades />
+            </Widget>
+          </TradesPanel>
+          <CandlesPanel>
+            <CandlesChart />
+          </CandlesPanel>
+          <BookPanel>
+            <Widget title={"Book"}>
+              <Book />
+            </Widget>
+          </BookPanel>
+          <DepthPanel>
+            <Widget title={"Depth"}>
+              <DepthChart />
+            </Widget>
+          </DepthPanel>
+          <Footer>
+            <Diagnostics />
+          </Footer>
         </Content>
       </Container>
     </Provider>

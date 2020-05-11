@@ -1,3 +1,3 @@
-import Ticker from './Ticker.container';
+import Ticker from "./Ticker.container";
 
 export default Ticker;
