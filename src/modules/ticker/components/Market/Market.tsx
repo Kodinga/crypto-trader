@@ -32,7 +32,9 @@ const Market: FC<Props> = props => {
         headerName: 'Bid Price',
         field: 'bid',
         cellStyle: () => ({
-            color: Palette.Bid
+            color: Palette.Bid,
+            display: 'flex',
+            'justify-content': 'flex-end'
         }),
         type: 'numericColumn',
         valueFormatter: priceFormatter,
@@ -44,7 +46,7 @@ const Market: FC<Props> = props => {
             color: Palette.Ask
         }),
         valueFormatter: priceFormatter,
-        cellRenderer: 'priceRenderer',
+        cellRenderer: 'priceRenderer'
     }, {
         headerName: 'Volume',
         field: 'volume',
