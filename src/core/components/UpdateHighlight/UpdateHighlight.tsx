@@ -7,7 +7,7 @@ import {
 } from "./UpdateHightlight.styled";
 import Palette from "theme/style";
 
-export interface IProps {
+export interface Props {
     value?: string | null;
     effect?: "zoom" | "default";
 }
@@ -84,7 +84,7 @@ const AnimatedValue: FC<{
     return <DigitContainer ref={ref}>{value}</DigitContainer>;
 };
 
-const UpdateHighlight: FC<IProps> = (props) => {
+const UpdateHighlight: FC<Props> = (props) => {
     const changedPartRef = createRef<HTMLDivElement>();
     const { value, effect = "default" } = props;
     const prev = usePrevious(value);
