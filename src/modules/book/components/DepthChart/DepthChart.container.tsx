@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import { RootState } from "modules/root";
 import { getSelectedCurrencyPair } from "modules/selection/selectors";
-import { getSubscriptionId, getIsSubscriptionStale } from "core/transport/selectors";
+import {
+  getSubscriptionId,
+  getIsSubscriptionStale,
+} from "core/transport/selectors";
 import DepthChart, { Props } from "./DepthChart";
 import { getDepth } from "../../selectors";
 
@@ -11,12 +14,15 @@ const mapStateToProps = (state: RootState): Props => {
     ? getDepth(state)(selectedCurrencyPair)
     : { bids: [], asks: [] };
 
-  const subscriptionId = getSubscriptionId(state)('book');
-  const isStale = typeof subscriptionId === 'undefined' ? false : getIsSubscriptionStale(state)(subscriptionId);
+  const subscriptionId = getSubscriptionId(state)("book");
+  const isStale =
+    typeof subscriptionId === "undefined"
+      ? false
+      : getIsSubscriptionStale(state)(subscriptionId);
 
   return {
     depth,
-    isStale
+    isStale,
   };
 };
 

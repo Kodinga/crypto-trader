@@ -41,7 +41,7 @@ const Ticker: FC<Props> = (props) => {
     <Container onClick={onClick} isActive={!!isActive}>
       <CurrencyPair>{formatCurrencyPair(currencyPair)}</CurrencyPair>
       <Price>
-        <UpdateHighlight value={formatPrice(lastPrice)} effect={'zoom'} />
+        <UpdateHighlight value={formatPrice(lastPrice)} effect={"zoom"} />
       </Price>
       <RelativeChange isPositive={isPositiveChange}>
         <TrendIndicator value={dailyChangeRelative} />

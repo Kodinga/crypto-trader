@@ -52,17 +52,20 @@ describe("SubscriptionsReducer", () => {
     const initialState = {
       [channelId]: {
         channel: "topic",
-        request: {}
-      }
+        request: {},
+      },
     };
-    const action = TransportActions.receiveMessage([channelId, "hb"], undefined);
+    const action = TransportActions.receiveMessage(
+      [channelId, "hb"],
+      undefined
+    );
 
     const result = subscriptions(initialState, action);
     expect(result).toEqual({
       [channelId]: {
         isStale: false,
         channel: "topic",
-        request: {}
+        request: {},
       },
     });
   });
@@ -73,17 +76,17 @@ describe("SubscriptionsReducer", () => {
       [channelId]: {
         isStale: false,
         channel: "topic",
-        request: {}
-      }
+        request: {},
+      },
     };
-    const action = TransportActions.staleSubscription({channelId});
+    const action = TransportActions.staleSubscription({ channelId });
 
     const result = subscriptions(initialState, action);
     expect(result).toEqual({
       [channelId]: {
         isStale: true,
         channel: "topic",
-        request: {}
+        request: {},
       },
     });
   });

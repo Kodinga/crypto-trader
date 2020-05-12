@@ -11,7 +11,7 @@ const Palette = {
   Label: "rgba(245, 245, 245, 0.64)",
   Border: "#424242",
   LightGray: "rgba(245, 245, 245, 0.64)",
-  DarkGray: "#63666D"
+  DarkGray: "#63666D",
 };
 
 export default Palette;

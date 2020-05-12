@@ -27,5 +27,6 @@ export const getSubscriptionId = createSelector(
 
 export const getIsSubscriptionStale = createSelector(
   getSubscriptions,
-  subscriptions => (subscriptionId: number) => Boolean((subscriptions[subscriptionId] || {}).isStale)
+  (subscriptions) => (subscriptionId: number) =>
+    Boolean((subscriptions[subscriptionId] || {}).isStale)
 );

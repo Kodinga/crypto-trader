@@ -3,4 +3,8 @@ export type CandlesChannel = "candles";
 export type TickerChannel = "ticker";
 export type BookChannel = "book";
 
-export type Channel = TradesChannel | CandlesChannel | TickerChannel | BookChannel;
+export type Channel =
+  | TradesChannel
+  | CandlesChannel
+  | TickerChannel
+  | BookChannel;

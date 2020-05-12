@@ -350,8 +350,8 @@ describe("TransportEpic", () => {
             channel,
             channelId,
             request: {
-              symbol: "tBTCUSD"
-            }
+              symbol: "tBTCUSD",
+            },
           }),
           b: TransportActions.receiveMessage(
             {
@@ -361,8 +361,8 @@ describe("TransportEpic", () => {
             },
             undefined
           ),
-          c: TransportActions.receiveMessage([channelId, ['hb']], undefined), 
-          d: TransportActions.unsubscribeFromChannel({ channelId })
+          c: TransportActions.receiveMessage([channelId, ["hb"]], undefined),
+          d: TransportActions.unsubscribeFromChannel({ channelId }),
         });
         const state$ = hotState("-");
         const output$ = handleStaleSubscription(
@@ -373,8 +373,8 @@ describe("TransportEpic", () => {
 
         expectObservable(output$).toBe(`- ${HEARTBEAT_TIMEOUT_IN_MS}ms a`, {
           a: TransportActions.staleSubscription({
-            channelId
-          })
+            channelId,
+          }),
         });
       });
     });
