@@ -10,6 +10,7 @@ import DepthChart from "modules/book/components/DepthChart";
 import Market from "modules/ticker/components/Market";
 import Widget from "core/components/Widget";
 import Diagnostics from "core/components/Diagnostics";
+import Latency from "modules/ping/components/Latency";
 import {
   Container,
   Content,
@@ -66,6 +67,7 @@ function App() {
             </Widget>
           </DepthPanel>
           <Footer>
+            <Latency />
             <Diagnostics />
           </Footer>
         </Content>

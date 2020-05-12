@@ -97,4 +97,6 @@ export const DepthPanel = styled.div`
 export const Footer = styled.div`
   grid-area: footer;
   padding: 0 10px;
+  display: flex;
+  justify-content: flex-end;
 `;
