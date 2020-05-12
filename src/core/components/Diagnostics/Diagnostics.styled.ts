@@ -6,5 +6,7 @@ export const Container = styled.div`
   color: ${Palette.White};
   padding: 0 10px;
   display: flex;
-  justify-content: flex-end;
+  width: 85px;
+  justify-content: space-between;
+  color: ${Palette.LightGray};
 `;

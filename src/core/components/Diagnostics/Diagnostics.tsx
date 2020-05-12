@@ -25,7 +25,12 @@ const Diagnostics: FC<{}> = () => {
     };
   }, []);
 
-  return <Container>UI Latency: {delay || "-"}ms</Container>;
+  return (
+    <Container>
+      <span>UI Latency: </span>
+      <span>{delay || "---"}ms</span>
+    </Container>
+  );
 };
 
 export default Diagnostics;

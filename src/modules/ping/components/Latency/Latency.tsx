@@ -7,7 +7,12 @@ export interface Props {
 
 const Latency: FC<Props> = (props) => {
   const { latency } = props;
-  return <Container>Round trip latency: {latency || "-"}ms</Container>;
+  return (
+    <Container>
+      <span>Round trip: </span>
+      <span>{latency || "---"}ms</span>
+    </Container>
+  );
 };
 
 export default Latency;
