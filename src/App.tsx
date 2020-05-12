@@ -8,7 +8,7 @@ import CandlesChart from "modules/candles/components/CandlesChart";
 import Book from "modules/book/components/Book";
 import DepthChart from "modules/book/components/DepthChart";
 import Market from "modules/ticker/components/Market";
-import Widget from "core/components/widget";
+import Widget from "core/components/Gadget";
 import Diagnostics from "core/components/Diagnostics";
 import {
   Container,
