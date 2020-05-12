@@ -2,7 +2,7 @@ import { from } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
 import { Epic, ofType, combineEpics } from "redux-observable";
 import { RootState, Actions } from "modules/root";
-import { getSubscription } from "core/transport/selectors";
+import { getSubscriptionId } from "core/transport/selectors";
 import { CandlesChannel } from "core/transport/types/Channels";
 import { TransportActions } from "core/transport/actions";
 import {
@@ -46,7 +46,7 @@ export const unsubscribeFromCandles: Epic<
       const { symbol, timeframe } = action.payload;
       const result: Actions[] = [];
 
-      const channelId = getSubscription(state$.value)("candles", {
+      const channelId = getSubscriptionId(state$.value)("candles", {
         key: ["trade", timeframe, `t${symbol}`].join(":"),
       });
       if (typeof channelId !== "undefined") {

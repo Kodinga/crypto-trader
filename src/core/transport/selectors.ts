@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import { RootState } from "modules/root";
+import { Channel } from "./types/Channels";
 
 const subscriptionsSelector = (state: RootState) => state.subscriptions;
 
@@ -8,9 +9,9 @@ export const getSubscriptions = createSelector(
   (subscriptions) => subscriptions
 );
 
-export const getSubscription = createSelector(
+export const getSubscriptionId = createSelector(
   getSubscriptions,
-  (subscriptions) => (channel: string, request: any) => {
+  (subscriptions) => (channel: Channel, request: any = {}) => {
     const channelIds = Object.keys(subscriptions).map(Number);
 
     return channelIds.find((channelId) => {
@@ -22,4 +23,9 @@ export const getSubscription = createSelector(
       );
     });
   }
+);
+
+export const getIsSubscriptionStale = createSelector(
+  getSubscriptions,
+  subscriptions => (subscriptionId: number) => Boolean((subscriptions[subscriptionId] || {}).isStale)
 );

@@ -3,6 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import { priceFormatter, amountFormatter } from "modules/ag-grid/formatter";
 import { useThrottle } from "core/hooks/useThrottle";
+import Stale from "core/components/Stale";
 import { bidAmountRenderer, askAmountRenderer } from "./renderers";
 import { Order } from "../../types/Order";
 import { Container } from "./Book.styled";
@@ -10,10 +11,11 @@ import Palette from "theme/style";
 
 export interface Props {
   orders: { bid: Order; ask: Order }[];
+  isStale?: boolean;
 }
 
 const Book: FC<Props> = (props) => {
-  const { orders } = props;
+  const { orders, isStale } = props;
   const throttledOrders = useThrottle<{ bid: Order; ask: Order }[]>(
     orders,
     500
@@ -54,6 +56,7 @@ const Book: FC<Props> = (props) => {
 
   return (
     <Container className="ag-theme-balham-dark">
+      {isStale && <Stale />}
       <AgGridReact
         columnDefs={columnDefs}
         rowData={throttledOrders}

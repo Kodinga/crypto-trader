@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import * as Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
+import Stale from "core/components/Stale";
 import { Container } from "./CandlesChart.styled";
 import { Candle } from "../../types/Candle";
 import { formatCurrencyPair } from "modules/reference-data/utils";
@@ -10,10 +11,11 @@ import Palette from "theme/style";
 export interface Props {
   candles: Candle[];
   currencyPair?: string;
+  isStale: boolean;
 }
 
 const CandlesChart: FC<Props> = (props) => {
-  const { candles, currencyPair } = props;
+  const { candles, currencyPair, isStale } = props;
   const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
     time: {
       useUTC: false,
@@ -134,6 +136,7 @@ const CandlesChart: FC<Props> = (props) => {
 
   return (
     <Container className="candles-chart">
+      {isStale && <Stale />}
       <HighchartsReact
         highcharts={Highcharts}
         options={chartOptions}

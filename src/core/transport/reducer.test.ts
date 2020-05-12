@@ -46,4 +46,45 @@ describe("SubscriptionsReducer", () => {
       },
     });
   });
+
+  it("should handle heartbeat", () => {
+    const channelId = 10;
+    const initialState = {
+      [channelId]: {
+        channel: "topic",
+        request: {}
+      }
+    };
+    const action = TransportActions.receiveMessage([channelId, "hb"], undefined);
+
+    const result = subscriptions(initialState, action);
+    expect(result).toEqual({
+      [channelId]: {
+        isStale: false,
+        channel: "topic",
+        request: {}
+      },
+    });
+  });
+
+  it("should set subscription as stale", () => {
+    const channelId = 10;
+    const initialState = {
+      [channelId]: {
+        isStale: false,
+        channel: "topic",
+        request: {}
+      }
+    };
+    const action = TransportActions.staleSubscription({channelId});
+
+    const result = subscriptions(initialState, action);
+    expect(result).toEqual({
+      [channelId]: {
+        isStale: true,
+        channel: "topic",
+        request: {}
+      },
+    });
+  });
 });

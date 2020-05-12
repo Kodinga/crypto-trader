@@ -17,6 +17,7 @@ export enum TRANSPORT_ACTION_TYPES {
   UNSUBSCRIBE_FROM_CHANNEL = "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL",
   UNSUBSCRIBE_FROM_CHANNEL_ACK = "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_ACK",
   UNSUBSCRIBE_FROM_CHANNEL_NACK = "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_NACK",
+  STALE_SUBSCRIPTION = "TRANSPORT/STALE_SUBSCRIPTION"
 }
 
 interface SubscribeToTrades {
@@ -69,6 +70,10 @@ export interface UnsubscribeFromChannelAckActionPayload {
   channelId: number;
 }
 
+export interface StaleSubscriptionActionPayload {
+  channelId: number;
+}
+
 export const TransportActions = {
   sendMessage: createAction<TRANSPORT_ACTION_TYPES.SEND_MESSAGE, any>(
     TRANSPORT_ACTION_TYPES.SEND_MESSAGE
@@ -105,6 +110,10 @@ export const TransportActions = {
   unsubscribeFromChannelNack: createAction<
     TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_NACK
   >(TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_NACK),
+  staleSubscription: createAction<
+    TRANSPORT_ACTION_TYPES.STALE_SUBSCRIPTION,
+    StaleSubscriptionActionPayload
+  >(TRANSPORT_ACTION_TYPES.STALE_SUBSCRIPTION)
 };
 
 export type TransportActions = ActionUnion<typeof TransportActions>;
@@ -130,4 +139,7 @@ export type UnsubscribeFromChannelAck = ReturnType<
 >;
 export type UnsubscribeFromChannelNack = ReturnType<
   typeof TransportActions.unsubscribeFromChannelNack
+>;
+export type StaleSubscription = ReturnType<
+  typeof TransportActions.staleSubscription
 >;

@@ -6,7 +6,7 @@ import { RootState, Actions } from "modules/root";
 import { SubscribeToTrades, TRADES_ACTION_TYPES } from "modules/trades/actions";
 import { Dependencies } from "./../redux/store";
 import { TransportActions } from "core/transport/actions";
-import { getSubscription } from "core/transport/selectors";
+import { getSubscriptionId } from "core/transport/selectors";
 import { from } from "rxjs";
 
 export const subscribeToTrades: Epic<
@@ -40,7 +40,7 @@ export const unsubscribeFromTrades: Epic<
     mergeMap((action) => {
       const { symbol } = action.payload;
       const result: Actions[] = [];
-      const channelId = getSubscription(state$.value)("trades", {
+      const channelId = getSubscriptionId(state$.value)("trades", {
         symbol: `t${symbol}`,
       });
       if (typeof channelId !== "undefined") {

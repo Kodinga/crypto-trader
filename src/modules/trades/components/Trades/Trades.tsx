@@ -10,13 +10,15 @@ import {
 import { Trade } from "../../types/Trade";
 import { Container } from "./Trades.styled";
 import Palette from "theme/style";
+import Stale from "core/components/Stale";
 
 export interface Props {
   trades: Trade[];
+  isStale: boolean;
 }
 
 const Trades: FC<Props> = (props) => {
-  const { trades } = props;
+  const { trades, isStale } = props;
   const throttledTrades = useThrottle<Trade[]>(trades, 500);
 
   const columnDefs: ColDef[] = [
@@ -53,6 +55,7 @@ const Trades: FC<Props> = (props) => {
 
   return (
     <Container className="ag-theme-balham-dark">
+      {isStale && <Stale />}
       <AgGridReact
         columnDefs={columnDefs}
         rowData={throttledTrades}

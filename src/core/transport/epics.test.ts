@@ -5,13 +5,16 @@ import {
   TransportActions,
   SubscribeToChannel,
   UnsubscribeFromChannel,
+  SubscribeToChannelAck,
 } from "core/transport/actions";
 import { DummyConnectionProxy } from "./DummyConnectionProxy";
 import { SendMessage, ReceiveMessage } from "./actions";
 import {
   handleSubscription,
-  WS_SUBSCRIPTION_TIMEOUT_IN_MS,
+  SUBSCRIPTION_TIMEOUT_IN_MS,
   handleSendMessage,
+  handleStaleSubscription,
+  HEARTBEAT_TIMEOUT_IN_MS,
 } from "./epics";
 import { Connection } from "./Connection";
 
@@ -230,7 +233,7 @@ describe("TransportEpic", () => {
           any
         >(helpers, {});
 
-        const action$ = hotAction(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS}ms `, {
+        const action$ = hotAction(`-a ${SUBSCRIPTION_TIMEOUT_IN_MS}ms `, {
           a: TransportActions.subscribeToChannel({
             channel: "trades",
             symbol: "tBTCUSD",
@@ -244,7 +247,7 @@ describe("TransportEpic", () => {
         );
 
         expectObservable(output$).toBe(
-          `-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms b`,
+          `-a ${SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms b`,
           {
             a: TransportActions.sendMessage({
               event: "subscribe",
@@ -306,7 +309,7 @@ describe("TransportEpic", () => {
           any
         >(helpers, {});
         const channelId = 12;
-        const action$ = hotAction(`-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS}ms `, {
+        const action$ = hotAction(`-a ${SUBSCRIPTION_TIMEOUT_IN_MS}ms `, {
           a: TransportActions.unsubscribeFromChannel({
             channelId,
           }),
@@ -319,7 +322,7 @@ describe("TransportEpic", () => {
         );
 
         expectObservable(output$).toBe(
-          `-a ${WS_SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms b`,
+          `-a ${SUBSCRIPTION_TIMEOUT_IN_MS - 1}ms b`,
           {
             a: TransportActions.sendMessage({
               event: "unsubscribe",
@@ -328,6 +331,51 @@ describe("TransportEpic", () => {
             b: TransportActions.unsubscribeFromChannelNack(),
           }
         );
+      });
+    });
+  });
+
+  describe("handleStaleSubscription()", () => {
+    it("should detect stale subscription", async () => {
+      testScheduler.run((helpers) => {
+        const { hotAction, hotState, expectObservable } = wrapHelpers<
+          SubscribeToChannelAck | ReceiveMessage | UnsubscribeFromChannel,
+          any
+        >(helpers, {});
+        const channel = "trades";
+        const channelId = 1;
+
+        const action$ = hotAction(`-a- b ${HEARTBEAT_TIMEOUT_IN_MS}ms - c d`, {
+          a: TransportActions.subscribeToChannelAck({
+            channel,
+            channelId,
+            request: {
+              symbol: "tBTCUSD"
+            }
+          }),
+          b: TransportActions.receiveMessage(
+            {
+              event: "subscribed",
+              channel,
+              chanId: channelId,
+            },
+            undefined
+          ),
+          c: TransportActions.receiveMessage([channelId, ['hb']], undefined), 
+          d: TransportActions.unsubscribeFromChannel({ channelId })
+        });
+        const state$ = hotState("-");
+        const output$ = handleStaleSubscription(
+          action$,
+          state$,
+          ({} as unknown) as Dependencies
+        );
+
+        expectObservable(output$).toBe(`- ${HEARTBEAT_TIMEOUT_IN_MS}ms a`, {
+          a: TransportActions.staleSubscription({
+            channelId
+          })
+        });
       });
     });
   });

@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useThrottle } from "core/hooks/useThrottle";
+import Stale from "core/components/Stale";
 import { Container } from "./DepthChart.styled";
 import Palette from "theme/style";
 import "theme/Highchart";
@@ -13,10 +14,11 @@ interface Depth {
 
 export interface Props {
   depth: Depth;
+  isStale: boolean;
 }
 
 const DepthChart: FC<Props> = (props) => {
-  const { depth } = props;
+  const { depth, isStale } = props;
   const throttledDepth = useThrottle<Depth>(depth, 500);
   const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
     chart: {
@@ -100,6 +102,7 @@ const DepthChart: FC<Props> = (props) => {
 
   return (
     <Container>
+      {isStale && <Stale />}
       <HighchartsReact
         highcharts={Highcharts}
         options={chartOptions}
