@@ -93,9 +93,11 @@ const updateTitle: Epic<Actions, Actions, RootState, Dependencies> = (
   state$
 ) =>
   action$.pipe(
-    ofType(SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR),
+    ofType<Actions, SelectCurrencyPair>(
+      SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR
+    ),
     switchMap((action) => {
-      const { currencyPair } = (action as SelectCurrencyPair).payload;
+      const { currencyPair } = action.payload;
       const [, counter] = parseCurrencyPair(currencyPair);
 
       return state$.pipe(

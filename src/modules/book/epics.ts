@@ -19,9 +19,9 @@ export const subscribeToBook: Epic<
   Dependencies | undefined
 > = (action$) =>
   action$.pipe(
-    ofType(BOOK_ACTION_TYPES.SUBSCRIBE_TO_BOOK),
+    ofType<Actions, SubscribeToBook>(BOOK_ACTION_TYPES.SUBSCRIBE_TO_BOOK),
     map((action) => {
-      const { symbol } = (action as SubscribeToBook).payload;
+      const { symbol } = action.payload;
       const msg = {
         channel: "book" as BookChannel,
         symbol: `t${symbol}`,
@@ -38,9 +38,11 @@ export const unsubscribeFromBook: Epic<
   Dependencies
 > = (action$, state$) =>
   action$.pipe(
-    ofType(BOOK_ACTION_TYPES.UNSUBSCRIBE_FROM_BOOK),
+    ofType<Actions, UnsubscribeFromBook>(
+      BOOK_ACTION_TYPES.UNSUBSCRIBE_FROM_BOOK
+    ),
     mergeMap((action) => {
-      const { symbol } = (action as UnsubscribeFromBook).payload;
+      const { symbol } = action.payload;
       const result: Actions[] = [];
       const channelId = getSubscriptionId(state$.value)("book", {
         symbol: `t${symbol}`,
