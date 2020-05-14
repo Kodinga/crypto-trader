@@ -4,6 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 import { useThrottle } from "core/hooks/useThrottle";
 import Stale from "core/components/Stale";
 import { Container } from "./DepthChart.styled";
+import Loading from "core/components/Loading";
 import Palette from "theme/style";
 import "theme/Highchart";
 
@@ -20,6 +21,7 @@ export interface Props {
 const DepthChart: FC<Props> = (props) => {
   const { depth, isStale } = props;
   const throttledDepth = useThrottle<Depth>(depth, 500);
+  const [isLoading, setIsLoading] = useState(true);
   const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
     chart: {
       type: "area",
@@ -73,6 +75,8 @@ const DepthChart: FC<Props> = (props) => {
   useEffect(() => {
     const { bids, asks } = throttledDepth;
 
+    setIsLoading(bids.length === 0 && asks.length === 0);
+
     setChartOptions({
       xAxis: {
         categories: [...bids, ...asks].map((order) => order.price.toString()),
@@ -103,6 +107,7 @@ const DepthChart: FC<Props> = (props) => {
   return (
     <Container>
       {isStale && <Stale />}
+      {isLoading && <Loading />}
       <HighchartsReact
         highcharts={Highcharts}
         options={chartOptions}

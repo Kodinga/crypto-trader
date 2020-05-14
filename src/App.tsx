@@ -11,6 +11,7 @@ import Market from "modules/ticker/components/Market";
 import Widget from "core/components/Widget";
 import Diagnostics from "core/components/Diagnostics";
 import Latency from "modules/ping/components/Latency";
+import AnimatedContent from "modules/common/AnimatedContent";
 import {
   Container,
   Content,
@@ -50,7 +51,9 @@ function App() {
           </MarketPanel>
           <TradesPanel>
             <Widget title={"Trades"}>
-              <Trades />
+              <AnimatedContent>
+                <Trades />
+              </AnimatedContent>
             </Widget>
           </TradesPanel>
           <CandlesPanel>
@@ -58,12 +61,16 @@ function App() {
           </CandlesPanel>
           <BookPanel>
             <Widget title={"Book"}>
-              <Book />
+              <AnimatedContent>
+                <Book />
+              </AnimatedContent>
             </Widget>
           </BookPanel>
           <DepthPanel>
             <Widget title={"Depth"}>
-              <DepthChart />
+              <AnimatedContent>
+                <DepthChart />
+              </AnimatedContent>
             </Widget>
           </DepthPanel>
           <Footer>
