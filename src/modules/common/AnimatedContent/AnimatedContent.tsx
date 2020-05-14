@@ -3,7 +3,7 @@ import AnimatedCube from "core/components/AnimatedCube";
 
 export interface Props {
   currencyPair?: string;
-  children?: any;
+  children?: JSX.Element | string;
 }
 
 const AnimatedContent: FC<Props> = (props) => {

@@ -1,13 +1,13 @@
 import React, { FC, useEffect, createRef, useState } from "react";
+import { debounce } from "lodash";
 import { Container, Cube, FrontFace, RightFace } from "./AnimatedCube.styled";
 import { usePrevious } from "core/hooks/usePrevious";
-import { debounce } from "lodash";
 
 const DEBOUNCE_RESIZE_IN_MS = 200;
 
 export interface Props {
   trigger: any;
-  children: any;
+  children?: JSX.Element | string;
 }
 
 const AnimatedCube: FC<Props> = (props) => {
@@ -48,6 +48,7 @@ const AnimatedCube: FC<Props> = (props) => {
   useEffect(() => {
     let animation: Animation | undefined = undefined;
 
+    // don't trigger animation the first time we render the component, nor on resize
     if (previousTrigger && previousWidth === width) {
       requestAnimationFrame(() => {
         animation = cubeRef.current?.animate(

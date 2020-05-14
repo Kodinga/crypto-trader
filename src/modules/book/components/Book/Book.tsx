@@ -79,7 +79,6 @@ const Book: FC<Props> = (props) => {
     <Container className="ag-theme-balham-dark">
       {isStale && <Stale />}
       <AgGridReact
-        gridOptions={{ localeText: { noRowsToShow: "Loading..." } }}
         columnDefs={columnDefs}
         rowData={throttledOrders}
         deltaRowDataMode={true}

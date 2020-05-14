@@ -58,7 +58,6 @@ const Trades: FC<Props> = (props) => {
     <Container className="ag-theme-balham-dark">
       {isStale && <Stale />}
       <AgGridReact
-        gridOptions={{ localeText: { noRowsToShow: "Loading..." } }}
         columnDefs={columnDefs}
         rowData={throttledTrades}
         deltaRowDataMode={true}
