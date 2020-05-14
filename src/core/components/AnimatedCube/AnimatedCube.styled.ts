@@ -7,7 +7,6 @@ export const Container = styled.div<{
   perspective: ${({ width }) => `${width}px`};
   width: 100%;
   height: 100%;
-  overflow: hidden;
 `;
 
 export const Cube = styled.div<{

@@ -5,6 +5,7 @@ import { debounce } from "lodash";
 import { priceFormatter, amountFormatter } from "modules/ag-grid/formatter";
 import { useThrottle } from "core/hooks/useThrottle";
 import Stale from "core/components/Stale";
+import Loading from "core/components/Loading";
 import { bidAmountRenderer, askAmountRenderer } from "./renderers";
 import { Order } from "../../types/Order";
 import { Container } from "./Book.styled";
@@ -22,7 +23,7 @@ const Book: FC<Props> = (props) => {
   const [gridApi, setGridApi] = useState<GridApi | null>(null);
   const throttledOrders = useThrottle<{ bid: Order; ask: Order }[]>(
     orders,
-    500
+    100
   );
 
   const columnDefs: ColDef[] = [
@@ -85,6 +86,10 @@ const Book: FC<Props> = (props) => {
         getRowNodeId={(data) => [data.bid?.id, data.ask?.id].join("#")}
         onGridReady={(event) => {
           setGridApi(event.api);
+        }}
+        noRowsOverlayComponent={"customLoadingOverlay"}
+        frameworkComponents={{
+          customLoadingOverlay: Loading,
         }}
       ></AgGridReact>
     </Container>

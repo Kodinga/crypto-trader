@@ -7,6 +7,7 @@ import {
   amountFormatter,
   timeFormatter,
 } from "modules/ag-grid/formatter";
+import Loading from "core/components/Loading";
 import { Trade } from "../../types/Trade";
 import { Container } from "./Trades.styled";
 import Palette from "theme/style";
@@ -63,6 +64,10 @@ const Trades: FC<Props> = (props) => {
         deltaRowDataMode={true}
         getRowNodeId={(data) => data.id}
         onGridReady={(event) => event.api.sizeColumnsToFit()}
+        noRowsOverlayComponent={"customLoadingOverlay"}
+        frameworkComponents={{
+          customLoadingOverlay: Loading,
+        }}
       ></AgGridReact>
     </Container>
   );
