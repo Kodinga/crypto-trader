@@ -3,6 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef, GridApi } from "ag-grid-community";
 import { priceFormatter, volumeFormatter } from "modules/ag-grid/formatter";
 import { Ticker } from "modules/ticker/types/Ticker";
+import Loading from "core/components/Loading";
 import { formatCurrencyPair } from "modules/reference-data/utils";
 import { Container } from "./Market.styled";
 import PriceChartRenderer from "./PriceChartRenderer";
@@ -97,9 +98,11 @@ const Market: FC<Props> = (props) => {
         onRowClicked={(event) => {
           onClick(event.data.currencyPair);
         }}
+        noRowsOverlayComponent={"customLoadingOverlay"}
         frameworkComponents={{
           priceChartRenderer: PriceChartRenderer,
           priceRenderer: PriceRenderer,
+          customLoadingOverlay: Loading,
         }}
       ></AgGridReact>
     </Container>
