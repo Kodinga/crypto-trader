@@ -6,10 +6,10 @@ export interface Props {
   children?: JSX.Element | string;
 }
 
-const AnimatedContent: FC<Props> = (props) => {
+const CurrencyPairTransition: FC<Props> = (props) => {
   const { currencyPair, children } = props;
 
   return <AnimatedCube trigger={currencyPair}>{children}</AnimatedCube>;
 };
 
-export default AnimatedContent;
+export default CurrencyPairTransition;

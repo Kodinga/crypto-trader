@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { RootState } from "modules/root";
-import AnimatedContent, { Props } from "./AnimatedContent";
+import CurrencyPairTransition, { Props } from "./CurrencyPairTransition";
 import { getSelectedCurrencyPair } from "modules/selection/selectors";
 
 const mapStateToProps = (state: RootState): Props => {
@@ -11,4 +11,4 @@ const mapStateToProps = (state: RootState): Props => {
   };
 };
 
-export default connect(mapStateToProps)(AnimatedContent);
+export default connect(mapStateToProps)(CurrencyPairTransition);

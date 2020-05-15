@@ -41,8 +41,6 @@ const AnimatedCube: FC<Props> = (props) => {
     return () => {
       window.removeEventListener("resize", handleWindowResize);
     };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef]);
 
   useEffect(() => {
