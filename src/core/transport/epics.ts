@@ -146,13 +146,10 @@ export const handleStaleSubscription: Epic<
       return action$.pipe(
         ofType<Actions, ReceiveMessage>(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
         filter((action) => action.payload[0] === channelId),
+        map(() => null), // Discard action so we don't use memory unnecessarily
         bufferTime(HEARTBEAT_TIMEOUT_IN_MS),
-        mergeMap((actions) => {
-          if (actions.length === 0) {
-            return of(TransportActions.staleSubscription({ channelId }));
-          }
-          return EMPTY;
-        }),
+        filter((actions) => actions.length === 0),
+        map(() => TransportActions.staleSubscription({ channelId })),
         takeUntil(
           action$.pipe(
             ofType<Actions, UnsubscribeFromChannel>(

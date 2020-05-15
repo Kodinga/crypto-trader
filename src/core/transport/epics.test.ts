@@ -345,7 +345,7 @@ describe("TransportEpic", () => {
         const channel = "trades";
         const channelId = 1;
 
-        const action$ = hotAction(`-a- b ${HEARTBEAT_TIMEOUT_IN_MS}ms - c d`, {
+        const action$ = hotAction(`-a- ${HEARTBEAT_TIMEOUT_IN_MS}ms - b c`, {
           a: TransportActions.subscribeToChannelAck({
             channel,
             channelId,
@@ -353,16 +353,8 @@ describe("TransportEpic", () => {
               symbol: "tBTCUSD",
             },
           }),
-          b: TransportActions.receiveMessage(
-            {
-              event: "subscribed",
-              channel,
-              chanId: channelId,
-            },
-            undefined
-          ),
-          c: TransportActions.receiveMessage([channelId, ["hb"]], undefined),
-          d: TransportActions.unsubscribeFromChannel({ channelId }),
+          b: TransportActions.receiveMessage([channelId, ["hb"]], undefined),
+          c: TransportActions.unsubscribeFromChannel({ channelId }),
         });
         const state$ = hotState("-");
         const output$ = handleStaleSubscription(
