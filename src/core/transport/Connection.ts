@@ -22,4 +22,12 @@ export class Connection {
   onReceive(callback: (data: any) => void) {
     this.connectionProxy.onReceived(callback);
   }
+
+  onError(callback: (data: any) => void) {
+    this.connectionProxy.onError(callback);
+  }
+
+  onClose(callback: () => void) {
+    this.connectionProxy.onClose(callback);
+  }
 }

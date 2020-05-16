@@ -5,8 +5,10 @@ import {
   TRANSPORT_ACTION_TYPES,
   ReceiveMessage,
   StaleSubscription,
+  ChangeConnectionStatus,
 } from "core/transport/actions";
 import { SubscribeToChannelAck, UnsubscribeFromChannelAck } from "./actions";
+import { ConnectionStatus } from "./types/ConnectionStatus";
 
 export interface SubscriptionState {
   [key: number]: { channel: string; request: any; isStale?: boolean };
@@ -75,12 +77,23 @@ const staleSubscriptionReducer = (
   };
 };
 
+const changeConnectionStatusReducer = (
+  state: SubscriptionState,
+  action: ChangeConnectionStatus
+) => {
+  if (action.payload === ConnectionStatus.Disconnected) {
+    return initialState;
+  }
+  return state;
+};
+
 export const subscriptionsReducer = createReducer<SubscriptionState, Actions>(
   {
     [TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK]: subscribeToChannelAckReducer,
     [TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_ACK]: unsubscribeFromChannelAckReducer,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
     [TRANSPORT_ACTION_TYPES.STALE_SUBSCRIPTION]: staleSubscriptionReducer,
+    [TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS]: changeConnectionStatusReducer,
   },
   initialState
 );

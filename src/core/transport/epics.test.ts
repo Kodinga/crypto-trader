@@ -6,6 +6,7 @@ import {
   SubscribeToChannel,
   UnsubscribeFromChannel,
   SubscribeToChannelAck,
+  ChangeConnectionStatus,
 } from "core/transport/actions";
 import { DummyConnectionProxy } from "./DummyConnectionProxy";
 import { SendMessage, ReceiveMessage } from "./actions";
@@ -15,8 +16,10 @@ import {
   handleSendMessage,
   handleStaleSubscription,
   HEARTBEAT_TIMEOUT_IN_MS,
+  handleReconnection,
 } from "./epics";
 import { Connection } from "./Connection";
+import { ConnectionStatus } from "./types/ConnectionStatus";
 
 jest.mock("./Connection");
 
@@ -368,6 +371,31 @@ describe("TransportEpic", () => {
             channelId,
           }),
         });
+      });
+    });
+  });
+
+  describe("handleReconnection()", () => {
+    it("should reconnect", () => {
+      testScheduler.run(async (helpers) => {
+        const { hotAction, hotState } = wrapHelpers<
+          ChangeConnectionStatus,
+          any
+        >(helpers, {});
+        const connection = new Connection(new DummyConnectionProxy());
+        const action$ = hotAction(`-a|`, {
+          a: TransportActions.changeConnectionStatus(
+            ConnectionStatus.Disconnected
+          ),
+        });
+        const state$ = hotState("");
+        const dependencies = {
+          connection,
+        };
+        const output$ = handleReconnection(action$, state$, dependencies);
+        await output$.toPromise();
+
+        expect(connection.connect).toHaveBeenCalled();
       });
     });
   });

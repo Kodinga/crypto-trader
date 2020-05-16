@@ -12,4 +12,6 @@ export class DummyConnectionProxy implements ConnectionProxy {
   onReceived(callback: (data: any) => void): void {}
 
   onError(callback: (error: any) => void): void {}
+
+  onClose(callback: () => void): void {}
 }

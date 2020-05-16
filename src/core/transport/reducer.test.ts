@@ -1,5 +1,6 @@
 import { TransportActions } from "core/transport/actions";
 import subscriptions from "./reducer";
+import { ConnectionStatus } from "./types/ConnectionStatus";
 
 describe("SubscriptionsReducer", () => {
   it("should save subscription on ack", () => {
@@ -89,5 +90,21 @@ describe("SubscriptionsReducer", () => {
         request: {},
       },
     });
+  });
+
+  it("should clear state after disconnection", () => {
+    const channelId = 10;
+    const initialState = {
+      [channelId]: {
+        isStale: false,
+        channel: "topic",
+        request: {},
+      },
+    };
+    const action = TransportActions.changeConnectionStatus(
+      ConnectionStatus.Disconnected
+    );
+    const result = subscriptions(initialState, action);
+    expect(result).toEqual({});
   });
 });

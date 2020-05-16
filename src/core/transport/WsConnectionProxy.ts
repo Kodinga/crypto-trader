@@ -5,6 +5,7 @@ export class WsConnectionProxy implements ConnectionProxy {
   private onConnectFn?: () => void;
   private onReceivedFn?: (data?: any) => void;
   private onErrorFn?: (error: any) => void;
+  private onCloseFn?: () => void;
 
   constructor(private realm: string) {
     this.socket = undefined;
@@ -18,6 +19,7 @@ export class WsConnectionProxy implements ConnectionProxy {
       this.onReceivedFn && this.onReceivedFn(data);
     };
     this.socket.onerror = (error) => this.onErrorFn && this.onErrorFn(error);
+    this.socket.onclose = () => this.onCloseFn && this.onCloseFn();
   }
 
   stop(): void {
@@ -26,7 +28,13 @@ export class WsConnectionProxy implements ConnectionProxy {
 
   send(message: any): void {
     if (this.socket) {
-      this.socket.send(message);
+      if (this.socket.readyState !== this.socket.OPEN) {
+        console.warn(
+          `Fail to send message as WS is in ${this.socket.readyState} state`
+        );
+      } else {
+        this.socket.send(message);
+      }
     }
   }
 
@@ -40,5 +48,9 @@ export class WsConnectionProxy implements ConnectionProxy {
 
   onError(callback: (error: any) => void): void {
     this.onErrorFn = callback;
+  }
+
+  onClose(callback: () => void): void {
+    this.onCloseFn = callback;
   }
 }

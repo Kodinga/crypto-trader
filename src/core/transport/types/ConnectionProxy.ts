@@ -9,4 +9,5 @@ export interface ConnectionProxy {
   onConnect(callback: () => void): void;
   onReceived(callback: (data: any) => void): void;
   onError(callback: (error: any) => void): void;
+  onClose(callback: () => void): void;
 }

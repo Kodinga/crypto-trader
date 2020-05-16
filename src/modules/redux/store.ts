@@ -46,6 +46,12 @@ export default function configureStore() {
     );
     console.log("Connected");
   });
+  connection.onClose(() => {
+    store.dispatch(
+      TransportActions.changeConnectionStatus(ConnectionStatus.Disconnected)
+    );
+    console.log("Disconnected");
+  });
 
   epicMiddleware.run(rootEpic);
 

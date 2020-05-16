@@ -1,4 +1,4 @@
-import { EMPTY, merge } from "rxjs";
+import { EMPTY, merge, timer } from "rxjs";
 import { Epic, ofType, combineEpics } from "redux-observable";
 import {
   filter,
@@ -10,6 +10,8 @@ import {
   map,
   bufferTime,
   takeUntil,
+  switchMap,
+  tap,
 } from "rxjs/operators";
 import { of } from "rxjs/internal/observable/of";
 import { Dependencies } from "modules/redux/store";
@@ -22,10 +24,13 @@ import {
   SubscribeToChannel,
   SubscribeToChannelAck,
   UnsubscribeFromChannel,
+  ChangeConnectionStatus,
 } from "./actions";
+import { ConnectionStatus } from "./types/ConnectionStatus";
 
 export const SUBSCRIPTION_TIMEOUT_IN_MS = 5000;
 export const HEARTBEAT_TIMEOUT_IN_MS = 20000;
+export const RECONNECT_AFTER_MS = 1000;
 
 export const handleSendMessage: Epic<
   Actions,
@@ -151,11 +156,18 @@ export const handleStaleSubscription: Epic<
         filter((actions) => actions.length === 0),
         map(() => TransportActions.staleSubscription({ channelId })),
         takeUntil(
-          action$.pipe(
-            ofType<Actions, UnsubscribeFromChannel>(
-              TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL
+          merge(
+            action$.pipe(
+              ofType<Actions, UnsubscribeFromChannel>(
+                TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL
+              ),
+              filter((action) => action.payload.channelId === channelId)
             ),
-            filter((action) => action.payload.channelId === channelId)
+            action$.pipe(
+              ofType<Actions, ChangeConnectionStatus>(
+                TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS
+              )
+            )
           )
         )
       );
@@ -163,8 +175,29 @@ export const handleStaleSubscription: Epic<
   );
 };
 
+export const handleReconnection: Epic<
+  Actions,
+  Actions,
+  RootState,
+  Dependencies
+> = (action$, state$, { connection }) => {
+  return action$.pipe(
+    ofType<Actions, ChangeConnectionStatus>(
+      TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS
+    ),
+    filter((action) => action.payload === ConnectionStatus.Disconnected),
+    switchMap(() =>
+      timer(RECONNECT_AFTER_MS).pipe(
+        tap(() => connection.connect()),
+        switchMap(() => EMPTY)
+      )
+    )
+  );
+};
+
 export default combineEpics(
   handleSendMessage,
   handleSubscription,
-  handleStaleSubscription
+  handleStaleSubscription,
+  handleReconnection
 );
