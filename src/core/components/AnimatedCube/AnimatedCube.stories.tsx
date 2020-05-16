@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { withKnobs, select } from "@storybook/addon-knobs";
 import { StoryFn } from "@storybook/addons";
+import Palette from "theme/style";
 import AnimatedCube from "./AnimatedCube";
 
 const Container: FC<any> = ({ children }) => (
@@ -8,6 +9,7 @@ const Container: FC<any> = ({ children }) => (
     style={{
       width: "400px",
       height: "500px",
+      color: Palette.White,
     }}
   >
     {children}

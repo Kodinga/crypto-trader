@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Palette from "theme/style";
 
 export const Container = styled.div`
   position: absolute;
@@ -13,10 +12,4 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-export const Content = styled.div`
-  color: ${Palette.White};
-  font-family: FiraSans-Medium;
-  font-size: 14px;
 `;

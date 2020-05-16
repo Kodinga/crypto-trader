@@ -1,10 +1,11 @@
 import React, { FC } from "react";
-import { Container, Content } from "./Stale.styled";
+import Loading from "core/components/Loading";
+import { Container } from "./Stale.styled";
 
 const Stale: FC<{}> = () => {
   return (
     <Container>
-      <Content>Stale...</Content>
+      <Loading title={"Stale..."}></Loading>
     </Container>
   );
 };

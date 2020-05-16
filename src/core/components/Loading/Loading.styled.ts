@@ -12,7 +12,7 @@ const animation = `
     height: ${barHeight}px;
 `;
 
-export const Animation = styled.div`
+export const Container = styled.div`
   position: absolute;
   left: 0;
   top: 0;
@@ -20,6 +20,29 @@ export const Animation = styled.div`
   bottom: 0;
   margin: auto;
   z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "icon"
+    "title";
+
+  justify-items: center;
+`;
+
+export const Title = styled.div`
+  font-size: 11px;
+  font-family: FiraSans-Light;
+  grid-area: title;
+  align-self: flex-start;
+  color: ${Palette.LightGray};
+`;
+
+export const Animation = styled.div`
+  position: relative;
+  grid-area: icon;
+  align-self: flex-end;
+  margin-bottom: 5px;
 
   @keyframes loadingAnimation {
     0%,

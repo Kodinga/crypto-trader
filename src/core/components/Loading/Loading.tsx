@@ -1,8 +1,18 @@
 import React, { FC } from "react";
-import { Animation } from "./Loading.styled";
+import { Container, Title, Animation } from "./Loading.styled";
 
-const Loading: FC<{}> = () => {
-  return <Animation></Animation>;
+interface Props {
+  title?: string;
+}
+
+const Loading: FC<Props> = (props) => {
+  const { title = "Loading..." } = props;
+  return (
+    <Container>
+      <Animation></Animation>
+      <Title>{title}</Title>
+    </Container>
+  );
 };
 
 export default Loading;
