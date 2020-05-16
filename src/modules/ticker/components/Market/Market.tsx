@@ -11,7 +11,11 @@ import PriceRenderer from "./PriceRenderer";
 import Palette from "theme/style";
 
 export interface StateProps {
-  tickers: (Ticker & { currencyPair: string; prices: number[] })[];
+  tickers: (Ticker & {
+    currencyPair: string;
+    prices: number[];
+    isStale: boolean;
+  })[];
   selectedCurrencyPair?: string;
 }
 
@@ -71,6 +75,7 @@ const Market: FC<Props> = (props) => {
 
   const rowClassRules = {
     "selected-row": (params: any) => params.node.isSelected(),
+    "stale-row": (params: any) => params.data.isStale,
   };
 
   useEffect(() => {

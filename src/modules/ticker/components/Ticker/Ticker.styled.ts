@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import { Container as Stale } from "core/components/Stale/Stale.styled";
 import Palette from "theme/style";
 
 export const Container = styled.div<{
   isActive: boolean;
 }>`
+  position: relative;
   cursor: pointer;
   display: grid;
   grid-template-rows: 25px 1fr;
@@ -19,6 +21,12 @@ export const Container = styled.div<{
 
   &:hover {
     background-color: #2d3436;
+  }
+
+  ${Stale} {
+    background: none;
+    top: 12px;
+    bottom: -12px;
   }
 `;
 

@@ -51,6 +51,10 @@ const receiveMessageReducer = (
   if (isHeartbeat(action)) {
     const [channelId] = action.payload;
 
+    if (!Boolean(state[channelId].isStale)) {
+      return state;
+    }
+
     return {
       ...state,
       [channelId]: {
@@ -81,7 +85,7 @@ const changeConnectionStatusReducer = (
   state: SubscriptionState,
   action: ChangeConnectionStatus
 ) => {
-  if (action.payload === ConnectionStatus.Disconnected) {
+  if (action.payload === ConnectionStatus.Connected) {
     return initialState;
   }
   return state;

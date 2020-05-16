@@ -52,6 +52,7 @@ describe("SubscriptionsReducer", () => {
     const channelId = 10;
     const initialState = {
       [channelId]: {
+        isStale: true,
         channel: "topic",
         request: {},
       },
@@ -92,7 +93,7 @@ describe("SubscriptionsReducer", () => {
     });
   });
 
-  it("should clear state after disconnection", () => {
+  it("should clear state after reconnection", () => {
     const channelId = 10;
     const initialState = {
       [channelId]: {
@@ -102,7 +103,7 @@ describe("SubscriptionsReducer", () => {
       },
     };
     const action = TransportActions.changeConnectionStatus(
-      ConnectionStatus.Disconnected
+      ConnectionStatus.Connected
     );
     const result = subscriptions(initialState, action);
     expect(result).toEqual({});

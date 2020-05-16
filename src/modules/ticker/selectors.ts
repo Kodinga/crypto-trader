@@ -4,6 +4,7 @@ import { RootState } from "modules/root";
 import { getCurrencyPairs } from "modules/reference-data/selectors";
 import { candlesSelector } from "modules/candles/selectors";
 import { getSelectedCurrencyPair } from "modules/selection/selectors";
+import { getSubscriptionId, getSubscriptions } from "core/transport/selectors";
 import { getValueAt } from "core/utils";
 import { getLookupKey } from "./../candles/utils";
 
@@ -51,12 +52,23 @@ export const getVisibleCurrencyPairTickers = createSelector(
 export const getTickersWithPrices = createSelector(
   getTickers,
   candlesSelector,
-  (tickers, candles) => {
-    return tickers.map((ticker) => ({
-      ...ticker,
-      prices: (candles[getLookupKey(ticker.currencyPair, "5m")] || []).map(
-        (ticker) => ticker.close
-      ),
-    }));
+  getSubscriptionId,
+  getSubscriptions,
+  (tickers, candles, subscribeIdGetter, subscriptions) => {
+    return tickers.map((ticker) => {
+      const subscriptionId = subscribeIdGetter("ticker", {
+        symbol: `t${ticker.currencyPair}`,
+      });
+
+      return {
+        ...ticker,
+        prices: (candles[getLookupKey(ticker.currencyPair, "5m")] || []).map(
+          (ticker) => ticker.close
+        ),
+        isStale: Boolean(
+          subscriptionId ? subscriptions[subscriptionId].isStale : false
+        ),
+      };
+    });
   }
 );

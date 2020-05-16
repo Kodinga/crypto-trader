@@ -7,4 +7,8 @@ export const Container = styled.div`
   .selected-row {
     font-family: FiraSans-Medium;
   }
+
+  .stale-row {
+    opacity: 0.6;
+  }
 `;

@@ -166,7 +166,8 @@ export const handleStaleSubscription: Epic<
             action$.pipe(
               ofType<Actions, ChangeConnectionStatus>(
                 TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS
-              )
+              ),
+              filter((action) => action.payload === ConnectionStatus.Connected)
             )
           )
         )

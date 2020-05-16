@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { withKnobs } from "@storybook/addon-knobs";
+import { withKnobs, boolean } from "@storybook/addon-knobs";
 import { StoryFn } from "@storybook/addons";
 import Ticker from "./Ticker";
 import Palette from "theme/style";
@@ -31,6 +31,7 @@ export const Default = () => {
       lastPrice={7540.45}
       dailyChangeRelative={-3.5}
       dailyChange={-210.3}
+      isStale={boolean("isStale", false)}
     />
   );
 };

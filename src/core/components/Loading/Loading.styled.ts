@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Palette from "theme/style";
 
 const barWidth = 5;
-const barHeight = 30;
+const barHeight = 20;
 const gap = 2;
 
 const animation = `

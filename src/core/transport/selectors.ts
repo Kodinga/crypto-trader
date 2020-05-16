@@ -1,3 +1,4 @@
+import { memoize } from "lodash";
 import { createSelector } from "reselect";
 import { RootState } from "modules/root";
 import { Channel } from "./types/Channels";
@@ -11,18 +12,29 @@ export const getSubscriptions = createSelector(
 
 export const getSubscriptionId = createSelector(
   getSubscriptions,
-  (subscriptions) => (channel: Channel, request: any = {}) => {
-    const channelIds = Object.keys(subscriptions).map(Number);
+  (subscriptions) =>
+    memoize(
+      (channel: Channel, request: { [key: string]: string } = {}) => {
+        const channelIds = Object.keys(subscriptions).map(Number);
 
-    return channelIds.find((channelId) => {
-      return (
-        subscriptions[channelId].channel === channel &&
-        Object.keys(request).every(
-          (key) => request[key] === subscriptions[channelId].request[key]
-        )
-      );
-    });
-  }
+        return channelIds.find((channelId) => {
+          return (
+            subscriptions[channelId].channel === channel &&
+            Object.keys(request).every(
+              (key) => request[key] === subscriptions[channelId].request[key]
+            )
+          );
+        });
+      },
+      (channel: Channel, request: { [key: string]: string } = {}) => {
+        return [
+          channel,
+          ...Object.keys(request)
+            .sort()
+            .map((key) => `${key}=${request[key]}`),
+        ].join(":");
+      }
+    )
 );
 
 export const getIsSubscriptionStale = createSelector(
