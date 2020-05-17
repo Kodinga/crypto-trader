@@ -16,10 +16,12 @@ import {
   handleSendMessage,
   handleStaleSubscription,
   HEARTBEAT_TIMEOUT_IN_MS,
+  RECONNECT_AFTER_MS,
   handleReconnection,
 } from "./epics";
 import { Connection } from "./Connection";
 import { ConnectionStatus } from "./types/ConnectionStatus";
+import { AppActions } from "modules/app/actions";
 
 jest.mock("./Connection");
 
@@ -376,26 +378,27 @@ describe("TransportEpic", () => {
   });
 
   describe("handleReconnection()", () => {
-    it("should reconnect", () => {
-      testScheduler.run(async (helpers) => {
-        const { hotAction, hotState } = wrapHelpers<
+    it("should re-bootstrapp app after losing connection", () => {
+      testScheduler.run((helpers) => {
+        const { hotAction, hotState, expectObservable } = wrapHelpers<
           ChangeConnectionStatus,
           any
         >(helpers, {});
-        const connection = new Connection(new DummyConnectionProxy());
-        const action$ = hotAction(`-a|`, {
+        const action$ = hotAction(`a`, {
           a: TransportActions.changeConnectionStatus(
             ConnectionStatus.Disconnected
           ),
         });
         const state$ = hotState("");
-        const dependencies = {
-          connection,
-        };
-        const output$ = handleReconnection(action$, state$, dependencies);
-        await output$.toPromise();
+        const output$ = handleReconnection(
+          action$,
+          state$,
+          ({} as unknown) as Dependencies
+        );
 
-        expect(connection.connect).toHaveBeenCalled();
+        expectObservable(output$).toBe(`${RECONNECT_AFTER_MS}ms a`, {
+          a: AppActions.bootstrapApp(),
+        });
       });
     });
   });

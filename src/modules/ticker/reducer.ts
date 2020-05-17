@@ -1,8 +1,9 @@
 import { createReducer } from "modules/redux/utils";
-import { Actions } from "./../root";
 import { TRANSPORT_ACTION_TYPES, ReceiveMessage } from "core/transport/actions";
 import { isHeartbeat } from "core/transport/utils";
 import { Ticker } from "./types/Ticker";
+import { APP_ACTION_TYPES } from "modules/app/actions";
+import { Actions } from "./../root";
 
 export interface TickerState {
   [symbol: string]: Ticker;
@@ -58,6 +59,7 @@ const receiveMessageReducer = (state: TickerState, action: ReceiveMessage) => {
 
 export const tickerReducer = createReducer<TickerState, Actions>(
   {
+    [APP_ACTION_TYPES.BOOTSTRAP_APP]: () => initialState,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
   },
   initialState

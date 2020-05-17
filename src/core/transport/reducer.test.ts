@@ -1,3 +1,4 @@
+import { AppActions } from "./../../modules/app/actions";
 import { TransportActions } from "core/transport/actions";
 import subscriptions from "./reducer";
 import { ConnectionStatus } from "./types/ConnectionStatus";
@@ -93,7 +94,7 @@ describe("SubscriptionsReducer", () => {
     });
   });
 
-  it("should clear state after reconnection", () => {
+  it("should clear state when bootstrapping", () => {
     const channelId = 10;
     const initialState = {
       [channelId]: {
@@ -102,9 +103,7 @@ describe("SubscriptionsReducer", () => {
         request: {},
       },
     };
-    const action = TransportActions.changeConnectionStatus(
-      ConnectionStatus.Connected
-    );
+    const action = AppActions.bootstrapApp();
     const result = subscriptions(initialState, action);
     expect(result).toEqual({});
   });

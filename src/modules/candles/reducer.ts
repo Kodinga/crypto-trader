@@ -7,6 +7,7 @@ import {
   isErrorMessage,
 } from "core/transport/utils";
 import { ReceiveMessage } from "core/transport/actions";
+import { APP_ACTION_TYPES } from "modules/app/actions";
 import { getLookupKey } from "./utils";
 import { Actions } from "./../root";
 import { Candle } from "./types/Candle";
@@ -96,6 +97,7 @@ const receiveMessageReducer = (state: CandlesState, action: ReceiveMessage) => {
 
 export const candlesReducer = createReducer<CandlesState, Actions>(
   {
+    [APP_ACTION_TYPES.BOOTSTRAP_APP]: () => initialState,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
   },
   initialState

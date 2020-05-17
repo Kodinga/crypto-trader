@@ -28,6 +28,7 @@ import { CandlesActions } from "modules/candles/actions";
 import { RootState } from "./../root";
 import { APP_ACTION_TYPES, BoostrapApp } from "./actions";
 import { LoadRefDataAck } from "./../reference-data/actions";
+import { getSelectedCurrencyPair } from "./../selection/selectors";
 import {
   SELECTION_ACTION_TYPES,
   SelectCurrencyPair,
@@ -59,6 +60,14 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (
               take(1),
               mergeMap(() => {
                 const currencyPairs = getCurrencyPairs(state$.value);
+                const selectionActions: Actions[] = [];
+                if (!getSelectedCurrencyPair(state$.value)) {
+                  selectionActions.push(
+                    SelectionActions.selectCurrencyPair({
+                      currencyPair: currencyPairs[0],
+                    })
+                  );
+                }
                 const tickerActions = currencyPairs.map((currencyPair) =>
                   TickerActions.subscribeToTicker({
                     symbol: currencyPair,
@@ -72,11 +81,7 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (
                 );
 
                 return merge(
-                  of(
-                    SelectionActions.selectCurrencyPair({
-                      currencyPair: currencyPairs[0],
-                    })
-                  ),
+                  from(selectionActions),
                   from(tickerActions),
                   from(candleActions)
                 );

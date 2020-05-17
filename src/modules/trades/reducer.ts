@@ -7,6 +7,7 @@ import {
   isErrorMessage,
 } from "core/transport/utils";
 import { ReceiveMessage } from "core/transport/actions";
+import { APP_ACTION_TYPES } from "modules/app/actions";
 import { Actions } from "./../root";
 import { Trade } from "./types/Trade";
 
@@ -89,6 +90,7 @@ const receiveMessageReducer = (state: TradesState, action: ReceiveMessage) => {
 
 export const tradesReducer = createReducer<TradesState, Actions>(
   {
+    [APP_ACTION_TYPES.BOOTSTRAP_APP]: () => initialState,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
   },
   initialState

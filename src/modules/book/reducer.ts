@@ -8,6 +8,7 @@ import {
   isErrorMessage,
 } from "core/transport/utils";
 import { ReceiveMessage } from "core/transport/actions";
+import { APP_ACTION_TYPES } from "modules/app/actions";
 import { Order } from "./types/Order";
 
 type SymbolState = Order[];
@@ -91,6 +92,7 @@ const receiveMessageReducer = (state: BookState, action: ReceiveMessage) => {
 
 export const bookReducer = createReducer<BookState, Actions>(
   {
+    [APP_ACTION_TYPES.BOOTSTRAP_APP]: () => initialState,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
   },
   initialState

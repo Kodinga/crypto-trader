@@ -11,11 +11,11 @@ import {
   bufferTime,
   takeUntil,
   switchMap,
-  tap,
 } from "rxjs/operators";
 import { of } from "rxjs/internal/observable/of";
 import { Dependencies } from "modules/redux/store";
 import { RootState, Actions } from "modules/root";
+import { AppActions } from "modules/app/actions";
 import {
   TRANSPORT_ACTION_TYPES,
   SendMessage,
@@ -188,10 +188,7 @@ export const handleReconnection: Epic<
     ),
     filter((action) => action.payload === ConnectionStatus.Disconnected),
     switchMap(() =>
-      timer(RECONNECT_AFTER_MS).pipe(
-        tap(() => connection.connect()),
-        switchMap(() => EMPTY)
-      )
+      timer(RECONNECT_AFTER_MS).pipe(map(() => AppActions.bootstrapApp()))
     )
   );
 };
