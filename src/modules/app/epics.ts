@@ -60,14 +60,13 @@ const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (
               take(1),
               mergeMap(() => {
                 const currencyPairs = getCurrencyPairs(state$.value);
-                const selectionActions: Actions[] = [];
-                if (!getSelectedCurrencyPair(state$.value)) {
-                  selectionActions.push(
-                    SelectionActions.selectCurrencyPair({
-                      currencyPair: currencyPairs[0],
-                    })
-                  );
-                }
+                const selectionActions = [
+                  SelectionActions.selectCurrencyPair({
+                    currencyPair:
+                      getSelectedCurrencyPair(state$.value) || currencyPairs[0],
+                  }),
+                ];
+
                 const tickerActions = currencyPairs.map((currencyPair) =>
                   TickerActions.subscribeToTicker({
                     symbol: currencyPair,

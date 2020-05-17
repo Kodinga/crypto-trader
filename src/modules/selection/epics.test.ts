@@ -48,17 +48,17 @@ describe("SelectionEpic", () => {
             symbol: previousCurrencyPair,
             timeframe: "1m",
           }),
-          b: TradesActions.unsubscribeFromTrades({
+          b: BookActions.unsubscribeFromBook({ symbol: previousCurrencyPair }),
+          c: TradesActions.unsubscribeFromTrades({
             symbol: previousCurrencyPair,
           }),
-          c: BookActions.unsubscribeFromBook({ symbol: previousCurrencyPair }),
 
           d: CandlesActions.subscribeToCandles({
             symbol: currencyPair,
             timeframe: "1m",
           }),
-          e: TradesActions.subscribeToTrades({ symbol: currencyPair }),
-          f: BookActions.subscribeToBook({ symbol: currencyPair }),
+          e: BookActions.subscribeToBook({ symbol: currencyPair }),
+          f: TradesActions.subscribeToTrades({ symbol: currencyPair }),
         });
       });
     });

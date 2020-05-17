@@ -1,6 +1,13 @@
 import { combineEpics, Epic, ofType } from "redux-observable";
 import { interval, merge, of } from "rxjs";
-import { filter, switchMap, map } from "rxjs/operators";
+import {
+  filter,
+  switchMap,
+  map,
+  timeout,
+  catchError,
+  take,
+} from "rxjs/operators";
 import { PingActions } from "./actions";
 import { ReceiveMessage } from "core/transport/actions";
 import { TransportActions } from "core/transport/actions";
@@ -22,7 +29,8 @@ export const pingPong: Epic<Actions, Actions, RootState, Dependencies> = (
     filter((action) => action.payload === ConnectionStatus.Connected),
     switchMap(() => {
       return interval(PING_INTERVAL_IN_MS).pipe(
-        switchMap((cid) => {
+        switchMap((i) => {
+          const cid = i + 1;
           const pingTimestamp = Date.now();
           return merge(
             action$.pipe(
@@ -35,10 +43,19 @@ export const pingPong: Epic<Actions, Actions, RootState, Dependencies> = (
                   action.payload.event === "pong" &&
                   action.payload.cid === cid
               ),
+              take(1),
+              timeout(PING_INTERVAL_IN_MS - 100),
               map(() =>
                 PingActions.updateLatency({
                   latency: Date.now() - pingTimestamp,
                 })
+              ),
+              catchError(() =>
+                of(
+                  PingActions.updateLatency({
+                    latency: -1,
+                  })
+                )
               )
             ),
             of(

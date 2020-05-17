@@ -1,5 +1,8 @@
 import { createReducer } from "modules/redux/utils";
-import { TRANSPORT_ACTION_TYPES } from "core/transport/actions";
+import {
+  TRANSPORT_ACTION_TYPES,
+  ChangeConnectionStatus,
+} from "core/transport/actions";
 import {
   isHeartbeat,
   isSubscriptionMessage,
@@ -7,7 +10,7 @@ import {
   isErrorMessage,
 } from "core/transport/utils";
 import { ReceiveMessage } from "core/transport/actions";
-import { APP_ACTION_TYPES } from "modules/app/actions";
+import { ConnectionStatus } from "core/transport/types/ConnectionStatus";
 import { getLookupKey } from "./utils";
 import { Actions } from "./../root";
 import { Candle } from "./types/Candle";
@@ -95,9 +98,19 @@ const receiveMessageReducer = (state: CandlesState, action: ReceiveMessage) => {
   return state;
 };
 
+const changeConnectionStatusReducer = (
+  state: CandlesState,
+  action: ChangeConnectionStatus
+) => {
+  if (action.payload === ConnectionStatus.Connected) {
+    return initialState;
+  }
+  return state;
+};
+
 export const candlesReducer = createReducer<CandlesState, Actions>(
   {
-    [APP_ACTION_TYPES.BOOTSTRAP_APP]: () => initialState,
+    [TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS]: changeConnectionStatusReducer,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
   },
   initialState

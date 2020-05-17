@@ -9,3 +9,7 @@ export const Container = styled.div`
   justify-content: space-between;
   color: ${Palette.LightGray};
 `;
+
+export const Icon = styled.i`
+  font-size: 16px;
+`;

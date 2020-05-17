@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Container } from "./Latency.styled";
+import { Container, Icon } from "./Latency.styled";
 
 export interface Props {
   latency?: number;
@@ -10,7 +10,11 @@ const Latency: FC<Props> = (props) => {
   return (
     <Container>
       <span>Round trip: </span>
-      <span>{latency || "---"}ms</span>
+      {latency === -1 ? (
+        <Icon className="material-icons">warning</Icon>
+      ) : (
+        <span>{latency || "---"}ms</span>
+      )}
     </Container>
   );
 };

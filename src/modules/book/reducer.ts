@@ -1,5 +1,9 @@
+import { ConnectionStatus } from "core/transport/types/ConnectionStatus";
 import { Actions } from "modules/root";
-import { TRANSPORT_ACTION_TYPES } from "core/transport/actions";
+import {
+  TRANSPORT_ACTION_TYPES,
+  ChangeConnectionStatus,
+} from "core/transport/actions";
 import { createReducer } from "modules/redux/utils";
 import {
   isHeartbeat,
@@ -8,7 +12,6 @@ import {
   isErrorMessage,
 } from "core/transport/utils";
 import { ReceiveMessage } from "core/transport/actions";
-import { APP_ACTION_TYPES } from "modules/app/actions";
 import { Order } from "./types/Order";
 
 type SymbolState = Order[];
@@ -90,9 +93,19 @@ const receiveMessageReducer = (state: BookState, action: ReceiveMessage) => {
   return state;
 };
 
+const changeConnectionStatusReducer = (
+  state: BookState,
+  action: ChangeConnectionStatus
+) => {
+  if (action.payload === ConnectionStatus.Connected) {
+    return initialState;
+  }
+  return state;
+};
+
 export const bookReducer = createReducer<BookState, Actions>(
   {
-    [APP_ACTION_TYPES.BOOTSTRAP_APP]: () => initialState,
+    [TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS]: changeConnectionStatusReducer,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
   },
   initialState

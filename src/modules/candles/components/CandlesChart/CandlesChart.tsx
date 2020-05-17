@@ -102,40 +102,38 @@ const CandlesChart: FC<Props> = (props) => {
   useEffect(() => {
     setIsLoading(candles.length === 0);
 
-    if (candles.length > 0) {
-      const ohlc = candles
-        .map(({ timestamp, ...rest }) => ({
-          x: timestamp,
-          ...rest,
-        }))
-        .sort((a, b) => a.x - b.x);
-      const volumes = candles
-        .map(({ timestamp, volume }) => [timestamp, volume])
-        .sort((a, b) => a[0] - b[0]);
+    const ohlc = candles
+      .map(({ timestamp, ...rest }) => ({
+        x: timestamp,
+        ...rest,
+      }))
+      .sort((a, b) => a.x - b.x);
+    const volumes = candles
+      .map(({ timestamp, volume }) => [timestamp, volume])
+      .sort((a, b) => a[0] - b[0]);
 
-      setChartOptions({
-        series: [
-          {
-            type: "candlestick",
-            name: currencyPair && formatCurrencyPair(currencyPair),
-            data: ohlc,
-          },
-          {
-            type: "column",
-            data: volumes,
-          },
-        ],
-        plotOptions: {
-          candlestick: {
-            color: Palette.Negative,
-            upColor: Palette.Positive,
-          },
-          column: {
-            color: Palette.LightGray,
-          },
+    setChartOptions({
+      series: [
+        {
+          type: "candlestick",
+          name: currencyPair && formatCurrencyPair(currencyPair),
+          data: ohlc,
         },
-      });
-    }
+        {
+          type: "column",
+          data: volumes,
+        },
+      ],
+      plotOptions: {
+        candlestick: {
+          color: Palette.Negative,
+          upColor: Palette.Positive,
+        },
+        column: {
+          color: Palette.LightGray,
+        },
+      },
+    });
   }, [candles, currencyPair]);
 
   return (

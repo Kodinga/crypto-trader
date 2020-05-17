@@ -32,8 +32,8 @@ export const handleSelection: Epic<
             symbol: oldCurrencyPair,
             timeframe: "1m",
           }),
-          TradesActions.unsubscribeFromTrades({ symbol: oldCurrencyPair }),
-          BookActions.unsubscribeFromBook({ symbol: oldCurrencyPair })
+          BookActions.unsubscribeFromBook({ symbol: oldCurrencyPair }),
+          TradesActions.unsubscribeFromTrades({ symbol: oldCurrencyPair })
         );
       }
 
@@ -42,8 +42,8 @@ export const handleSelection: Epic<
           symbol: currencyPair,
           timeframe: "1m",
         }),
-        TradesActions.subscribeToTrades({ symbol: currencyPair }),
         BookActions.subscribeToBook({ symbol: currencyPair }),
+        TradesActions.subscribeToTrades({ symbol: currencyPair }),
       ];
 
       return from([...unsubscribeActions, ...subscribeActions]);

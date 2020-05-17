@@ -1,8 +1,12 @@
 import { createReducer } from "modules/redux/utils";
-import { TRANSPORT_ACTION_TYPES, ReceiveMessage } from "core/transport/actions";
+import {
+  TRANSPORT_ACTION_TYPES,
+  ReceiveMessage,
+  ChangeConnectionStatus,
+} from "core/transport/actions";
 import { isHeartbeat } from "core/transport/utils";
+import { ConnectionStatus } from "core/transport/types/ConnectionStatus";
 import { Ticker } from "./types/Ticker";
-import { APP_ACTION_TYPES } from "modules/app/actions";
 import { Actions } from "./../root";
 
 export interface TickerState {
@@ -57,9 +61,19 @@ const receiveMessageReducer = (state: TickerState, action: ReceiveMessage) => {
   return state;
 };
 
+const changeConnectionStatusReducer = (
+  state: TickerState,
+  action: ChangeConnectionStatus
+) => {
+  if (action.payload === ConnectionStatus.Connected) {
+    return initialState;
+  }
+  return state;
+};
+
 export const tickerReducer = createReducer<TickerState, Actions>(
   {
-    [APP_ACTION_TYPES.BOOTSTRAP_APP]: () => initialState,
+    [TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS]: changeConnectionStatusReducer,
     [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
   },
   initialState
