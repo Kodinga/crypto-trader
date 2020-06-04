@@ -26,7 +26,7 @@ const Tickers: FC<Props> = (props) => {
   }, [selectedCurrencyPairIndex]);
 
   return (
-    <Container className="tickers">
+    <Container itemCount={currencyPairs.length} className="tickers">
       {currencyPairs.map((currencyPair, index) => (
         <TickerWrapper
           index={index}

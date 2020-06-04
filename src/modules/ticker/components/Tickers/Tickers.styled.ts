@@ -4,9 +4,13 @@ import { Container as TickerContainer } from "../Ticker/Ticker.styled";
 
 export type ScrollDirection = "left" | "right";
 
-export const Container = styled.div`
+export const Container = styled.div<{
+  itemCount: number;
+}>`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: ${({ itemCount }) =>
+    `repeat(${itemCount}, minmax(240px, 1fr))`};
+  width: 100%;
 `;
 
 export const TickerWrapper = styled.div<{

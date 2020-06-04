@@ -69,8 +69,6 @@ export const Header = styled.div`
 
 export const TickersPanel = styled.div`
   grid-area: tickers;
-  overflow: auto;
-  width: 1200px;
   margin: 0 auto;
 `;
 
