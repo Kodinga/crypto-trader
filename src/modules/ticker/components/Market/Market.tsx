@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef, GridApi } from "ag-grid-community";
 import { priceFormatter, volumeFormatter } from "modules/ag-grid/formatter";
+import { useGridResize } from "modules/ag-grid/hooks/useGridResize";
 import { Ticker } from "modules/ticker/types/Ticker";
 import Loading from "core/components/Loading";
 import { formatCurrencyPair } from "modules/reference-data/utils";
@@ -87,6 +88,8 @@ const Market: FC<Props> = (props) => {
     }
   }, [gridApi, selectedCurrencyPair]);
 
+  useGridResize(gridApi);
+
   return (
     <Container className="ag-theme-balham-dark">
       <AgGridReact
@@ -97,7 +100,6 @@ const Market: FC<Props> = (props) => {
         getRowNodeId={(data) => data.currencyPair}
         onGridReady={(event) => {
           setGridApi(event.api);
-          event.api.sizeColumnsToFit();
         }}
         rowSelection={"single"}
         onRowClicked={(event) => {

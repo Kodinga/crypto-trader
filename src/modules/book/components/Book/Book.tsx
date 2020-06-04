@@ -1,17 +1,15 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef, GridApi } from "ag-grid-community";
-import { debounce } from "lodash";
 import { priceFormatter, amountFormatter } from "modules/ag-grid/formatter";
 import { useThrottle } from "core/hooks/useThrottle";
 import Stale from "core/components/Stale";
 import Loading from "core/components/Loading";
+import { useGridResize } from "modules/ag-grid/hooks/useGridResize";
 import { bidAmountRenderer, askAmountRenderer } from "./renderers";
 import { Order } from "../../types/Order";
 import { Container } from "./Book.styled";
 import Palette from "theme/style";
-
-const DEBOUNCE_RESIZE_IN_MS = 200;
 
 export interface Props {
   orders: { bid: Order; ask: Order }[];
@@ -20,7 +18,7 @@ export interface Props {
 
 const Book: FC<Props> = (props) => {
   const { orders, isStale } = props;
-  const [gridApi, setGridApi] = useState<GridApi | null>(null);
+  const [gridApi, setGridApi] = useState<GridApi | undefined>();
   const throttledOrders = useThrottle<{ bid: Order; ask: Order }[]>(
     orders,
     100
@@ -59,21 +57,7 @@ const Book: FC<Props> = (props) => {
     },
   ];
 
-  useEffect(() => {
-    if (gridApi) {
-      gridApi.sizeColumnsToFit();
-    }
-
-    const handleResize = debounce(() => {
-      if (gridApi) {
-        gridApi.sizeColumnsToFit();
-      }
-    }, DEBOUNCE_RESIZE_IN_MS);
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, [gridApi]);
+  useGridResize(gridApi);
 
   return (
     <Container className="ag-theme-balham-dark">

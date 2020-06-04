@@ -1,12 +1,13 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { ColDef, GridApi } from "ag-grid-community";
 import { useThrottle } from "core/hooks/useThrottle";
 import {
   priceFormatter,
   amountFormatter,
   timeFormatter,
 } from "modules/ag-grid/formatter";
+import { useGridResize } from "modules/ag-grid/hooks/useGridResize";
 import Loading from "core/components/Loading";
 import { Trade } from "../../types/Trade";
 import { Container } from "./Trades.styled";
@@ -21,6 +22,7 @@ export interface Props {
 const Trades: FC<Props> = (props) => {
   const { trades, isStale } = props;
   const throttledTrades = useThrottle<Trade[]>(trades, 500);
+  const [gridApi, setGridApi] = useState<GridApi | undefined>();
 
   const columnDefs: ColDef[] = [
     {
@@ -54,6 +56,8 @@ const Trades: FC<Props> = (props) => {
     },
   ];
 
+  useGridResize(gridApi);
+
   return (
     <Container className="ag-theme-balham-dark">
       {isStale && <Stale />}
@@ -62,7 +66,9 @@ const Trades: FC<Props> = (props) => {
         rowData={throttledTrades}
         deltaRowDataMode={true}
         getRowNodeId={(data) => data.id}
-        onGridReady={(event) => event.api.sizeColumnsToFit()}
+        onGridReady={(event) => {
+          setGridApi(event.api);
+        }}
         noRowsOverlayComponent={"customLoadingOverlay"}
         frameworkComponents={{
           customLoadingOverlay: Loading,
