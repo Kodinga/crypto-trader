@@ -7,7 +7,7 @@ import {
   amountFormatter,
   timeFormatter,
 } from "modules/ag-grid/formatter";
-import { useGridResize } from "modules/ag-grid/hooks/useGridResize";
+import { useGridResize } from "core/hooks/useGridResize";
 import Loading from "core/components/Loading";
 import { Trade } from "../../types/Trade";
 import { Container } from "./Trades.styled";

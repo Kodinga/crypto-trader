@@ -5,7 +5,7 @@ import { priceFormatter, amountFormatter } from "modules/ag-grid/formatter";
 import { useThrottle } from "core/hooks/useThrottle";
 import Stale from "core/components/Stale";
 import Loading from "core/components/Loading";
-import { useGridResize } from "modules/ag-grid/hooks/useGridResize";
+import { useGridResize } from "core/hooks/useGridResize";
 import { bidAmountRenderer, askAmountRenderer } from "./renderers";
 import { Order } from "../../types/Order";
 import { Container } from "./Book.styled";
