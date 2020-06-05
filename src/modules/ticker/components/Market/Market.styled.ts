@@ -5,7 +5,7 @@ export const Container = styled.div`
   height: 100%;
 
   .selected-row {
-    font-family: FiraSans-Medium;
+    font-weight: 700;
   }
 
   .stale-row {

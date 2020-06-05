@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef, GridApi } from "ag-grid-community";
+import { ColDef, GridApi, RowNode } from "ag-grid-community";
+import { isEqual } from "lodash";
 import { priceFormatter, volumeFormatter } from "modules/ag-grid/formatter";
 import { useGridResize } from "core/hooks/useGridResize";
 import { Ticker } from "modules/ticker/types/Ticker";
@@ -71,6 +72,7 @@ const Market: FC<Props> = (props) => {
         "padding-left": 0,
         "padding-right": 0,
       }),
+      equals: isEqual,
     },
   ];
 
@@ -81,10 +83,19 @@ const Market: FC<Props> = (props) => {
 
   useEffect(() => {
     if (gridApi) {
+      const nodesToRefresh: RowNode[] = [];
       gridApi.forEachNode(function (node) {
-        node.setSelected(node.data.currencyPair === selectedCurrencyPair);
+        const shouldSelect = node.data.currencyPair === selectedCurrencyPair;
+        if (node.isSelected()) {
+          nodesToRefresh.push(node);
+        } else if (shouldSelect) {
+          nodesToRefresh.push(node);
+        }
+        node.setSelected(shouldSelect);
       });
-      gridApi.redrawRows();
+      gridApi.redrawRows({
+        rowNodes: nodesToRefresh,
+      });
     }
   }, [gridApi, selectedCurrencyPair]);
 
