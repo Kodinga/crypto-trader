@@ -3,8 +3,8 @@ import { ConnectionProxy } from "./types/ConnectionProxy";
 export class Connection {
   constructor(private connectionProxy: ConnectionProxy) {}
 
-  connect() {
-    this.connectionProxy.start();
+  connect(realm: string) {
+    this.connectionProxy.start(realm);
   }
 
   disconnect() {

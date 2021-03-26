@@ -1,4 +1,4 @@
-import { EMPTY, merge, timer } from "rxjs";
+import { EMPTY, merge, timer, Observable } from "rxjs";
 import { Epic, ofType, combineEpics } from "redux-observable";
 import {
   filter,
@@ -18,6 +18,7 @@ import { RootState, Actions } from "modules/root";
 import { AppActions } from "modules/app/actions";
 import {
   TRANSPORT_ACTION_TYPES,
+  Init,
   SendMessage,
   ReceiveMessage,
   TransportActions,
@@ -45,6 +46,60 @@ export const handleSendMessage: Epic<
       return EMPTY;
     })
   );
+
+export const init: Epic<Actions, Actions, RootState, Dependencies> = (
+  action$,
+  state$,
+  { connection }
+) => {
+  return action$.pipe(
+    ofType<Actions, Init>(TRANSPORT_ACTION_TYPES.INIT),
+    take(1),
+    switchMap((action) => {
+      const { wsEndpoint } = action.payload;
+
+      connection.connect(wsEndpoint);
+
+      return new Observable<ReceiveMessage | ChangeConnectionStatus>(
+        (subscriber) => {
+          connection.onConnect(() => {
+            console.log("Connected");
+
+            subscriber.next(
+              TransportActions.changeConnectionStatus(
+                ConnectionStatus.Connected
+              )
+            );
+          });
+          connection.onReceive((data) => {
+            const parsedData = JSON.parse(data);
+            let meta = undefined;
+            let channelId = undefined;
+
+            if (Array.isArray(parsedData)) {
+              channelId = parsedData[0];
+            } else if (parsedData.hasOwnProperty("chanId")) {
+              channelId = parsedData.chanId;
+            }
+            if (channelId && state$.value.subscriptions[channelId]) {
+              meta = state$.value.subscriptions[channelId];
+            }
+            subscriber.next(TransportActions.receiveMessage(parsedData, meta));
+          });
+          connection.onClose(() => {
+            console.log("Disconnected");
+
+            subscriber.next(
+              TransportActions.changeConnectionStatus(
+                ConnectionStatus.Disconnected
+              )
+            );
+          });
+        }
+      );
+    })
+  );
+};
 
 /*
     The Bitfinex WS api appears to have some limitations when it comes to subscriptions.
@@ -194,6 +249,7 @@ export const handleReconnection: Epic<
 };
 
 export default combineEpics(
+  init,
   handleSendMessage,
   handleSubscription,
   handleStaleSubscription,

@@ -8,6 +8,7 @@ import {
 } from "./types/Channels";
 
 export enum TRANSPORT_ACTION_TYPES {
+  INIT = "TRANSPORT/INIT",
   SEND_MESSAGE = "TRANSPORT/SEND_MESSAGE",
   RECEIVE_MESSAGE = "TRANSPORT/RECEIVE_MESSAGE",
   CHANGE_CONNECTION_STATUS = "TRANSPORT/CHANGE_CONNECTION_STATUS",
@@ -39,6 +40,10 @@ interface SubscribeToBook {
   channel: BookChannel;
   symbol: string;
   prec?: string;
+}
+
+export interface InitActionPayload {
+  wsEndpoint: string;
 }
 
 export type SubscribeToChannelActionPayload =
@@ -75,6 +80,9 @@ export interface StaleSubscriptionActionPayload {
 }
 
 export const TransportActions = {
+  init: createAction<TRANSPORT_ACTION_TYPES.INIT, InitActionPayload>(
+    TRANSPORT_ACTION_TYPES.INIT
+  ),
   sendMessage: createAction<TRANSPORT_ACTION_TYPES.SEND_MESSAGE, any>(
     TRANSPORT_ACTION_TYPES.SEND_MESSAGE
   ),
@@ -117,6 +125,7 @@ export const TransportActions = {
 };
 
 export type TransportActions = ActionUnion<typeof TransportActions>;
+export type Init = ReturnType<typeof TransportActions.init>;
 export type ReceiveMessage = ReturnType<typeof TransportActions.receiveMessage>;
 export type SendMessage = ReturnType<typeof TransportActions.sendMessage>;
 export type ChangeConnectionStatus = ReturnType<

@@ -3,7 +3,7 @@ export interface ConnectionProxyConstructor {
 }
 
 export interface ConnectionProxy {
-  start(): void;
+  start(realm: string): void;
   stop(): void;
   send(message: any): void;
   onConnect(callback: () => void): void;

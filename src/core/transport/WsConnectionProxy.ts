@@ -7,13 +7,13 @@ export class WsConnectionProxy implements ConnectionProxy {
   private onErrorFn?: (error: any) => void;
   private onCloseFn?: () => void;
 
-  constructor(private realm: string) {
+  constructor() {
     this.socket = undefined;
     this.onReceivedFn = undefined;
   }
 
-  start(): void {
-    this.socket = new WebSocket(this.realm);
+  start(realm: string): void {
+    this.socket = new WebSocket(realm);
     this.socket.onopen = () => this.onConnectFn && this.onConnectFn();
     this.socket.onmessage = ({ data }) => {
       this.onReceivedFn && this.onReceivedFn(data);
