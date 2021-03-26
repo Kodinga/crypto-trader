@@ -1,27 +1,15 @@
-import { createAction, ActionUnion } from "../redux/utils";
-
-export enum TRADES_ACTION_TYPES {
-  SUBSCRIBE_TO_TRADES = "TRADES/SUBSCRIBE_TO_TRADES",
-  UNSUBSCRIBE_FROM_TRADES = "TRADES/UNSUBSCRIBE_FROM_TRADES",
-}
-
-export interface SubscribeToTradesActionPayload {
-  symbol: string;
-}
-
-export interface UnsubscribeFromTradesActionPayload {
-  symbol: string;
-}
+import { action } from "ts-action";
+import { ActionUnion } from "../redux/utils";
 
 export const TradesActions = {
-  subscribeToTrades: createAction<
-    TRADES_ACTION_TYPES.SUBSCRIBE_TO_TRADES,
-    SubscribeToTradesActionPayload
-  >(TRADES_ACTION_TYPES.SUBSCRIBE_TO_TRADES),
-  unsubscribeFromTrades: createAction<
-    TRADES_ACTION_TYPES.UNSUBSCRIBE_FROM_TRADES,
-    UnsubscribeFromTradesActionPayload
-  >(TRADES_ACTION_TYPES.UNSUBSCRIBE_FROM_TRADES),
+  subscribeToTrades: action(
+    "TRADES/SUBSCRIBE_TO_TRADES",
+    (payload: { symbol: string }) => ({ payload })
+  ),
+  unsubscribeFromTrades: action(
+    "TRADES/UNSUBSCRIBE_FROM_TRADES",
+    (payload: { symbol: string }) => ({ payload })
+  ),
 };
 
 export type TradesActions = ActionUnion<typeof TradesActions>;

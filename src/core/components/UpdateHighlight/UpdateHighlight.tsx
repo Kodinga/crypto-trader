@@ -39,7 +39,7 @@ const AnimatedValue: FC<{
 
   useEffect(() => {
     let animation: Animation | undefined = undefined;
-    let timeoutId: number | undefined = undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
     if (typeof ref.current?.animate === "function") {
       const runAnimation = () => {

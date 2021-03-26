@@ -1,15 +1,12 @@
 import { from } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
-import { Epic, ofType, combineEpics } from "redux-observable";
+import { ofType } from "ts-action-operators";
+import { Epic, combineEpics } from "redux-observable";
 import { getSubscriptionId } from "core/transport/selectors";
 import { TransportActions } from "core/transport/actions";
 import { BookChannel } from "core/transport/types/Channels";
 import { RootState, Actions } from "modules/root";
-import {
-  SubscribeToBook,
-  BOOK_ACTION_TYPES,
-  UnsubscribeFromBook,
-} from "./actions";
+import { BookActions } from "./actions";
 import { Dependencies } from "./../redux/store";
 
 export const subscribeToBook: Epic<
@@ -19,7 +16,7 @@ export const subscribeToBook: Epic<
   Dependencies | undefined
 > = (action$) =>
   action$.pipe(
-    ofType<Actions, SubscribeToBook>(BOOK_ACTION_TYPES.SUBSCRIBE_TO_BOOK),
+    ofType(BookActions.subscribeToBook),
     map((action) => {
       const { symbol } = action.payload;
       const msg = {
@@ -38,9 +35,7 @@ export const unsubscribeFromBook: Epic<
   Dependencies
 > = (action$, state$) =>
   action$.pipe(
-    ofType<Actions, UnsubscribeFromBook>(
-      BOOK_ACTION_TYPES.UNSUBSCRIBE_FROM_BOOK
-    ),
+    ofType(BookActions.unsubscribeFromBook),
     mergeMap((action) => {
       const { symbol } = action.payload;
       const result: Actions[] = [];

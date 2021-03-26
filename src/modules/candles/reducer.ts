@@ -1,8 +1,5 @@
-import { createReducer } from "modules/redux/utils";
-import {
-  TRANSPORT_ACTION_TYPES,
-  ChangeConnectionStatus,
-} from "core/transport/actions";
+import { reducer, on } from "ts-action";
+import { TransportActions } from "core/transport/actions";
 import {
   isHeartbeat,
   isSubscriptionMessage,
@@ -12,7 +9,6 @@ import {
 import { ReceiveMessage } from "core/transport/actions";
 import { ConnectionStatus } from "core/transport/types/ConnectionStatus";
 import { getLookupKey } from "./utils";
-import { Actions } from "./../root";
 import { Candle } from "./types/Candle";
 
 const MAX_CANDLES = 100;
@@ -60,60 +56,51 @@ function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
   return [newOrUpdatedCandle, ...state];
 }
 
-const receiveMessageReducer = (state: CandlesState, action: ReceiveMessage) => {
-  if (
-    isHeartbeat(action) ||
-    isSubscriptionMessage(action) ||
-    isErrorMessage(action)
-  ) {
+export const candlesReducer = reducer(
+  initialState,
+  on(TransportActions.changeConnectionStatus, (state, action) => {
+    if (action.payload === ConnectionStatus.Connected) {
+      return initialState;
+    }
     return state;
-  }
-
-  const { channel, request } = action.meta || {};
-  if (channel === "candles") {
-    const { key } = request;
-    const [, timeframe, symbol] = key.split(":");
-    const currencyPair = symbol.slice(1);
-    const lookupKey = getLookupKey(currencyPair, timeframe);
-
-    if (isUnsubscriptionMessage(action)) {
-      const updatedState = {
-        ...state,
-      };
-      delete updatedState[lookupKey];
-      return updatedState;
+  }),
+  on(TransportActions.receiveMessage, (state, action) => {
+    if (
+      isHeartbeat(action) ||
+      isSubscriptionMessage(action) ||
+      isErrorMessage(action)
+    ) {
+      return state;
     }
 
-    const symbolReducer = Array.isArray(action.payload[1][0])
-      ? snapshotReducer
-      : updateReducer;
-    const result = symbolReducer(state[lookupKey], action);
+    const { channel, request } = action.meta || {};
+    if (channel === "candles") {
+      const { key } = request;
+      const [, timeframe, symbol] = key.split(":");
+      const currencyPair = symbol.slice(1);
+      const lookupKey = getLookupKey(currencyPair, timeframe);
 
-    return {
-      ...state,
-      [lookupKey]: result.slice(0, MAX_CANDLES), // restrict number of candles so we don't eventully fill up the memory
-    };
-  }
+      if (isUnsubscriptionMessage(action)) {
+        const updatedState = {
+          ...state,
+        };
+        delete updatedState[lookupKey];
+        return updatedState;
+      }
 
-  return state;
-};
+      const symbolReducer = Array.isArray(action.payload[1][0])
+        ? snapshotReducer
+        : updateReducer;
+      const result = symbolReducer(state[lookupKey], action);
 
-const changeConnectionStatusReducer = (
-  state: CandlesState,
-  action: ChangeConnectionStatus
-) => {
-  if (action.payload === ConnectionStatus.Connected) {
-    return initialState;
-  }
-  return state;
-};
+      return {
+        ...state,
+        [lookupKey]: result.slice(0, MAX_CANDLES), // restrict number of candles so we don't eventully fill up the memory
+      };
+    }
 
-export const candlesReducer = createReducer<CandlesState, Actions>(
-  {
-    [TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS]: changeConnectionStatusReducer,
-    [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
-  },
-  initialState
+    return state;
+  })
 );
 
 export default candlesReducer;

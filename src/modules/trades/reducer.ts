@@ -1,8 +1,5 @@
-import { createReducer } from "modules/redux/utils";
-import {
-  TRANSPORT_ACTION_TYPES,
-  ChangeConnectionStatus,
-} from "core/transport/actions";
+import { reducer, on } from "ts-action";
+import { TransportActions } from "core/transport/actions";
 import {
   isHeartbeat,
   isSubscriptionMessage,
@@ -11,7 +8,6 @@ import {
 } from "core/transport/utils";
 import { ConnectionStatus } from "core/transport/types/ConnectionStatus";
 import { ReceiveMessage } from "core/transport/actions";
-import { Actions } from "./../root";
 import { Trade } from "./types/Trade";
 
 type SymbolState = Trade[];
@@ -56,57 +52,48 @@ function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
   }
 }
 
-const receiveMessageReducer = (state: TradesState, action: ReceiveMessage) => {
-  if (
-    isHeartbeat(action) ||
-    isSubscriptionMessage(action) ||
-    isErrorMessage(action)
-  ) {
+export const tradesReducer = reducer(
+  initialState,
+  on(TransportActions.changeConnectionStatus, (state, action) => {
+    if (action.payload === ConnectionStatus.Connected) {
+      return initialState;
+    }
     return state;
-  }
-
-  const { channel, request } = action.meta || {};
-  if (channel === "trades") {
-    const { symbol } = request;
-    const currencyPair = symbol.slice(1);
-    if (isUnsubscriptionMessage(action)) {
-      const updatedState = {
-        ...state,
-      };
-      delete updatedState[currencyPair];
-      return updatedState;
+  }),
+  on(TransportActions.receiveMessage, (state, action) => {
+    if (
+      isHeartbeat(action) ||
+      isSubscriptionMessage(action) ||
+      isErrorMessage(action)
+    ) {
+      return state;
     }
 
-    const symbolReducer = Array.isArray(action.payload[1])
-      ? snapshotReducer
-      : updateReducer;
-    const result = symbolReducer(state[currencyPair], action);
+    const { channel, request } = action.meta || {};
+    if (channel === "trades") {
+      const { symbol } = request;
+      const currencyPair = symbol.slice(1);
+      if (isUnsubscriptionMessage(action)) {
+        const updatedState = {
+          ...state,
+        };
+        delete updatedState[currencyPair];
+        return updatedState;
+      }
 
-    return {
-      ...state,
-      [currencyPair]: result.slice(0, MAX_TRADES), // only keep the top x trades, so we don't eventually fill up the memory
-    };
-  }
+      const symbolReducer = Array.isArray(action.payload[1])
+        ? snapshotReducer
+        : updateReducer;
+      const result = symbolReducer(state[currencyPair], action);
 
-  return state;
-};
+      return {
+        ...state,
+        [currencyPair]: result.slice(0, MAX_TRADES), // only keep the top x trades, so we don't eventually fill up the memory
+      };
+    }
 
-const changeConnectionStatusReducer = (
-  state: TradesState,
-  action: ChangeConnectionStatus
-) => {
-  if (action.payload === ConnectionStatus.Connected) {
-    return initialState;
-  }
-  return state;
-};
-
-export const tradesReducer = createReducer<TradesState, Actions>(
-  {
-    [TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS]: changeConnectionStatusReducer,
-    [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
-  },
-  initialState
+    return state;
+  })
 );
 
 export default tradesReducer;

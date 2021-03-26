@@ -1,5 +1,6 @@
 import { EMPTY, merge, timer, Observable } from "rxjs";
-import { Epic, ofType, combineEpics } from "redux-observable";
+import { ofType } from "ts-action-operators";
+import { Epic, combineEpics } from "redux-observable";
 import {
   filter,
   mergeMap,
@@ -17,13 +18,9 @@ import { Dependencies } from "modules/redux/store";
 import { RootState, Actions } from "modules/root";
 import { AppActions } from "modules/app/actions";
 import {
-  TRANSPORT_ACTION_TYPES,
-  Init,
-  SendMessage,
   ReceiveMessage,
   TransportActions,
   SubscribeToChannel,
-  SubscribeToChannelAck,
   UnsubscribeFromChannel,
   ChangeConnectionStatus,
 } from "./actions";
@@ -40,7 +37,7 @@ export const handleSendMessage: Epic<
   Dependencies
 > = (action$, state$, { connection }) =>
   action$.pipe(
-    ofType<Actions, SendMessage>(TRANSPORT_ACTION_TYPES.SEND_MESSAGE),
+    ofType(TransportActions.sendMessage),
     mergeMap((action) => {
       connection.send(JSON.stringify(action.payload));
       return EMPTY;
@@ -53,7 +50,7 @@ export const init: Epic<Actions, Actions, RootState, Dependencies> = (
   { connection }
 ) => {
   return action$.pipe(
-    ofType<Actions, Init>(TRANSPORT_ACTION_TYPES.INIT),
+    ofType(TransportActions.init),
     take(1),
     switchMap((action) => {
       const { wsEndpoint } = action.payload;
@@ -113,19 +110,17 @@ export const handleSubscription: Epic<
   Dependencies
 > = (action$) => {
   return action$.pipe(
-    ofType<Actions, SubscribeToChannel | UnsubscribeFromChannel>(
-      TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL,
-      TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL
+    ofType(
+      TransportActions.subscribeToChannel,
+      TransportActions.unsubscribeFromChannel
     ),
     concatMap((rootAction) => {
       const isSubscribing =
-        rootAction.type === TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL;
+        rootAction.type === TransportActions.subscribeToChannel.type;
 
       return merge(
         action$.pipe(
-          ofType<Actions, ReceiveMessage>(
-            TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE
-          ),
+          ofType(TransportActions.receiveMessage),
           filter((action) => {
             return (
               (isSubscribing &&
@@ -198,13 +193,11 @@ export const handleStaleSubscription: Epic<
   Dependencies
 > = (action$) => {
   return action$.pipe(
-    ofType<Actions, SubscribeToChannelAck>(
-      TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK
-    ),
+    ofType(TransportActions.subscribeToChannelAck),
     mergeMap((subscribeAction) => {
       const { channelId } = subscribeAction.payload;
       return action$.pipe(
-        ofType<Actions, ReceiveMessage>(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
+        ofType(TransportActions.receiveMessage),
         filter((action) => action.payload[0] === channelId),
         map(() => null), // Discard action so we don't use memory unnecessarily
         bufferTime(HEARTBEAT_TIMEOUT_IN_MS),
@@ -213,15 +206,11 @@ export const handleStaleSubscription: Epic<
         takeUntil(
           merge(
             action$.pipe(
-              ofType<Actions, UnsubscribeFromChannel>(
-                TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL
-              ),
+              ofType(TransportActions.unsubscribeFromChannel),
               filter((action) => action.payload.channelId === channelId)
             ),
             action$.pipe(
-              ofType<Actions, ChangeConnectionStatus>(
-                TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS
-              ),
+              ofType(TransportActions.changeConnectionStatus),
               filter((action) => action.payload === ConnectionStatus.Connected)
             )
           )
@@ -236,11 +225,9 @@ export const handleReconnection: Epic<
   Actions,
   RootState,
   Dependencies
-> = (action$, state$, { connection }) => {
+> = (action$) => {
   return action$.pipe(
-    ofType<Actions, ChangeConnectionStatus>(
-      TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS
-    ),
+    ofType(TransportActions.changeConnectionStatus),
     filter((action) => action.payload === ConnectionStatus.Disconnected),
     switchMap(() =>
       timer(RECONNECT_AFTER_MS).pipe(map(() => AppActions.bootstrapApp()))

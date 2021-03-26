@@ -1,9 +1,10 @@
 import { map } from "rxjs/operators";
-import { Epic, ofType, combineEpics } from "redux-observable";
+import { Epic, combineEpics } from "redux-observable";
+import { ofType } from "ts-action-operators";
 import { TransportActions } from "core/transport/actions";
 import { TickerChannel } from "core/transport/types/Channels";
 import { RootState, Actions } from "modules/root";
-import { SubscribeToTicker, TICKER_ACTION_TYPES } from "./actions";
+import { TickerActions } from "./actions";
 import { Dependencies } from "./../redux/store";
 
 export const subscribeToTicker: Epic<
@@ -13,7 +14,7 @@ export const subscribeToTicker: Epic<
   Dependencies | undefined
 > = (action$) =>
   action$.pipe(
-    ofType<Actions, SubscribeToTicker>(TICKER_ACTION_TYPES.SUBSCRIBE_TO_TICKER),
+    ofType(TickerActions.subscribeToTicker),
     map((action) => {
       const { symbol } = action.payload;
       const msg = {

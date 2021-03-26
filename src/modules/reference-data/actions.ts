@@ -1,26 +1,13 @@
-import { createAction, ActionUnion } from "modules/redux/utils";
-
-export enum REF_DATA_ACTION_TYPES {
-  LOAD_REF_DATA = "REF_DATA/LOAD_REF_DATA",
-  LOAD_REF_DATA_ACK = "REF_DATA/LOAD_REF_DATA_ACK",
-  LOAD_REF_DATA_NACK = "REF_DATA/LOAD_REF_DATA_NACK",
-}
-
-interface RefDataLoadAckActionPayload {
-  currencyPairs: string[];
-}
+import { action } from "ts-action";
+import { ActionUnion } from "modules/redux/utils";
 
 export const RefDataActions = {
-  loadRefData: createAction<REF_DATA_ACTION_TYPES.LOAD_REF_DATA>(
-    REF_DATA_ACTION_TYPES.LOAD_REF_DATA
+  loadRefData: action("REF_DATA/LOAD_REF_DATA"),
+  loadRefDataAck: action(
+    "REF_DATA/LOAD_REF_DATA_ACK",
+    (payload: { currencyPairs: string[] }) => ({ payload })
   ),
-  loadRefDataAck: createAction<
-    REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK,
-    RefDataLoadAckActionPayload
-  >(REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK),
-  loadRefDataNack: createAction<REF_DATA_ACTION_TYPES.LOAD_REF_DATA_NACK>(
-    REF_DATA_ACTION_TYPES.LOAD_REF_DATA_NACK
-  ),
+  loadRefDataNack: action("REF_DATA/LOAD_REF_DATA_NACK"),
 };
 
 export type RefDataActions = ActionUnion<typeof RefDataActions>;

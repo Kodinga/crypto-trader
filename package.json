@@ -31,6 +31,8 @@
     "reselect": "^4.0.0",
     "rxjs": "^6.5.5",
     "styled-components": "^5.1.0",
+    "ts-action": "^11.0.0",
+    "ts-action-operators": "^9.1.1",
     "typescript": "~3.7.2"
   },
   "scripts": {

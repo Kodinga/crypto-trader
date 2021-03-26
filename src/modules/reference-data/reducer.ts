@@ -1,6 +1,5 @@
-import { Actions } from "modules/root";
-import { REF_DATA_ACTION_TYPES, LoadRefDataAck } from "./actions";
-import { createReducer } from "modules/redux/utils";
+import { reducer, on } from "ts-action";
+import { RefDataActions } from "./actions";
 
 interface RefDataState {
   currencyPairs: string[];
@@ -10,20 +9,16 @@ const initialState: RefDataState = {
   currencyPairs: [],
 };
 
-const loadRefDataReducer = (state: RefDataState, action: LoadRefDataAck) => {
-  const { currencyPairs } = action.payload;
+export const refDataReducer = reducer(
+  initialState,
+  on(RefDataActions.loadRefDataAck, (state, action) => {
+    const { currencyPairs } = action.payload;
 
-  return {
-    ...state,
-    currencyPairs,
-  };
-};
-
-export const refDataReducer = createReducer<RefDataState, Actions>(
-  {
-    [REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK]: loadRefDataReducer,
-  },
-  initialState
+    return {
+      ...state,
+      currencyPairs,
+    };
+  })
 );
 
 export default refDataReducer;

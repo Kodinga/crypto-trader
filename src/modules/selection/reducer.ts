@@ -1,6 +1,5 @@
-import { createReducer } from "modules/redux/utils";
-import { Actions } from "modules/root";
-import { SELECTION_ACTION_TYPES, SelectCurrencyPair } from "./actions";
+import { reducer, on } from "ts-action";
+import { SelectionActions } from "./actions";
 
 interface SelectionState {
   currencyPair?: string;
@@ -8,23 +7,16 @@ interface SelectionState {
 
 const initialState: SelectionState = {};
 
-const selectCurrencyPair = (
-  state: SelectionState,
-  action: SelectCurrencyPair
-) => {
-  const { currencyPair } = action.payload;
+export const selectionReducer = reducer(
+  initialState,
+  on(SelectionActions.selectCurrencyPair, (state, action) => {
+    const { currencyPair } = action.payload;
 
-  return {
-    ...state,
-    currencyPair,
-  };
-};
-
-export const selectionReducer = createReducer<SelectionState, Actions>(
-  {
-    [SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR]: selectCurrencyPair,
-  },
-  initialState
+    return {
+      ...state,
+      currencyPair,
+    };
+  })
 );
 
 export default selectionReducer;

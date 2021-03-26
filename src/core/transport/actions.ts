@@ -1,4 +1,5 @@
-import { createAction, ActionUnion } from "modules/redux/utils";
+import { action } from "ts-action";
+import { ActionUnion } from "modules/redux/utils";
 import { ConnectionStatus } from "./types/ConnectionStatus";
 import {
   TradesChannel,
@@ -6,20 +7,6 @@ import {
   TickerChannel,
   BookChannel,
 } from "./types/Channels";
-
-export enum TRANSPORT_ACTION_TYPES {
-  INIT = "TRANSPORT/INIT",
-  SEND_MESSAGE = "TRANSPORT/SEND_MESSAGE",
-  RECEIVE_MESSAGE = "TRANSPORT/RECEIVE_MESSAGE",
-  CHANGE_CONNECTION_STATUS = "TRANSPORT/CHANGE_CONNECTION_STATUS",
-  SUBSCRIBE_TO_CHANNEL = "TRANSPORT/SUBSCRIBE_TO_CHANNEL",
-  SUBSCRIBE_TO_CHANNEL_ACK = "TRANSPORT/SUBSCRIBE_TO_CHANNEL_ACK",
-  SUBSCRIBE_TO_CHANNEL_NACK = "TRANSPORT/SUBSCRIBE_TO_CHANNEL_NACK",
-  UNSUBSCRIBE_FROM_CHANNEL = "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL",
-  UNSUBSCRIBE_FROM_CHANNEL_ACK = "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_ACK",
-  UNSUBSCRIBE_FROM_CHANNEL_NACK = "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_NACK",
-  STALE_SUBSCRIPTION = "TRANSPORT/STALE_SUBSCRIPTION",
-}
 
 interface SubscribeToTrades {
   channel: TradesChannel;
@@ -52,76 +39,69 @@ export type SubscribeToChannelActionPayload =
   | SubscribeToTicker
   | SubscribeToBook;
 
-export interface SubscribeToChannelAckActionPayload {
-  channel: string;
-  channelId: number;
-  request: any;
-}
-
-export interface SubscribeToChannelNackActionPayload {
-  error: string;
-}
-
-export interface ReceiveMessageActionMeta {
-  channel: string;
-  request?: any;
-}
-
-export interface UnsubscribeFromChannelActionPayload {
-  channelId: number;
-}
-
-export interface UnsubscribeFromChannelAckActionPayload {
-  channelId: number;
-}
-
-export interface StaleSubscriptionActionPayload {
-  channelId: number;
-}
-
 export const TransportActions = {
-  init: createAction<TRANSPORT_ACTION_TYPES.INIT, InitActionPayload>(
-    TRANSPORT_ACTION_TYPES.INIT
+  init: action("TRANSPORT/INIT", (payload: { wsEndpoint: string }) => ({
+    payload,
+  })),
+  sendMessage: action("TRANSPORT/SEND_MESSAGE", (payload: any) => ({
+    payload,
+  })),
+  receiveMessage: action(
+    "TRANSPORT/RECEIVE_MESSAGE",
+    (payload: any, meta: any) => ({
+      payload,
+      meta,
+    })
   ),
-  sendMessage: createAction<TRANSPORT_ACTION_TYPES.SEND_MESSAGE, any>(
-    TRANSPORT_ACTION_TYPES.SEND_MESSAGE
+  changeConnectionStatus: action(
+    "TRANSPORT/CHANGE_CONNECTION_STATUS",
+    (payload: ConnectionStatus) => ({
+      payload,
+    })
   ),
-  receiveMessage: createAction<
-    TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE,
-    any,
-    ReceiveMessageActionMeta | undefined
-  >(TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE),
-  changeConnectionStatus: createAction<
-    TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS,
-    ConnectionStatus
-  >(TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS),
-  subscribeToChannel: createAction<
-    TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL,
-    SubscribeToChannelActionPayload
-  >(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL),
-  subscribeToChannelAck: createAction<
-    TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK,
-    SubscribeToChannelAckActionPayload
-  >(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_ACK),
-  subscribeToChannelNack: createAction<
-    TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK,
-    SubscribeToChannelNackActionPayload
-  >(TRANSPORT_ACTION_TYPES.SUBSCRIBE_TO_CHANNEL_NACK),
-  unsubscribeFromChannel: createAction<
-    TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL,
-    UnsubscribeFromChannelActionPayload
-  >(TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL),
-  unsubscribeFromChannelAck: createAction<
-    TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_ACK,
-    UnsubscribeFromChannelAckActionPayload
-  >(TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_ACK),
-  unsubscribeFromChannelNack: createAction<
-    TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_NACK
-  >(TRANSPORT_ACTION_TYPES.UNSUBSCRIBE_FROM_CHANNEL_NACK),
-  staleSubscription: createAction<
-    TRANSPORT_ACTION_TYPES.STALE_SUBSCRIPTION,
-    StaleSubscriptionActionPayload
-  >(TRANSPORT_ACTION_TYPES.STALE_SUBSCRIPTION),
+  subscribeToChannel: action(
+    "TRANSPORT/SUBSCRIBE_TO_CHANNEL",
+    (payload: SubscribeToChannelActionPayload) => ({
+      payload,
+    })
+  ),
+  subscribeToChannelAck: action(
+    "TRANSPORT/SUBSCRIBE_TO_CHANNEL_ACK",
+    (payload: { channel: string; channelId: number; request: any }) => ({
+      payload,
+    })
+  ),
+  subscribeToChannelNack: action(
+    "TRANSPORT/SUBSCRIBE_TO_CHANNEL_NACK",
+    (payload: { error: string }) => ({
+      payload,
+    })
+  ),
+  unsubscribeFromChannel: action(
+    "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL",
+    (payload: { channelId: number }) => ({
+      payload,
+    })
+  ),
+  unsubscribeFromChannelAck: action(
+    "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_ACK",
+    (payload: { channelId: number }) => ({
+      payload,
+    })
+  ),
+  unsubscribeFromChannelNack: action(
+    "TRANSPORT/UNSUBSCRIBE_FROM_CHANNEL_NACK",
+    (payload?: { channelId?: number }) => ({
+      payload,
+    })
+  ),
+
+  staleSubscription: action(
+    "TRANSPORT/STALE_SUBSCRIPTION",
+    (payload: { channelId: number }) => ({
+      payload,
+    })
+  ),
 };
 
 export type TransportActions = ActionUnion<typeof TransportActions>;

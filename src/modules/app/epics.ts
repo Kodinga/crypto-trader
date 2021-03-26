@@ -1,5 +1,5 @@
 import { merge, of, from, EMPTY } from "rxjs";
-import { Epic, ofType, combineEpics } from "redux-observable";
+import { Epic, combineEpics } from "redux-observable";
 import {
   switchMap,
   take,
@@ -9,54 +9,39 @@ import {
   tap,
   distinctUntilChanged,
 } from "rxjs/operators";
+import { ofType } from "ts-action-operators";
 import { Actions } from "modules/root";
+import { AppActions } from "modules/app/actions";
 import { ConnectionStatus } from "core/transport/types/ConnectionStatus";
 import { getCurrencyPairs } from "modules/reference-data/selectors";
-import {
-  RefDataActions,
-  REF_DATA_ACTION_TYPES,
-} from "modules/reference-data/actions";
+import { RefDataActions } from "modules/reference-data/actions";
 import { Dependencies } from "modules/redux/store";
 import { SelectionActions } from "modules/selection/actions";
-import {
-  TRANSPORT_ACTION_TYPES,
-  ChangeConnectionStatus,
-  TransportActions,
-} from "core/transport/actions";
+import { TransportActions } from "core/transport/actions";
 import { parseCurrencyPair } from "modules/reference-data/utils";
 import { TickerActions } from "modules/ticker/actions";
 import { CandlesActions } from "modules/candles/actions";
 import { RootState } from "./../root";
-import { APP_ACTION_TYPES, BoostrapApp } from "./actions";
-import { LoadRefDataAck } from "./../reference-data/actions";
 import { getSelectedCurrencyPair } from "./../selection/selectors";
-import {
-  SELECTION_ACTION_TYPES,
-  SelectCurrencyPair,
-} from "./../selection/actions";
 
 const bootstrap: Epic<Actions, Actions, RootState, Dependencies> = (
   action$,
   state$
 ) =>
   action$.pipe(
-    ofType<Actions, BoostrapApp>(APP_ACTION_TYPES.BOOTSTRAP_APP),
+    ofType(AppActions.bootstrapApp),
     switchMap(() => {
       console.log("Bootstrap App");
 
       return merge(
         action$.pipe(
-          ofType<Actions, ChangeConnectionStatus>(
-            TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS
-          ),
+          ofType(TransportActions.changeConnectionStatus),
           filter((action) => action.payload === ConnectionStatus.Connected),
           switchMap(() =>
             merge(
               of(RefDataActions.loadRefData()),
               action$.pipe(
-                ofType<Actions, LoadRefDataAck>(
-                  REF_DATA_ACTION_TYPES.LOAD_REF_DATA_ACK
-                ),
+                ofType(RefDataActions.loadRefDataAck),
                 take(1),
                 mergeMap(() => {
                   const currencyPairs = getCurrencyPairs(state$.value);
@@ -104,9 +89,7 @@ const updateTitle: Epic<Actions, Actions, RootState, Dependencies> = (
   state$
 ) =>
   action$.pipe(
-    ofType<Actions, SelectCurrencyPair>(
-      SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR
-    ),
+    ofType(SelectionActions.selectCurrencyPair),
     switchMap((action) => {
       const { currencyPair } = action.payload;
       const [, counter] = parseCurrencyPair(currencyPair);

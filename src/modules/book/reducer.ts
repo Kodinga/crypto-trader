@@ -1,10 +1,6 @@
+import { reducer, on } from "ts-action";
 import { ConnectionStatus } from "core/transport/types/ConnectionStatus";
-import { Actions } from "modules/root";
-import {
-  TRANSPORT_ACTION_TYPES,
-  ChangeConnectionStatus,
-} from "core/transport/actions";
-import { createReducer } from "modules/redux/utils";
+import { TransportActions } from "core/transport/actions";
 import {
   isHeartbeat,
   isSubscriptionMessage,
@@ -57,58 +53,49 @@ function updateReducer(state: SymbolState = [], action: ReceiveMessage) {
   }
 }
 
-const receiveMessageReducer = (state: BookState, action: ReceiveMessage) => {
-  if (
-    isHeartbeat(action) ||
-    isSubscriptionMessage(action) ||
-    isErrorMessage(action)
-  ) {
+export const bookReducer = reducer(
+  initialState,
+  on(TransportActions.changeConnectionStatus, (state, action) => {
+    if (action.payload === ConnectionStatus.Connected) {
+      return initialState;
+    }
     return state;
-  }
-
-  const { channel, request } = action.meta || {};
-
-  if (channel === "book") {
-    const { symbol } = request;
-    const currencyPair = symbol.slice(1);
-
-    if (isUnsubscriptionMessage(action)) {
-      const updatedState = {
-        ...state,
-      };
-      delete updatedState[currencyPair];
-      return updatedState;
+  }),
+  on(TransportActions.receiveMessage, (state, action) => {
+    if (
+      isHeartbeat(action) ||
+      isSubscriptionMessage(action) ||
+      isErrorMessage(action)
+    ) {
+      return state;
     }
 
-    const symbolReducer = Array.isArray(action.payload[1][0])
-      ? snapshotReducer
-      : updateReducer;
-    const result = symbolReducer(state[currencyPair], action);
-    return {
-      ...state,
-      [currencyPair]: result,
-    };
-  }
+    const { channel, request } = action.meta || {};
 
-  return state;
-};
+    if (channel === "book") {
+      const { symbol } = request;
+      const currencyPair = symbol.slice(1);
 
-const changeConnectionStatusReducer = (
-  state: BookState,
-  action: ChangeConnectionStatus
-) => {
-  if (action.payload === ConnectionStatus.Connected) {
-    return initialState;
-  }
-  return state;
-};
+      if (isUnsubscriptionMessage(action)) {
+        const updatedState = {
+          ...state,
+        };
+        delete updatedState[currencyPair];
+        return updatedState;
+      }
 
-export const bookReducer = createReducer<BookState, Actions>(
-  {
-    [TRANSPORT_ACTION_TYPES.CHANGE_CONNECTION_STATUS]: changeConnectionStatusReducer,
-    [TRANSPORT_ACTION_TYPES.RECEIVE_MESSAGE]: receiveMessageReducer,
-  },
-  initialState
+      const symbolReducer = Array.isArray(action.payload[1][0])
+        ? snapshotReducer
+        : updateReducer;
+      const result = symbolReducer(state[currencyPair], action);
+      return {
+        ...state,
+        [currencyPair]: result,
+      };
+    }
+
+    return state;
+  })
 );
 
 export default bookReducer;

@@ -1,27 +1,24 @@
-import { createReducer } from "modules/redux/utils";
-import { Actions } from "./../root";
-import { UpdateLatency, PING_ACTION_TYPES } from "./actions";
+import { reducer, on } from "ts-action";
+import { PingActions } from "./actions";
 
 interface PingState {
   latency?: number;
 }
 
-const initialState = {};
-
-const updateLatencyReducer = (state: PingState, action: UpdateLatency) => {
-  const { latency } = action.payload;
-
-  return {
-    ...state,
-    latency,
-  };
+const initialState: PingState = {
+  latency: undefined,
 };
 
-export const pingReducer = createReducer<PingState, Actions>(
-  {
-    [PING_ACTION_TYPES.UPDATE_LATENCY]: updateLatencyReducer,
-  },
-  initialState
+export const pingReducer = reducer(
+  initialState,
+  on(PingActions.updateLatency, (state, action) => {
+    const { latency } = action.payload;
+
+    return {
+      ...state,
+      latency,
+    };
+  })
 );
 
 export default pingReducer;

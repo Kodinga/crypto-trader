@@ -1,18 +1,11 @@
-import { createAction, ActionUnion } from "../redux/utils";
-
-export enum SELECTION_ACTION_TYPES {
-  SELECT_CURRENCY_PAIR = "SELECTION/SELECT_CURRENCY_PAIR",
-}
-
-export interface SelectCurrencyPairActionPayload {
-  currencyPair: string;
-}
+import { action } from "ts-action";
+import { ActionUnion } from "../redux/utils";
 
 export const SelectionActions = {
-  selectCurrencyPair: createAction<
-    SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR,
-    SelectCurrencyPairActionPayload
-  >(SELECTION_ACTION_TYPES.SELECT_CURRENCY_PAIR),
+  selectCurrencyPair: action(
+    "SELECTION/SELECT_CURRENCY_PAIR",
+    (payload: { currencyPair: string }) => ({ payload })
+  ),
 };
 
 export type SelectionActions = ActionUnion<typeof SelectionActions>;

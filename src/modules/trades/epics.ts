@@ -1,13 +1,13 @@
-import { UnsubscribeFromTrades } from "./actions";
-import { TradesChannel } from "core/transport/types/Channels";
+import { from } from "rxjs";
+import { ofType } from "ts-action-operators";
 import { map, mergeMap } from "rxjs/operators";
-import { Epic, ofType, combineEpics } from "redux-observable";
+import { Epic, combineEpics } from "redux-observable";
 import { RootState, Actions } from "modules/root";
-import { SubscribeToTrades, TRADES_ACTION_TYPES } from "modules/trades/actions";
-import { Dependencies } from "./../redux/store";
+import { TradesChannel } from "core/transport/types/Channels";
+import { TradesActions } from "modules/trades/actions";
 import { TransportActions } from "core/transport/actions";
 import { getSubscriptionId } from "core/transport/selectors";
-import { from } from "rxjs";
+import { Dependencies } from "./../redux/store";
 
 export const subscribeToTrades: Epic<
   Actions,
@@ -16,7 +16,7 @@ export const subscribeToTrades: Epic<
   Dependencies
 > = (action$) =>
   action$.pipe(
-    ofType<Actions, SubscribeToTrades>(TRADES_ACTION_TYPES.SUBSCRIBE_TO_TRADES),
+    ofType(TradesActions.subscribeToTrades),
     map((action) => {
       const { symbol } = action.payload;
       const msg = {
@@ -34,9 +34,7 @@ export const unsubscribeFromTrades: Epic<
   Dependencies
 > = (action$, state$) =>
   action$.pipe(
-    ofType<Actions, UnsubscribeFromTrades>(
-      TRADES_ACTION_TYPES.UNSUBSCRIBE_FROM_TRADES
-    ),
+    ofType(TradesActions.unsubscribeFromTrades),
     mergeMap((action) => {
       const { symbol } = action.payload;
       const result: Actions[] = [];

@@ -1,4 +1,5 @@
-import { createAction, ActionUnion } from "../redux/utils";
+import { action } from "ts-action";
+import { ActionUnion } from "../redux/utils";
 
 type Timeframe =
   | "1m"
@@ -14,30 +15,15 @@ type Timeframe =
   | "14D"
   | "1M";
 
-export enum CANDLES_ACTION_TYPES {
-  SUBSCRIBE_TO_CANDLES = "CANDLES/SUBSCRIBE_TO_CANDLES",
-  UNSUBSCRIBE_FROM_CANDLES = "CANDLES/UNSUBSCRIBE_FROM_CANDLES",
-}
-
-export interface SubscribeToCandlesActionPayload {
-  symbol: string;
-  timeframe: Timeframe;
-}
-
-export interface UnsubscribeFromCandlesActionPayload {
-  symbol: string;
-  timeframe: Timeframe;
-}
-
 export const CandlesActions = {
-  subscribeToCandles: createAction<
-    CANDLES_ACTION_TYPES.SUBSCRIBE_TO_CANDLES,
-    SubscribeToCandlesActionPayload
-  >(CANDLES_ACTION_TYPES.SUBSCRIBE_TO_CANDLES),
-  unsubscribeFromCandles: createAction<
-    CANDLES_ACTION_TYPES.UNSUBSCRIBE_FROM_CANDLES,
-    UnsubscribeFromCandlesActionPayload
-  >(CANDLES_ACTION_TYPES.UNSUBSCRIBE_FROM_CANDLES),
+  subscribeToCandles: action(
+    "CANDLES/SUBSCRIBE_TO_CANDLES",
+    (payload: { symbol: string; timeframe: Timeframe }) => ({ payload })
+  ),
+  unsubscribeFromCandles: action(
+    "CANDLES/UNSUBSCRIBE_FROM_CANDLES",
+    (payload: { symbol: string; timeframe: Timeframe }) => ({ payload })
+  ),
 };
 
 export type CandlesActions = ActionUnion<typeof CandlesActions>;

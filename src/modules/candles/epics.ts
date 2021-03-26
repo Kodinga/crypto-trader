@@ -1,15 +1,12 @@
 import { from } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
-import { Epic, ofType, combineEpics } from "redux-observable";
+import { ofType } from "ts-action-operators";
+import { Epic, combineEpics } from "redux-observable";
 import { RootState, Actions } from "modules/root";
 import { getSubscriptionId } from "core/transport/selectors";
 import { CandlesChannel } from "core/transport/types/Channels";
 import { TransportActions } from "core/transport/actions";
-import {
-  SubscribeToCandles,
-  CANDLES_ACTION_TYPES,
-  UnsubscribeFromCandles,
-} from "./actions";
+import { CandlesActions } from "./actions";
 import { Dependencies } from "./../redux/store";
 
 export const subscribeToCandles: Epic<
@@ -19,9 +16,7 @@ export const subscribeToCandles: Epic<
   Dependencies | undefined
 > = (action$) =>
   action$.pipe(
-    ofType<Actions, SubscribeToCandles>(
-      CANDLES_ACTION_TYPES.SUBSCRIBE_TO_CANDLES
-    ),
+    ofType(CandlesActions.subscribeToCandles),
     map((action) => {
       const { symbol, timeframe } = action.payload;
       const msg = {
@@ -39,9 +34,7 @@ export const unsubscribeFromCandles: Epic<
   Dependencies
 > = (action$, state$) =>
   action$.pipe(
-    ofType<Actions, UnsubscribeFromCandles>(
-      CANDLES_ACTION_TYPES.UNSUBSCRIBE_FROM_CANDLES
-    ),
+    ofType(CandlesActions.unsubscribeFromCandles),
     mergeMap((action) => {
       const { symbol, timeframe } = action.payload;
       const result: Actions[] = [];

@@ -1,18 +1,11 @@
-import { createAction, ActionUnion } from "../redux/utils";
-
-export enum PING_ACTION_TYPES {
-  UPDATE_LATENCY = "PING/UPDATE_LATENCY",
-}
-
-interface UpdateLatencyActionPayload {
-  latency: number;
-}
+import { action } from "ts-action";
+import { ActionUnion } from "../redux/utils";
 
 export const PingActions = {
-  updateLatency: createAction<
-    PING_ACTION_TYPES.UPDATE_LATENCY,
-    UpdateLatencyActionPayload
-  >(PING_ACTION_TYPES.UPDATE_LATENCY),
+  updateLatency: action(
+    "PING/UPDATE_LATENCY",
+    (payload: { latency: number }) => ({ payload })
+  ),
 };
 
 export type PingActions = ActionUnion<typeof PingActions>;
