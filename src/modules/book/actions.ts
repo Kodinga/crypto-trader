@@ -12,7 +12,7 @@ export const BookActions = {
   ),
 };
 
-export type BookActions = ActionUnion<typeof BookActions>;
+export type AllBookActions = ActionUnion<typeof BookActions>;
 export type SubscribeToBook = ReturnType<typeof BookActions.subscribeToBook>;
 export type UnsubscribeFromBook = ReturnType<
   typeof BookActions.unsubscribeFromBook

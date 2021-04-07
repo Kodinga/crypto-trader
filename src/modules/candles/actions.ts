@@ -26,7 +26,7 @@ export const CandlesActions = {
   ),
 };
 
-export type CandlesActions = ActionUnion<typeof CandlesActions>;
+export type AllCandlesActions = ActionUnion<typeof CandlesActions>;
 export type SubscribeToCandles = ReturnType<
   typeof CandlesActions.subscribeToCandles
 >;

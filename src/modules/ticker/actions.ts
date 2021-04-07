@@ -12,7 +12,7 @@ export const TickerActions = {
   ),
 };
 
-export type TickerActions = ActionUnion<typeof TickerActions>;
+export type AllTickerActions = ActionUnion<typeof TickerActions>;
 export type SubscribeToTicker = ReturnType<
   typeof TickerActions.subscribeToTicker
 >;

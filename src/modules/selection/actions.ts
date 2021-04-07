@@ -8,7 +8,7 @@ export const SelectionActions = {
   ),
 };
 
-export type SelectionActions = ActionUnion<typeof SelectionActions>;
+export type AllSelectionActions = ActionUnion<typeof SelectionActions>;
 export type SelectCurrencyPair = ReturnType<
   typeof SelectionActions.selectCurrencyPair
 >;

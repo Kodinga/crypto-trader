@@ -12,7 +12,7 @@ export const TradesActions = {
   ),
 };
 
-export type TradesActions = ActionUnion<typeof TradesActions>;
+export type AllTradesActions = ActionUnion<typeof TradesActions>;
 export type SubscribeToTrades = ReturnType<
   typeof TradesActions.subscribeToTrades
 >;

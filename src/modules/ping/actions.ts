@@ -8,5 +8,5 @@ export const PingActions = {
   ),
 };
 
-export type PingActions = ActionUnion<typeof PingActions>;
+export type AllPingActions = ActionUnion<typeof PingActions>;
 export type UpdateLatency = ReturnType<typeof PingActions.updateLatency>;

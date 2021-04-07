@@ -104,7 +104,7 @@ export const TransportActions = {
   ),
 };
 
-export type TransportActions = ActionUnion<typeof TransportActions>;
+export type AllTransportActions = ActionUnion<typeof TransportActions>;
 export type Init = ReturnType<typeof TransportActions.init>;
 export type ReceiveMessage = ReturnType<typeof TransportActions.receiveMessage>;
 export type SendMessage = ReturnType<typeof TransportActions.sendMessage>;

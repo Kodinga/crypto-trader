@@ -1,11 +1,11 @@
 import { combineEpics } from "redux-observable";
 import { combineReducers } from "redux";
-import { BookActions } from "./book/actions";
-import { SelectionActions } from "./selection/actions";
-import { CandlesActions } from "./candles/actions";
-import { TickerActions } from "./ticker/actions";
-import { RefDataActions } from "./reference-data/actions";
-import { PingActions } from "./ping/actions";
+import { AllBookActions } from "./book/actions";
+import { AllSelectionActions } from "./selection/actions";
+import { AllCandlesActions } from "./candles/actions";
+import { AllTickerActions } from "./ticker/actions";
+import { AllRefDataActions } from "./reference-data/actions";
+import { AllPingActions } from "./ping/actions";
 import appEpics from "./app/epics";
 import transportEpics from "../core/transport/epics";
 import tradeEpics from "./trades/epics";
@@ -15,9 +15,9 @@ import candlesEpics from "./candles/epics";
 import selectionEpics from "./selection/epics";
 import bookEpics from "./book/epics";
 import pingEpics from "./ping/epics";
-import { AppActions } from "./app/actions";
-import { TradesActions } from "./trades/actions";
-import { TransportActions } from "core/transport/actions";
+import { AllAppActions } from "./app/actions";
+import { AllTradesActions } from "./trades/actions";
+import { AllTransportActions } from "core/transport/actions";
 import { tradesReducer } from "./trades/reducer";
 import { subscriptionsReducer } from "core/transport/reducer";
 import { refDataReducer } from "./reference-data/reducer";
@@ -51,14 +51,14 @@ export const rootReducer = combineReducers({
 });
 
 export type Actions =
-  | AppActions
-  | RefDataActions
-  | TransportActions
-  | TradesActions
-  | TickerActions
-  | CandlesActions
-  | SelectionActions
-  | BookActions
-  | PingActions;
+  | AllAppActions
+  | AllRefDataActions
+  | AllTransportActions
+  | AllTradesActions
+  | AllTickerActions
+  | AllCandlesActions
+  | AllSelectionActions
+  | AllBookActions
+  | AllPingActions;
 
 export type RootState = ReturnType<typeof rootReducer>;
